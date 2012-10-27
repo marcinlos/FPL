@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo "make uninstall..."
+make uninstall
+echo "make clean..."
+make clean
+
+GIT='./\.git\(ignore\|/.*\)?'
+
+echo "Removing temp files (file~)..."
+find \( -regex '.*~' ! -regex "${GIT}" \) -exec rm {} \;
+echo "Removing generated '.in' files..."
+find \( -regex '.*\.in' ! -regex "${GIT}" \) -exec rm {} \;
+echo "Removing generated Makefiles..."
+find \( -name "Makefile" ! -regex "${GIT}" \) -exec rm {} \;
+find \( -regex ".*config\..*"  ! -regex "${GIT}" \) -exec rm {} \;
+echo "Removing hidden files..."
+find \( -regex ".*/\..*" ! -regex "${GIT}" \) -exec rm -rf {} \; 2>/dev/null
+
+echo "Removing specific files..."
+FILELIST="\
+          autom4te.cache \
+          aclocal.m4 \
+          m4 \
+          depcomp \
+          install-sh \
+          libtool \
+          configure \
+          ltmain.sh \
+          missing \
+          stamp-h1 \
+          src/test/testlist\
+          doc"
+    
+rm -rf ${FILELIST}
+rm -rf doc

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "Detecting test files..."
+
+runner=runner.cpp
+test_dir=src/test
+test_ext='test'
+test_prefix=${test_dir}/
+test_list=$(find ${test_dir}/*.${test_ext})
+
+output_file="${test_dir}/testlist"
+
+rm -rf ${output_file}
+echo -n "test_sources = ${runner} " >> ${output_file}
+
+echo "Tests found:"
+
+for name in ${test_list}
+do
+    relname=${name#${test_prefix}}
+    echo ${relname}
+    echo -n "${relname/%.test/.cpp} " >> ${output_file}
+done
+echo >> ${output_file}
+
+echo "List written to ${output_file}"
+

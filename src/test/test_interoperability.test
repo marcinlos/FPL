@@ -1,0 +1,38 @@
+#include <cxxtest/TestSuite.h>
+#include <fplib/interoperability.h>
+
+class TestDoubleToIeee : public CxxTest::TestSuite
+{
+private:
+    void templateTest(double x, ieee754_64 correct)
+    {
+        ieee754_64 ieee;
+        double_to_ieee(x, &ieee);
+        TS_ASSERT_EQUALS(ieee.sign, correct.sign);
+        TS_ASSERT_EQUALS(ieee.exponent, correct.exponent);
+        TS_ASSERT_EQUALS(ieee.mantissa, correct.mantissa);
+    }
+    
+public:
+    void test_1_0()
+    {
+        ieee754_64 correct = {0, 0, 0};
+        double val = 1.0;
+        templateTest(val, correct);
+    }
+    
+    void test_2_0()
+    {
+        ieee754_64 correct = {0, 1, 0};
+        double val = 2.0;
+        templateTest(val, correct);
+    }
+    
+    void test_minus_12_0()
+    {
+        uint64_t mantissa = 0x80000000000000uL;
+        ieee754_64 correct = {1, 3, mantissa};
+        double val = -12.0;
+        templateTest(val, correct);
+    }
+};

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TARGET_DIR=~/mikro/fplib_target
+export CXX_PATH=~/cpp/cxxtest
+
+script/find_tests
+aclocal
+autoheader
+libtoolize
+automake -a
+autoconf
+./configure --prefix=${TARGET_DIR} --exec-prefix=${TARGET_DIR}
+make
+make install
+

@@ -1,0 +1,10 @@
+#include <cxxtest/TestSuite.h>
+
+class MyTestSuite : public CxxTest::TestSuite
+{
+public:
+    void testFun()
+    {
+        TS_ASSERT_EQUALS(3, 3);
+    }
+};
