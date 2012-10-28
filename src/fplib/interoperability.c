@@ -1,6 +1,7 @@
 #include "config.h"
 #include <fplib/interoperability.h>
 
+
 typedef union
 {
     double double_val;

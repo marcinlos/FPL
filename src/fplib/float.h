@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /// 64-bit floating point number
 typedef uint64_t float64;
@@ -61,18 +64,18 @@ typedef uint64_t float64;
  */
 ///@{
 #define GET_SIGN_64(n)      (((n) & SIGN_MASK_64) >> SIGN_OFFSET_64)
-#define GET_EXP_64(n)       (((n) & EXP_MASK_64) >> EXP_OFFSET_64)
+#define GET_EXP_64(n)       ((((n) & EXP_MASK_64) >> EXP_OFFSET_64) - EXP_BIAS_64)
 #define GET_MANTISSA_64(n)  (((n) & MANTISSA_MASK_64) >> MANTISSA_OFFSET_64)
 /// @}
 
 /**
  * Builds float64 from components
  */
-#define MAKE_FLOAT64(sign, exp, mant)                   \
-    (                                                   \
-     ((sign) << SIGN_OFFSET_64) |                       \
-     (((exp) + EXP_BIAS_64) << EXP_OFFSET_64) |         \
-     ((mant) << MANTISSA_OFFSET_64)                     \
+#define MAKE_FLOAT_64(sign, exp, mant)                          \
+    (                                                           \
+     (((float64) sign) << SIGN_OFFSET_64) |                     \
+     (((float64)(exp) + EXP_BIAS_64) << EXP_OFFSET_64) |        \
+     (((float64) mant) << MANTISSA_OFFSET_64)                   \
     )   
 
 /**
@@ -114,25 +117,26 @@ float64 ieee_to_float64(ieee754_64* ieee);
  * (e.g. being NaN).
  */
 ///@{
-
 /**
  * @return true if x is NaN, false otherwise
  */
-bool is_nan(float64 x);
+bool is_nan_64(float64 x);
 
 /**
  * @return true if x represents infinite value, false otherwise
  */
-bool is_inf(float64 x);
+bool is_inf_64(float64 x);
 
 /**
  * @return true if x is subnormal number (i.e. is to be interpreted
  *     without implicit 1 before the dot in mantissa), false otherwise
  */
-bool is_subnormal(float64 x);
-
+bool is_subnormal_64(float64 x);
 ///@}
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // FPLIB_FLOAT_H
 

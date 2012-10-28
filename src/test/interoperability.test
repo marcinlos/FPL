@@ -1,6 +1,6 @@
 #include <cxxtest/TestSuite.h>
 #include <fplib/interoperability.h>
-#include <iostream>
+
 
 class TestDoubleToIeee : public CxxTest::TestSuite
 {
