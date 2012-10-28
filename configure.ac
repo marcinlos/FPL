@@ -25,7 +25,7 @@ AC_SUBST([CXXTESTGEN], ["${CXX_PATH}/bin/cxxtestgen"])
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
-    src/fplib/Makefile
+    src/FPL/Makefile
     src/test/Makefile
 ])
                  

@@ -1,41 +1,50 @@
 #include <cxxtest/TestSuite.h>
-#include <fplib/float.h>
+#include <FPL/float.h>
+
+struct Values
+{
+    // 4.7842102055437862873077392578125
+    static const FPL_float64 NORMAL_VAL     = 0x4013230800080000uL;
+    static const FPL_float64 NAN_VAL        = 0x7FF1000000000000uL;
+    static const FPL_float64 POS_SUBN_VAL   = 0x0001000000000000uL;
+    static const FPL_float64 NEG_SUBN_VAL   = 0x8001000000000000uL;
+};
 
 
-class TestFloat64Getters : public CxxTest::TestSuite
+class TestFloat64 : public CxxTest::TestSuite
 {
 private:
-    static const float64 x = 0x1234567890ABCDEFuL;
-    static const int16_t exponent = 0x123 - EXP_BIAS_64;
+    static const FPL_float64 x = 0x1234567890ABCDEFuL;
+    static const int16_t exponent = 0x123 - FPL_EXP_BIAS_64;
     static const uint64_t mantissa = 0x4567890ABCDEFuL;
 
 public:
     void testGetSign_Positive_Returns0() 
     {
-        TS_ASSERT_EQUALS(GET_SIGN_64(x), 0);
+        TS_ASSERT_EQUALS(FPL_GET_SIGN_64(x), 0);
     }
     
     void testGetExponent_ExtractsGoodBits() 
     {
-        TS_ASSERT_EQUALS(GET_EXP_64(x), exponent);
+        TS_ASSERT_EQUALS(FPL_GET_EXP_64(x), exponent);
     }
     
     void testGetMantissa_ExtractsGoodBits() 
     {
-        TS_ASSERT_EQUALS(GET_MANTISSA_64(x), mantissa);
+        TS_ASSERT_EQUALS(FPL_GET_MANTISSA_64(x), mantissa);
     }
     
     
     void testMakeFloat64_MixesBitsCorrectly()
     {
-        float64 val = MAKE_FLOAT_64(0, exponent, mantissa);
+        FPL_float64 val = FPL_MAKE_FLOAT_64(0, exponent, mantissa);
         TS_ASSERT_EQUALS(val, x);
     }
     
     void testFloat64ToIeee()
     {
-        ieee754_64 ieee;
-        float64_to_ieee(x, &ieee);
+        FPL_ieee754_64 ieee;
+        FPL_float64_to_ieee(x, &ieee);
         TS_ASSERT_EQUALS(ieee.sign, 0);
         TS_ASSERT_EQUALS(ieee.exponent, exponent);
         TS_ASSERT_EQUALS(ieee.mantissa, mantissa);
@@ -43,9 +52,112 @@ public:
     
     void testIeeeToFloat64()
     {
-        ieee754_64 ieee = {0, exponent, mantissa};
-        float64 val = ieee_to_float64(&ieee);
+        FPL_ieee754_64 ieee = {0, exponent, mantissa};
+        FPL_float64 val = FPL_ieee_to_float64(&ieee);
         TS_ASSERT_EQUALS(val, x);
     }
 };
+
+
+class TestFloat64SpecialValues : public CxxTest::TestSuite
+{
+private:
+
+    
+public:
+
+    //-----------------------------------------------------
+    // is_nan
+    //-----------------------------------------------------
+    void testIsNaN_NaN_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_nan_64(Values::NAN_VAL));
+    }
+    
+    void testIsNaN_Inf_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_nan_64(FPL_POSITIVE_INF_64));
+    }
+    
+    void testIsNaN_Normal_False()
+    {
+        TS_ASSERT(! FPL_is_nan_64(Values::NORMAL_VAL));
+    }
+    
+    //-----------------------------------------------------
+    // is_inf
+    //-----------------------------------------------------
+    void testIsInf_PositiveInf_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_inf_64(FPL_POSITIVE_INF_64));
+    }
+    
+    void testIsInf_NegativeInf_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_inf_64(FPL_NEGATIVE_INF_64));
+    }
+    
+    void testIsInf_NaN_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_inf_64(Values::NAN_VAL));
+    }
+    
+    void testIsInf_Normal_False()
+    {
+        TS_ASSERT(! FPL_is_inf_64(Values::NORMAL_VAL));
+    }
+    
+    //-----------------------------------------------------
+    // is_subnormal
+    //-----------------------------------------------------
+    void testIsSubnormal_Subnormal_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_subnormal_64(Values::POS_SUBN_VAL));
+    }
+    
+    void testIsSubnormal_NegativeSubnormal_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_subnormal_64(Values::NEG_SUBN_VAL));
+    }
+    
+    void testIsSubnormal_PositiveInf_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_subnormal_64(FPL_POSITIVE_INF_64));
+    }
+    
+    void testIsSubnormal_NegativeZero_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_subnormal_64(FPL_NEGATIVE_ZERO_64));
+    }
+    
+    //-----------------------------------------------------
+    // is_normal
+    //-----------------------------------------------------
+    void testIsNormal_Normal_ReturnsTrue()
+    {
+        TS_ASSERT(FPL_is_normal_64(Values::NORMAL_VAL));
+    }
+    
+    void testIsNormal_Zero_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_normal_64(FPL_POSITIVE_ZERO_64));
+    }
+    
+    void testIsNormal_Inf_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_normal_64(FPL_NEGATIVE_INF_64));
+    }
+    
+    void testIsNormal_NaN_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_normal_64(Values::NAN_VAL));
+    }
+    
+    void testIsNormal_Subnormal_ReturnsFalse()
+    {
+        TS_ASSERT(! FPL_is_normal_64(Values::POS_SUBN_VAL));
+    }
+};
+
+
 

@@ -1,1 +1,1 @@
-SUBDIRS = fplib test
+SUBDIRS = FPL test

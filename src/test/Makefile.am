@@ -13,8 +13,8 @@ MOSTLYCLEANFILES = ${test_sources}
 BUILT_SOURCES = runner.cpp
 
 noinst_PROGRAMS = test
-test_LDADD = ../fplib/libfp.la
-test_SOURCES := ${test_sources}
+test_LDADD = ../FPL/libfpl.la
+test_SOURCES = ${test_sources}
 
 ${test_cpps}: %.cpp: %.test
 	@CXXTESTGEN@ ${TESTGEN_FLAGS} -o $@ $^
