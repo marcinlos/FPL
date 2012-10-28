@@ -14,38 +14,39 @@ extern "C" {
  * Converts double to integral type float64. It's a function instead of macro
  * casting pointers because this would preclude using it with rvalues.
  *
- * @param x Value to convert
+ * @param[in] x Value to convert
  * @return float64 with the same binary representation
+ *
+ * @sa float64_to_double
  */
 float64 double_to_float64(double x);
 
 /**
- * Structure containing all the parts of binary represenation of 64-bit
- * floating point number as defined by ieee 754
- */
-typedef struct ieee754_64
-{
-    int8_t sign;
-    int16_t exponent;
-    int32_t mantissa;
-}
-ieee754_64;
-
-/**
- * Converts float64 to ieee765_64 structure
+ * Converts float64 to native double.
  *
- * @param x emulated float64 value
- * @param p pointer to output structure
+ * @param[in] x Value to convert
+ * @return double with the same binary represenation
+ *
+ * @sa double_to_float64
  */
-void float64_to_ieee(float64 x, ieee754_64* p);
+double float64_to_double(float64 x);
 
 /**
  * Converts native double to ieee754_64 structure
  *
- * @param x native floating point value 
- * @param p pointer to output structure
+ * @param[in]  x native floating point value 
+ * @param[out] ieee pointer to output structure
  */
-void double_to_ieee(double x, ieee754_64* p);
+void double_to_ieee(double x, ieee754_64* ieee);
+
+/**
+ * Converts ieee754_64 structure to native double
+ * 
+ * @param[in] ieee structure with components
+ * @return double precision floating point number with components as
+ *     defined by @ref ieee
+ */
+double ieee_to_double(ieee754_64* ieee);
 
 #ifdef __cplusplus
 }
@@ -53,3 +54,4 @@ void double_to_ieee(double x, ieee754_64* p);
 
 
 #endif // FPLIB_INTEROPERABILITY_H
+
