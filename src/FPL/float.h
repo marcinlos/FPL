@@ -66,9 +66,11 @@ typedef uint64_t FPL_float64;
 #define FPL_GET_EXP_BITS_64(n)  (((n) & FPL_EXP_MASK_64) >> FPL_EXP_OFFSET_64)
 #define FPL_GET_EXP_64(n)       (FPL_GET_EXP_BITS_64(n) - FPL_EXP_BIAS_64)
 #define FPL_GET_MANTISSA_64(n)  (((n) & FPL_MANTISSA_MASK_64) >> FPL_MANTISSA_OFFSET_64)
-/// @}
+///@}
 
-/// Extreme values of an exponent
+/**
+ * @name Extreme values of an exponent
+ */
 ///@{
 #define FPL_MAX_EXP_64          0x7FF
 #define FPL_MIN_EXP_64              0
@@ -138,7 +140,7 @@ typedef uint64_t FPL_float64;
  * Structure containing all the parts of binary represenation of 64-bit
  * floating point number as defined by ieee 754.
  */
-typedef struct FPL_ieee754_64
+typedef struct
 {
     int8_t sign;
     int16_t exponent;
@@ -196,15 +198,70 @@ bool FPL_is_inf_64(FPL_float64 x);
 bool FPL_is_subnormal_64(FPL_float64 x);
 
 /**
- * @return true if value is normal (not 0, NaN, inf, subnormal),
+ * @return true if x is normal (not 0, NaN, inf, subnormal),
  *     false otherwise
  */
 bool FPL_is_normal_64(FPL_float64 x);
+
+/**
+ * @return true if x is zero (positive or negative), false otherwise
+ */
+bool FPL_is_zero_64(FPL_float64 x);
+
+/**
+ * @return true if sign bit of x is set
+ */
+bool FPL_is_sign_minus_64(FPL_float64 x);
+
 ///@}
+
+
+/**
+ * @name Arithmetic functions
+ * Basic arithmetical operations on floating point numbers: addition, 
+ * subtraction, multiplication, division.
+ */
+///@{
+
+FPL_float64 FPL_addition_64(FPL_float64 x, FPL_float64 y);
+
+FPL_float64 FPL_subtraction_64(FPL_float64 x, FPL_float64 y);
+
+FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y);
+
+FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y);
+
+///@}
+
+/**
+ * @name Sign operations
+ * All of these treat arguments as bit patterns, with no distinction between
+ * actual numbers, NaNs etc.
+ */
+///@{
+
+/**
+ * @return value of x with switched sign bit
+ */
+FPL_float64 FPL_negate_64(FPL_float64 x);
+
+/**
+ * @return absolute value of x (zeroed sign bit)
+ */
+FPL_float64 FPL_negate_64(FPL_float64 x);
+
+/**
+ * @return value of x with sign bit same as in y
+ */
+FPL_float64 FPL_copy_sign_64(FPL_float64 x, FPL_float64 y);
+
+///@}
+
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif // FPL_FLOAT_H
+
 

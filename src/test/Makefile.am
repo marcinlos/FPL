@@ -23,4 +23,3 @@ runner.cpp: ${test_cpps}
 	@CXXTESTGEN@ ${ROOT_FLAGS} -o $@ 
 
     
-    
