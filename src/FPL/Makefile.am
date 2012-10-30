@@ -6,6 +6,8 @@ lib_LTLIBRARIES = libfpl.la
 libfpl_la_SOURCES =         \
     classification.c        \
     ieee_conversions.c      \
+    sign_operations.c       \
+    arithmetic.c            \
     interoperability.c
 
 

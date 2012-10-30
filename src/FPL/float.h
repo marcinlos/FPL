@@ -248,7 +248,7 @@ FPL_float64 FPL_negate_64(FPL_float64 x);
 /**
  * @return absolute value of x (zeroed sign bit)
  */
-FPL_float64 FPL_negate_64(FPL_float64 x);
+FPL_float64 FPL_abs_64(FPL_float64 x);
 
 /**
  * @return value of x with sign bit same as in y

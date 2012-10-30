@@ -1,0 +1,87 @@
+#include <cxxtest/TestSuite.h>
+#include <FPL/float.h>
+#include "Values.h"
+
+
+class TestSignOperations64 : public CxxTest::TestSuite
+{
+public:
+    //------------------------------------------------------
+    // negate
+    //------------------------------------------------------
+    void testNegate_Normal()
+    {
+        FPL_float64 x = FPL_negate_64(Values::NORMAL_VAL);
+        TS_ASSERT_EQUALS(x, Values::NEG_NORMAL_VAL);
+    }
+
+    void testNegate_NegativeInfinity()
+    {
+        FPL_float64 x = FPL_negate_64(FPL_NEGATIVE_INF_64);
+        TS_ASSERT_EQUALS(x, FPL_POSITIVE_INF_64);
+    }
+    
+    void testNegate_Subnormal()
+    {
+        FPL_float64 x = FPL_negate_64(Values::POS_SUBN_VAL);
+        TS_ASSERT_EQUALS(x, Values::NEG_SUBN_VAL);
+    }
+    
+    void testNegate_NaN()
+    {
+        FPL_float64 x = FPL_negate_64(Values::NAN_VAL);
+        TS_ASSERT_EQUALS(x, Values::NEG_NAN_VAL);
+    }
+    
+    //------------------------------------------------------
+    // abs
+    //------------------------------------------------------
+    void testAbs_NegativeZero_ReturnsPositiveZero()
+    {
+        TS_ASSERT_EQUALS(FPL_abs_64(FPL_NEGATIVE_ZERO_64), FPL_POSITIVE_ZERO_64);
+    }
+    
+    void testAbs_PositiveZero_ReturnsPositiveZero()
+    {
+        TS_ASSERT_EQUALS(FPL_abs_64(FPL_POSITIVE_ZERO_64), FPL_POSITIVE_ZERO_64);
+    }
+    
+    void testAbs_NegativeNormal_ReturnsPositiveNormal()
+    {
+        TS_ASSERT_EQUALS(FPL_abs_64(Values::NEG_NORMAL_VAL), Values::NORMAL_VAL);
+    }
+    
+    void testAbs_PositiveNormal_ReturnsPositiveNovmal()
+    {
+        TS_ASSERT_EQUALS(FPL_abs_64(Values::NORMAL_VAL), Values::NORMAL_VAL);
+    }
+    
+    //------------------------------------------------------
+    // copy_sign
+    //------------------------------------------------------
+    void testCopySign_Normal_DoesNotChangeAbs()
+    {
+        FPL_float64 x = FPL_copy_sign_64(Values::NORMAL_VAL, Values::NEG_NORMAL_VAL);
+        TS_ASSERT_EQUALS(x, Values::NEG_NORMAL_VAL);
+    }
+    
+    void testCopySign_PositiveNegative_ReturnsNegative()
+    {
+        FPL_float64 x = FPL_copy_sign_64(Values::NORMAL_VAL, Values::NEG_NORMAL_VAL);
+        TS_ASSERT(FPL_is_sign_minus_64(x));
+    }
+    
+    void testCopySign_NegativePositive_ReturnsPositive()
+    {
+        FPL_float64 x = FPL_copy_sign_64(Values::NEG_NORMAL_VAL, Values::NORMAL_VAL);
+        TS_ASSERT(! FPL_is_sign_minus_64(x));
+    }
+    
+    void testCopySign_PositivePositive_ReturnsPositive()
+    {
+        FPL_float64 x = FPL_copy_sign_64(Values::NORMAL_VAL, Values::NORMAL_VAL);
+        TS_ASSERT(! FPL_is_sign_minus_64(x));
+    }
+    
+};
+
