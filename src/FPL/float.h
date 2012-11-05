@@ -11,6 +11,7 @@
 extern "C" {
 #endif
 
+
 /// 64-bit floating point number
 typedef uint64_t FPL_float64;
 

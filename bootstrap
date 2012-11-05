@@ -1,7 +1,8 @@
 #!/bin/bash
 
 TARGET_DIR=~/mikro/fplib_target
-export CXX_PATH=~/cpp/cxxtest
+export CXX_BIN_PATH=/usr/bin
+export CXX_INCLUDE_PATH=/usr/include
 
 script/find_tests
 aclocal

@@ -19,8 +19,9 @@ LT_INIT
 # Checks for library functions.
 
 
-AC_SUBST([CXXTEST_PATH], ["${CXX_PATH}"])
-AC_SUBST([CXXTESTGEN], ["${CXX_PATH}/bin/cxxtestgen"])
+AC_SUBST([CXXTEST_BIN_PATH], ["${CXX_BIN_PATH}"])
+AC_SUBST([CXXTEST_INCLUDE_PATH], ["${CXX_INCLUDE_PATH}"])
+AC_SUBST([CXXTESTGEN], ["${CXX_BIN_PATH}/cxxtestgen"])
 
 AC_CONFIG_FILES([
     Makefile
