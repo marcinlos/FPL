@@ -28,8 +28,13 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
     my >>= shift;
     uint64_t mr = mx * my;
     int exp = FPL_GET_EXP_64(x) + FPL_GET_EXP_64(y);
+    /*if (exp < FPL_EXP_BIAS_64)
+    {
+    	// underflow
+
+    }*/
     uint64_t sign = FPL_GET_SIGN_64(x) ^ FPL_GET_SIGN_64(y);
-    // highest bit  set means overflow occured
+    // highest bit set means overflow occured
     if ((mr & 0x8000000000000000) != 0)
     {
     	++ exp;
