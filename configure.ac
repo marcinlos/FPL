@@ -4,7 +4,7 @@ AC_INIT([fplib], [1.0],, [fplib-1.0])
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign])
-AM_SILENT_RULES([yes])
+AM_SILENT_RULES
 AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for programs.

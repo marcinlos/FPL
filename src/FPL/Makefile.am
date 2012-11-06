@@ -8,7 +8,8 @@ libfpl_la_SOURCES =         \
     ieee_conversions.c      \
     sign_operations.c       \
     arithmetic.c            \
-    interoperability.c
+    interoperability.c		\
+    utils.c
 
 
 libfpl_la_includedir = ${includedir}/FPL

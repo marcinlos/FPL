@@ -6,5 +6,6 @@ if [[ -e "${test_exec}" ]]; then
     ${test_exec}
 else
     echo "Test executable \`${test_exec}' doesn't exist" 1>&2
+    ex
     exit 1
 fi
