@@ -1,0 +1,44 @@
+#include <cxxtest/TestSuite.h>
+#include <FPL/float.h>
+#include <FPL/interoperability.h>
+
+
+class TestArithmetic64 : public CxxTest::TestSuite
+{
+private:
+    double EPS = 1e-10;
+    
+public:
+    void testMultiplication_5_x_3_Returns15() 
+    {
+        FPL_float64 x = FPL_double_to_float64(3.0);
+        FPL_float64 y = FPL_double_to_float64(5.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 15.0, EPS); 
+    }
+    
+    void testMultiplication_0_x_3_Returns0() 
+    {
+        FPL_float64 x = FPL_double_to_float64(0.0);
+        FPL_float64 y = FPL_double_to_float64(3.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 0.0, EPS); 
+    }
+    
+    void testMultiplication_min2_x_3_ReturnsMin6() 
+    {
+        FPL_float64 x = FPL_double_to_float64(-2.0);
+        FPL_float64 y = FPL_double_to_float64(3.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), -6.0, EPS); 
+    }
+    
+    void testMultiplication_sqrt2_x_sqrt2_Returns2()
+    {
+        FPL_float64 x = FPL_double_to_float64(1.4142135);
+        FPL_float64 res = FPL_multiplication_64(x, x);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 2.0, 1e-4);
+    }
+};
+
+
