@@ -1,0 +1,97 @@
+#include <cxxtest/TestSuite.h>
+#include <FPL/float.h>
+#include <FPL/interoperability.h>
+#include <stdio.h>
+
+
+class TestArithmetic64 : public CxxTest::TestSuite
+{
+private:
+    double EPS = 1e-300;
+    
+    void additionTest(double xv, double yv)
+    {
+        FPL_float64 x = FPL_double_to_float64(xv);
+        FPL_float64 y = FPL_double_to_float64(yv);
+        FPL_float64 res = FPL_addition_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), xv + yv, EPS);
+        
+        printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);
+    }
+    
+public:
+    void testMultiplication_5_x_3_Returns15() 
+    {
+        FPL_float64 x = FPL_double_to_float64(3.0);
+        FPL_float64 y = FPL_double_to_float64(5.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 15.0, EPS); 
+    }
+    
+    void testMultiplication_0_x_3_Returns0() 
+    {
+        FPL_float64 x = FPL_double_to_float64(0.0);
+        FPL_float64 y = FPL_double_to_float64(3.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 0.0, EPS); 
+    }
+    
+    void testMultiplication_0_x_0_Returns0() 
+    {
+        FPL_float64 x = FPL_double_to_float64(0.0);
+        FPL_float64 y = FPL_double_to_float64(0.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 0.0, EPS); 
+    }
+    
+    void testMultiplication_min2_x_3_ReturnsMin6() 
+    {
+        FPL_float64 x = FPL_double_to_float64(-2.0);
+        FPL_float64 y = FPL_double_to_float64(3.0);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), -6.0, EPS); 
+    }
+    
+    void testMultiplication_sqrt2_x_sqrt2_Returns2()
+    {
+        FPL_float64 x = FPL_double_to_float64(1.4142135);
+        FPL_float64 res = FPL_multiplication_64(x, x);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 2.0, 1e-4);
+    }
+    
+    void testMultiplication_underflow()
+    {
+        double val = 1.5e-157;
+        FPL_float64 x = FPL_double_to_float64(val);
+        FPL_float64 res = FPL_multiplication_64(x, x);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), 2.25e-314, 1e-320);
+        //printf("expected: %le\nhave: %le\n", val * val, FPL_float64_to_double(res));
+        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(val * val), res);
+    }
+    
+
+    void testMultiplication_overflow()
+    {
+        double val = 1e155;
+        FPL_float64 x = FPL_double_to_float64(val);
+        FPL_float64 res = FPL_multiplication_64(x, x);
+        TS_ASSERT(FPL_is_inf_64(res));
+    }
+    
+    void testAddition_1_9_plus_2_7_ReturnsGoodValue()
+    {
+        additionTest(1.9, 2.7);
+    }
+    
+    void testAddition_1_9_plus_neg2_7_ReturnsGoodValue()
+    {
+        additionTest(1.9, -2.7);
+    }
+    
+    void testAddition_1_9_plus_neg1_9_ReturnsGoodValue()
+    {
+        additionTest(1.9, -1.9);
+    }
+};
+
+

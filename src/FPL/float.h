@@ -55,6 +55,9 @@ typedef uint64_t FPL_float64;
 /// Exponent bias (actual exponent = exponent - 1023)
 #define FPL_EXP_BIAS_64         1023
 
+/// Implicit one bit of mantissa
+#define FPL_IMPLICIT_ONE_64 	(((uint64_t) 1) << FPL_MANTISSA_SIZE_64)
+
 ///@}
 
 
@@ -63,18 +66,25 @@ typedef uint64_t FPL_float64;
  * Macros to extract components from @ref FPL_float64 
  */
 ///@{
-#define FPL_GET_SIGN_64(n)      (((n) & FPL_SIGN_MASK_64) >> FPL_SIGN_OFFSET_64)
-#define FPL_GET_EXP_BITS_64(n)  (((n) & FPL_EXP_MASK_64) >> FPL_EXP_OFFSET_64)
-#define FPL_GET_EXP_64(n)       (FPL_GET_EXP_BITS_64(n) - FPL_EXP_BIAS_64)
-#define FPL_GET_MANTISSA_64(n)  (((n) & FPL_MANTISSA_MASK_64) >> FPL_MANTISSA_OFFSET_64)
+#define FPL_GET_SIGN_64(n)      	(((n) & FPL_SIGN_MASK_64) >> FPL_SIGN_OFFSET_64)
+#define FPL_GET_EXP_BITS_64(n)  	(((n) & FPL_EXP_MASK_64) >> FPL_EXP_OFFSET_64)
+#define FPL_GET_EXP_64(n)       	(FPL_GET_EXP_BITS_64(n) - FPL_EXP_BIAS_64)
+#define FPL_GET_MANTISSA_BITS_64(n) (((n) & FPL_MANTISSA_MASK_64) >> FPL_MANTISSA_OFFSET_64)
+#define FPL_GET_MANTISSA_64(n)		(FPL_GET_MANTISSA_BITS_64(n) | FPL_IMPLICIT_ONE_64)
 ///@}
 
 /**
  * @name Extreme values of an exponent
  */
 ///@{
-#define FPL_MAX_EXP_64          0x7FF
-#define FPL_MIN_EXP_64              0
+#define FPL_MAX_EXP_BITS_64          0x7FF
+#define FPL_MIN_EXP_BITS_64              0
+
+#define FPL_MAX_NORMAL_EXP_64	FPL_EXP_BIAS_64
+#define FPL_MIN_NORMAL_EXP_64	(-FPL_EXP_BIAS_64 + 1)
+
+#define FPL_INF_EXP_64			(FPL_EXP_BIAS_64 + 1)
+#define FPL_ZERO_EXP_64			(-FPL_EXP_BIAS_64)
 ///@}
 
 /**
@@ -83,7 +93,7 @@ typedef uint64_t FPL_float64;
 #define FPL_MAKE_FLOAT_64(sign, exp, mant)                                  \
     (                                                                       \
      (((FPL_float64) sign) << FPL_SIGN_OFFSET_64) |                         \
-     (((FPL_float64) (exp) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |       \
+     (((FPL_float64) exp) << FPL_EXP_OFFSET_64)  |       					\
      (((FPL_float64) mant) << FPL_MANTISSA_OFFSET_64)                       \
     )   
     
@@ -149,6 +159,7 @@ typedef struct
 }
 FPL_ieee754_64;
 
+
 /**
  * @name Conversions between FPL_float64 and FPL_ieee754_64 structure
  */
@@ -168,6 +179,43 @@ void FPL_float64_to_ieee(FPL_float64 x, FPL_ieee754_64* ieee);
  * @return float64 having components as specified by @ref ieee
  */
 FPL_float64 FPL_ieee_to_float64(FPL_ieee754_64* ieee);
+///@}
+
+
+/**
+ * Structure containing unpacked binary number
+ */
+typedef struct
+{
+	int8_t s; ///< Zero if positive, 1 if negative
+	int16_t e; ///< Exponent
+	uint64_t m; ///< Mantissa, decimal point FPL_MANTISSA_SIZE_64 bits from right
+}
+FPL_unpacked64;
+
+/**
+ * @name Packing/unpacking routines
+ */
+///@{
+/**
+ * Converts FPL_unpacked64 to FPL_float64 it represents
+ */
+#define FPL_PACK_64(u)                                                      \
+    (                                                                       \
+     (((FPL_float64) u.s) << FPL_SIGN_OFFSET_64) |                          \
+     ((((FPL_float64) u.e) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |       \
+     ((u.m & FPL_MANTISSA_MASK_64) << FPL_MANTISSA_OFFSET_64)               \
+    )
+
+/**
+ * Converts FPL_float64 to corresponding FPL_unpacked64 structure
+ */
+#define FPL_UNPACK_64(x, up) do {           \
+        up.s = FPL_GET_SIGN_64(x);          \
+        up.e = FPL_GET_EXP_64(x);           \
+        up.m = FPL_GET_MANTISSA_64(x);      \
+    } while(0)
+
 ///@}
 
 /**

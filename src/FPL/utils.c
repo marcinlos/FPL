@@ -1,12 +1,15 @@
 #include "config.h"
 #include <FPL/float.h>
 
-uint64_t FPL_add_implicit_one(uint64_t mantissa)
-{
-	return (((uint64_t) 1) << FPL_MANTISSA_SIZE_64) | mantissa;
-}
 
 int FPL_highest_nonzero_bit(uint64_t x)
 {
-	return 0;
+    int i;
+    for (i = 63; x != 0; --i)
+        {
+            if (x & 0x8000000000000000)
+                return i;
+            x <<= 1;
+        }
+    return -1;
 }

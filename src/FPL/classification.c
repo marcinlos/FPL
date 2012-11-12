@@ -5,16 +5,16 @@
 bool FPL_is_nan_64(FPL_float64 x)
 {
     return 
-        FPL_GET_EXP_BITS_64(x) == FPL_MAX_EXP_64 && 
-        FPL_GET_MANTISSA_64(x) != 0;
+        FPL_GET_EXP_BITS_64(x) == FPL_MAX_EXP_BITS_64 &&
+        FPL_GET_MANTISSA_BITS_64(x) != 0;
 }
 
 
 bool FPL_is_inf_64(FPL_float64 x)
 {
     return 
-        FPL_GET_EXP_BITS_64(x) == FPL_MAX_EXP_64 && 
-        FPL_GET_MANTISSA_64(x) == 0;
+        FPL_GET_EXP_BITS_64(x) == FPL_MAX_EXP_BITS_64 &&
+        FPL_GET_MANTISSA_BITS_64(x) == 0;
 }
 
 
@@ -22,7 +22,7 @@ bool FPL_is_subnormal_64(FPL_float64 x)
 {
     return 
         FPL_GET_EXP_BITS_64(x) == 0 && 
-        FPL_GET_MANTISSA_64(x) != 0;
+        FPL_GET_MANTISSA_BITS_64(x) != 0;
 }
 
 

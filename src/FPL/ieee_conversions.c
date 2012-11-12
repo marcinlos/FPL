@@ -5,8 +5,8 @@
 void FPL_float64_to_ieee(FPL_float64 x, FPL_ieee754_64* p)
 {
     p->sign     = FPL_GET_SIGN_64(x);
-    p->exponent = FPL_GET_EXP_64(x);
-    p->mantissa = FPL_GET_MANTISSA_64(x);
+    p->exponent = FPL_GET_EXP_BITS_64(x);
+    p->mantissa = FPL_GET_MANTISSA_BITS_64(x);
 }
 
 
