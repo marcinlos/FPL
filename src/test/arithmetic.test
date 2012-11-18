@@ -16,7 +16,9 @@ private:
         FPL_float64 res = FPL_addition_64(x, y);
         TS_ASSERT_DELTA(FPL_float64_to_double(res), xv + yv, EPS);
         
-        printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);
+        //printf("\nx: %#018lx\ny: %#018lx\n", x, y);
+        
+        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);
     }
     
 public:
@@ -59,23 +61,36 @@ public:
         TS_ASSERT_DELTA(FPL_float64_to_double(res), 2.0, 1e-4);
     }
     
-    void testMultiplication_underflow()
+    void testMultiplication_Underflow()
     {
         double val = 1.5e-157;
         FPL_float64 x = FPL_double_to_float64(val);
         FPL_float64 res = FPL_multiplication_64(x, x);
         TS_ASSERT_DELTA(FPL_float64_to_double(res), 2.25e-314, 1e-320);
-        //printf("expected: %le\nhave: %le\n", val * val, FPL_float64_to_double(res));
+        
         //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(val * val), res);
     }
     
 
-    void testMultiplication_overflow()
+    void testMultiplication_Overflow()
     {
         double val = 1e155;
         FPL_float64 x = FPL_double_to_float64(val);
         FPL_float64 res = FPL_multiplication_64(x, x);
         TS_ASSERT(FPL_is_inf_64(res));
+    }
+    
+    void testMultiplication_Subnormal_x_Normal()
+    {
+        double a = 1e305, b = 1e-310;
+        FPL_float64 x = FPL_double_to_float64(a);
+        FPL_float64 y = FPL_double_to_float64(b);
+        FPL_float64 res = FPL_multiplication_64(x, y);
+        
+        
+        printf("\nx: %#018lx\ny: %#018lx\n", x, y);
+                
+        printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(a * b), res);
     }
     
     void testAddition_1_9_plus_2_7_ReturnsGoodValue()
@@ -91,6 +106,16 @@ public:
     void testAddition_1_9_plus_neg1_9_ReturnsGoodValue()
     {
         additionTest(1.9, -1.9);
+    }
+    
+    void testAddition_Underflow_FromNormals()
+    {
+        additionTest(2.22510e-308, -2.22508e-308);
+    }
+    
+    void testAddition_Underflow_FromUnderflowed()
+    {
+        additionTest(2.225e-308, -2.224e-308);
     }
 };
 

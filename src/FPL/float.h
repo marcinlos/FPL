@@ -67,10 +67,21 @@ typedef uint64_t FPL_float64;
  */
 ///@{
 #define FPL_GET_SIGN_64(n)      	(((n) & FPL_SIGN_MASK_64) >> FPL_SIGN_OFFSET_64)
+
 #define FPL_GET_EXP_BITS_64(n)  	(((n) & FPL_EXP_MASK_64) >> FPL_EXP_OFFSET_64)
-#define FPL_GET_EXP_64(n)       	(FPL_GET_EXP_BITS_64(n) - FPL_EXP_BIAS_64)
+
+#define FPL_GET_EXP_64(n)                                                   \
+(                                                                           \
+    (FPL_GET_EXP_BITS_64(n) ? FPL_GET_EXP_BITS_64(n) : 1) - FPL_EXP_BIAS_64 \
+)
+
 #define FPL_GET_MANTISSA_BITS_64(n) (((n) & FPL_MANTISSA_MASK_64) >> FPL_MANTISSA_OFFSET_64)
-#define FPL_GET_MANTISSA_64(n)		(FPL_GET_MANTISSA_BITS_64(n) | FPL_IMPLICIT_ONE_64)
+
+#define FPL_GET_MANTISSA_64(n)		                                        \
+(                                                                           \
+    FPL_GET_MANTISSA_BITS_64(n) |                                           \
+    ((FPL_EXP_MASK_64 & (n)) ? FPL_IMPLICIT_ONE_64 : 0)                     \
+)
 ///@}
 
 /**
@@ -201,11 +212,11 @@ FPL_unpacked64;
  * Converts FPL_unpacked64 to FPL_float64 it represents
  */
 #define FPL_PACK_64(u)                                                      \
-    (                                                                       \
-     (((FPL_float64) u.s) << FPL_SIGN_OFFSET_64) |                          \
-     ((((FPL_float64) u.e) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |       \
-     ((u.m & FPL_MANTISSA_MASK_64) << FPL_MANTISSA_OFFSET_64)               \
-    )
+(                                                                           \
+    (((FPL_float64) u.s) << FPL_SIGN_OFFSET_64) |                           \
+    ((((FPL_float64) u.e) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |        \
+    ((u.m & FPL_MANTISSA_MASK_64) << FPL_MANTISSA_OFFSET_64)                \
+)
 
 /**
  * Converts FPL_float64 to corresponding FPL_unpacked64 structure
