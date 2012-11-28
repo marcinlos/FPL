@@ -28,6 +28,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/FPL/Makefile
     src/test/Makefile
+    src/demo/Makefile
 ])
                  
 AC_OUTPUT

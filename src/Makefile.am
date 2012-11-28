@@ -1,1 +1,1 @@
-SUBDIRS = FPL test
+SUBDIRS = FPL test demo

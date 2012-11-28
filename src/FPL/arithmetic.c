@@ -17,6 +17,21 @@
         }                                                       \
     } while (0)
 
+/*
+#define FPL_ALIGN_MANTISSAS_64(x, y) do {                       \
+        int diff = (x).e - (y).e;                               \
+        if (diff < 0)                                           \
+        {                                                       \
+            (y).m <<= (-diff);                                  \
+            (y).e = (x).e;                                      \
+        }                                                       \
+        else if (diff > 0)                                      \
+        {                                                       \
+            (x).m <<= diff;                                     \
+            (x).e = (y).e;                                      \
+        }                                                       \
+    } while (0)
+*/
 
 #define FPL_ADJUST_EXPONENT_64(up) do {                         \
         if ((up).e < FPL_MIN_NORMAL_EXP_64)                     \
@@ -65,12 +80,12 @@ FPL_unpacked64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
     res.e = x->e;
     if (x->m < y->m)
     {
-        res.s = 1;
+        res.s = 1 - x->s;
         res.m = y->m - x->m;
     }
     else
     {
-        res.s = 0;
+        res.s = x->s;
         res.m = x->m - y->m;
     }
     FPL_NORMALIZE_MANTISSA_64(res);
@@ -89,7 +104,7 @@ FPL_float64 FPL_addition_64(FPL_float64 x, FPL_float64 y)
         res = add_same_sign(&ux, &uy);
     else
     {
-        ux.s = 1 - ux.s;
+        uy.s = 1 - uy.s;
         res = sub_same_sign(&ux, &uy);
     }
     return FPL_PACK_64(res);
@@ -120,6 +135,12 @@ struct uint128
 
 #define HIGH64(val) ((((uint64_t) val.b[3]) << 32) | val.b[2])
 #define LOW64(val)  ((((uint64_t) val.b[1]) << 32) | val.b[0])
+
+
+#define GET_BIT128(val, n)                                                  \
+    ((n) > 63 ?                                                             \
+        (HIGH64(val) & (1 << ((n) - 64)))                                   \
+        : (LOW64(val) & (1 << (n))))
 
 
 #define HIGH32(val) (val >> 32)
@@ -249,4 +270,36 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
 
 FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
 {
+    FPL_unpacked64 ux, uy, res;
+    FPL_UNPACK_64(x, ux);
+    FPL_UNPACK_64(y, uy);
+    res.s = ux.s ^ uy.s;
+    res.e = ux.e - uy.e;
+
+    uint64_t N = ux.m;
+    uint64_t D = uy.m;
+    while (N > D)
+    {
+        res.e += 1;
+        D <<= 1;
+    }
+    //printf("N = %lx\nD = %lx\n", N, D);
+    uint64_t q = 0;
+    int i;
+    for (i = 0; i < 53; ++i)
+    {
+        N <<= 1;
+        q <<= 1;
+        if (N >= D)
+        {
+            q |= 1;
+            N -= D;
+        }
+    }
+    // One extra bit in the above loop
+    -- res.e;
+    res.m = q;
+    FPL_NORMALIZE_MANTISSA_64(res);
+    FPL_ADJUST_EXPONENT_64(res);
+    return FPL_PACK_64(res);
 }
