@@ -132,7 +132,7 @@ public:
         double a = FPL_float64_to_double(x), b = FPL_float64_to_double(y);
         FPL_float64 res = FPL_division_64(x, y);
         //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(a / b), res);
-        TS_ASSERT_DELTA(FPL_float64_to_double(res), .0, EPS);
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), a / b, EPS);
         /*printf("\nx: %#018lx\ny: %#018lx\n", x, y);
         printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);*/
     }
