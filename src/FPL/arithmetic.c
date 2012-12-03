@@ -2,9 +2,6 @@
 #include <FPL/float.h>
 #include <FPL/utils.h>
 
-
-
-
 struct uint128
 {
     uint32_t b[4];
