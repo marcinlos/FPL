@@ -1,6 +1,7 @@
 #include <FPL/float.h>
 #include <FPL/interoperability.h>
 #include <FPL/functions.h>
+#include "generators.h"
 #include <iostream>
 #include <cstdio>
 #include <map>
@@ -9,36 +10,14 @@
 #include <iomanip>
 
 using namespace std;
+using namespace fpl::gen;
 
-
-
-double bitwise_random_double()
-{
-    //return (rand() / double(RAND_MAX)) * 100000;
-    int res = rand() % 1000;
-    if (res == 0) return 0.0;
-    if (res == 1) return 1. / 0.;
-    if (res == 2) return -1. / 0.;
-    if (res == 3) return FPL_float64_to_double(FPL_POSITIVE_NAN_64);
-    uint64_t x = 0;
-    for (int i = 0; i < 4; ++ i)
-    {
-        x <<= 16;
-        x |= rand() & 0xffff;
-    }
-    return FPL_float64_to_double(x);
-}
-
-double random_double(double max)
-{
-    return (rand() / double(RAND_MAX) - .5) * 2 * max;
-}
-
-void test_truncation()
+template <class Generator>
+void test_truncation(const Generator& rand)
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = (rand() / double(RAND_MAX) - .5) * 1000000000;
+        double r = rand();
         int res = FPL_to_integer(FPL_double_to_float64(r));
         int actual = static_cast<int>(r);
         if (res != actual)
@@ -48,11 +27,12 @@ void test_truncation()
     }
 }
 
-void test_round()
+template <class Generator>
+void test_round(const Generator& rand)
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = (rand() / double(RAND_MAX) - .5) * 1000000000;
+        double r = rand();
         int res = FPL_round(FPL_double_to_float64(r));
         int actual = round(r);
         if (res != actual)
@@ -64,9 +44,10 @@ void test_round()
 
 void compare_exp()
 {
+    uniform_random_double rand(30);
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = random_double(30);
+        double r = rand();
         double res = FPL_float64_to_double(FPL_exponent_64(FPL_double_to_float64(r)));
         double actual = std::exp(r);
         double diff = std::fabs(actual - res);
@@ -86,11 +67,12 @@ void test()
     srand(1234);
     Operation op;
     std::map<int64_t, int> errors;
+    bitwise_random_double rand;
     for (int i = 0; i < 10000000; ++ i)
     {
         if (i % 1000000 == 0) std::cout << '.' << std::flush;
-        double x = bitwise_random_double();
-        double y = bitwise_random_double();
+        double x = rand();
+        double y = rand();
 
         FPL_float64 a = FPL_double_to_float64(x);
         FPL_float64 b = FPL_double_to_float64(y);
@@ -106,17 +88,6 @@ void test()
             ++ j->second;
         else
             errors[diff] = 1;
-
-        /*if (diff == 0x8000000000000000)
-                {
-                    printf("- - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-                    printf("x = %lx\ny = %lx\n", a, b);
-                    std::cout << "x = " << x << "\ny = " << y << std::endl;
-                    std::cout << "res = " << FPL_float64_to_double(res) << std::endl;
-                    std::cout << "ok =  " << op(x, y) << endl;
-                    printf("res = %lx\nok =  %lx\n", res, actual);
-                }*/
-
 
         if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
             continue;
@@ -134,9 +105,7 @@ void test()
     for (std::map<int64_t, int>::iterator i = errors.begin();
             i != errors.end(); ++ i)
     {
-        //if (i->first < 100 && i->first > -1000)
         std::cout << i->first << ": " << std::dec << i->second << std::endl;
-        //std::cout << FPL_float64_to_double(i->first) << std::endl;
     }
 }
 
@@ -228,15 +197,15 @@ int main()
 {
     //test_round();
     //exprPrinter();
-    /*std::cout << "Multiplication";
+    std::cout << "Multiplication";
     test<mul>();
     std::cout << "Addition";
-    test<add>();*/
+    test<add>();
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
-	randomlogPrinter();
+	//randomlogPrinter();
     return 0;
 }
 

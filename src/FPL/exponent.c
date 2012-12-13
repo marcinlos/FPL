@@ -5,8 +5,6 @@
 #include <FPL/exptable.h>
 #include <math.h>
 
-#define LOGN2 4604418534313441775
-#define SQRT2 4609047870845172685
 
 double static polynomial(FPL_float64 z){
     double x = FPL_float64_to_double(z);
