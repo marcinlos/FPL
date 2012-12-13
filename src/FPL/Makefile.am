@@ -9,6 +9,7 @@ libfpl_la_SOURCES =         \
     sign_operations.c       \
     arithmetic.c            \
     interoperability.c		\
+    conversions.c			\
     utils.c
 
 

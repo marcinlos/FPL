@@ -216,9 +216,9 @@ FPL_unpacked64;
  */
 #define FPL_PACK_64(u)                                                      \
 (                                                                           \
-    (((FPL_float64) u.s) << FPL_SIGN_OFFSET_64) |                           \
-    ((((FPL_float64) u.e) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |        \
-    ((u.m & FPL_MANTISSA_MASK_64) << FPL_MANTISSA_OFFSET_64)                \
+    (((FPL_float64) (u).s) << FPL_SIGN_OFFSET_64) |                         \
+    ((((FPL_float64) (u).e) + FPL_EXP_BIAS_64) << FPL_EXP_OFFSET_64) |      \
+    (((u).m & FPL_MANTISSA_MASK_64) << FPL_MANTISSA_OFFSET_64)              \
 )
 
 /**
@@ -293,6 +293,18 @@ FPL_float64 FPL_subtraction_64(FPL_float64 x, FPL_float64 y);
 FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y);
 
 FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y);
+
+///@}
+
+/**
+ * @name Conversions
+ * Conversions between emulated floating point numbers and integers
+ */
+///@{
+
+int64_t FPL_to_integer(FPL_float64 x);
+
+FPL_float64 FPL_to_float64(int x);
 
 ///@}
 
