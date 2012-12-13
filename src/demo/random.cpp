@@ -40,6 +40,21 @@ void test_truncation()
     }
 }
 
+void test_round()
+{
+    for (int i = 0; i < 1000; ++ i)
+    {
+        double r = (rand() / double(RAND_MAX) - .5) * 100000;
+        int res = FPL_round(FPL_double_to_float64(r));
+        int actual = round(r);
+        if (res != actual)
+        {
+            std::cerr << res << " =/= " << actual << std::endl;
+        }
+    }
+}
+
+
 template <typename Operation>
 void test()
 {
@@ -58,24 +73,15 @@ void test()
         FPL_float64 actual = FPL_double_to_float64(op(x, y));
         std::map<int64_t, int>::iterator j = errors.find(res - actual);
         int64_t diff = res - actual;
+
+        if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
+            continue;
+
         if (j != errors.end())
             ++ j->second;
         else
             errors[diff] = 1;
 
-        /*if (diff == 0x8000000000000000)
-                {
-                    printf("- - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-                    printf("x = %lx\ny = %lx\n", a, b);
-                    std::cout << "x = " << x << "\ny = " << y << std::endl;
-                    std::cout << "res = " << FPL_float64_to_double(res) << std::endl;
-                    std::cout << "ok =  " << op(x, y) << endl;
-                    printf("res = %lx\nok =  %lx\n", res, actual);
-                }*/
-
-
-        if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
-            continue;
         if (diff > 1000 || diff < -1000)
         {
             printf("- - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
@@ -91,7 +97,7 @@ void test()
             i != errors.end(); ++ i)
     {
         //if (i->first < 100 && i->first > -1000)
-        std::cout << std::hex << i->first << ": " << std::dec << i->second << std::endl;
+        std::cout << i->first << ": " << std::dec << i->second << std::endl;
         //std::cout << FPL_float64_to_double(i->first) << std::endl;
     }
 }
@@ -156,8 +162,11 @@ void logPrinter(){
 
 int main()
 {
-    test_truncation();
-    //test<mul>();
+    //test_truncation();
+    std::cout << "Multiplication";
+    test<mul>();
+    std::cout << "Addition";
+    test<add>();
     return 0;
 }
 

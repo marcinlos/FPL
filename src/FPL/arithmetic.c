@@ -101,7 +101,8 @@ struct uint128
 
 
 
-#define LT_128(x, y) (HIGH64(x) < HIGH64(y) || ((HIGH64(x) == HIGH64(y)) && LOW64(x) < LOW64(y)))
+#define LT_128(x, y) (HIGH64(x) < HIGH64(y) ||                              \
+                     ((HIGH64(x) == HIGH64(y)) && LOW64(x) < LOW64(y)))
 
 
 #define FPL_MULT(x, y, r) do {                                              \
@@ -143,21 +144,6 @@ struct uint128
 #define NAN_GUARD(x) do { if (FPL_is_nan_64(x)) return (x); } while (0)
 
 
-#define FPL_ALIGN_MANTISSAS_64(x, y) do {                       \
-        int diff = (x).e - (y).e;                               \
-        if (diff < 0)                                           \
-        {                                                       \
-            (x).m >>= (-diff);                                  \
-            (x).e = (y).e;                                      \
-        }                                                       \
-        else if ((y).e < (x).e)                                 \
-        {                                                       \
-            (y).m >>= diff;                                     \
-            (y).e = (x).e;                                      \
-        }                                                       \
-    } while (0)
-
-
 #define FPL_ADJUST_EXPONENT_64(up) do {                         \
         if ((up).e < FPL_MIN_NORMAL_EXP_64)                     \
         {                                                       \
@@ -187,6 +173,55 @@ struct uint128
     } while (0)
 
 
+#define FPL_RENORMALIZE_64(result, mantissa, expected_shift) do {           \
+        int pos = FPL_highest_nonzero_bit(HIGH64(mantissa)) + 64;           \
+        if (pos < 64) pos = FPL_highest_nonzero_bit(LOW64(mantissa));       \
+        int total_shift = 0;                                                \
+        bool fixed = false;                                                 \
+        if (pos >= 0)                                                       \
+        {                                                                   \
+            total_shift += pos - FPL_MANTISSA_SIZE_64;                      \
+            result.e += total_shift - expected_shift;                       \
+        }                                                                   \
+        else result.e = FPL_ZERO_EXP_64;                                    \
+        if (result.e < FPL_MIN_NORMAL_EXP_64)                               \
+        {                                                                   \
+            total_shift += FPL_MIN_NORMAL_EXP_64 - result.e;                \
+            result.e = FPL_ZERO_EXP_64;                                     \
+        }                                                                   \
+        else if (res.e >= FPL_INF_EXP_64)                                   \
+        {                                                                   \
+            result.m = FPL_IMPLICIT_ONE_64;                                 \
+            result.e = FPL_INF_EXP_64;                                      \
+            fixed = true;                                                   \
+        }                                                                   \
+        if (! fixed)                                                        \
+        {                                                                   \
+            int b = GET_BIT128(mantissa, total_shift - 1);                  \
+            SHIFT_128(mantissa, total_shift);                               \
+            result.m = LOW64(mantissa);                                     \
+        }                                                                   \
+        else result.m = 0;                                                  \
+    } while (0)
+
+
+#define FPL_ALIGN_MANTISSAS(x, y) do {                                      \
+        int diff = (x).e - (y).e;                                           \
+        if (diff < 0)                                                       \
+        {                                                                   \
+            SHIFT_LEFT_128(mx, -diff);                                      \
+            (x).m >>= (- diff);                                             \
+            (x).e = (y).e;                                                  \
+        }                                                                   \
+        else if ((y).e < (x).e)                                             \
+        {                                                                   \
+            SHIFT_LEFT_128(my, diff);                                       \
+            (y).m >>= diff;                                                 \
+            (y).e = (x).e;                                                  \
+        }                                                                   \
+    } while (0)
+
+
 FPL_float64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
 {
     FPL_unpacked64 res;
@@ -198,57 +233,11 @@ FPL_float64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
         return FPL_PACK_64(*y);
     MAKE_UINT128(x->m, 0, mx);
     MAKE_UINT128(y->m, 0, my);
-
-    int diff = x->e - y->e;
-    if (diff < 0)
-    {
-        SHIFT_LEFT_128(mx, -diff);
-        x->m >>= (-diff);
-        x->e = y->e;
-    }
-    else if (y->e < x->e)
-    {
-        SHIFT_LEFT_128(my, diff);
-        y->m >>= diff;
-        y->e = x->e;
-    }
-
+    FPL_ALIGN_MANTISSAS(*x, *y);
     res.e = x->e;
     res.s = x->s;
     ADD_128(mx, my);
-
-    // Manual renormalization due to 128 bit precision of mantissa
-    int pos = FPL_highest_nonzero_bit(HIGH64(mx)) + 64;
-    if (pos < 64) pos = FPL_highest_nonzero_bit(LOW64(mx));
-
-    int total_shift = 0;
-    bool fixed = false;
-    if (pos >= 0)
-    {
-        total_shift += pos - FPL_MANTISSA_SIZE_64;
-        res.e += total_shift - 64;
-    }
-    else res.e = FPL_ZERO_EXP_64;
-
-
-    if (res.e < FPL_MIN_NORMAL_EXP_64)
-    {
-        total_shift += FPL_MIN_NORMAL_EXP_64 - res.e;
-        res.e = FPL_ZERO_EXP_64;
-    }
-    else if (res.e >= FPL_INF_EXP_64)
-    {
-        res.m = FPL_IMPLICIT_ONE_64;
-        res.e = FPL_INF_EXP_64;
-        fixed = true;
-    }
-    if (! fixed)
-    {
-        int b = GET_BIT128(mx, total_shift - 1);
-        SHIFT_128(mx, total_shift);
-        res.m = LOW64(mx);
-    }
-    else res.m = 0;
+    FPL_RENORMALIZE_64(res, mx, 64);
     return FPL_PACK_64(res);
 }
 
@@ -266,32 +255,13 @@ FPL_float64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
     }
     else if (y->e == FPL_INF_EXP_64)
     {
-        // -y
-        y->s ^= 1;
+        y->s = 1 - y->s;
         return FPL_PACK_64(*y);
     }
-
     MAKE_UINT128(x->m, 0, mx);
     MAKE_UINT128(y->m, 0, my);
-
-
-    int diff = x->e - y->e;
-    if (diff < 0)
-    {
-        SHIFT_LEFT_128(mx, -diff);
-        x->m >>= (-diff);
-        x->e = y->e;
-    }
-    else if (y->e < x->e)
-    {
-        SHIFT_LEFT_128(my, diff);
-        y->m >>= diff;
-        y->e = x->e;
-    }
-
+    FPL_ALIGN_MANTISSAS(*x, *y);
     res.e = x->e;
-
-
     if (LT_128(mx, my))
     {
         res.s = 1 - x->s;
@@ -305,41 +275,7 @@ FPL_float64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
         res.m = x->m - y->m;
         SUB_128(mx, my);
     }
-
-
-
-    // Manual renormalization due to 128 bit precision of mantissa
-    int pos = FPL_highest_nonzero_bit(HIGH64(mx)) + 64;
-    if (pos < 64) pos = FPL_highest_nonzero_bit(LOW64(mx));
-
-    int total_shift = 0;
-    bool fixed = false;
-    if (pos >= 0)
-    {
-        total_shift += pos - FPL_MANTISSA_SIZE_64;
-        res.e += total_shift - 64;
-    }
-    else res.e = FPL_ZERO_EXP_64;
-    if (res.e < FPL_MIN_NORMAL_EXP_64)
-    {
-        total_shift += FPL_MIN_NORMAL_EXP_64 - res.e;
-        res.e = FPL_ZERO_EXP_64;
-        //printf("shift: %d\n", total_shift);
-        //fixed = true;
-    }
-    else if (res.e >= FPL_INF_EXP_64)
-    {
-        res.m = FPL_IMPLICIT_ONE_64;
-        res.e = FPL_INF_EXP_64;
-        fixed = true;
-    }
-    if (! fixed)
-    {
-        int b = GET_BIT128(mx, total_shift - 1);
-        SHIFT_128(mx, total_shift);
-        res.m = LOW64(mx);
-    }
-    else res.m = 0;
+    FPL_RENORMALIZE_64(res, mx, 64);
     return FPL_PACK_64(res);
 }
 
@@ -403,40 +339,9 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
         if (FPL_is_zero_64(x)) return FPL_POSITIVE_NAN_64 | sign;
         else return FPL_POSITIVE_INF_64 | sign;
     }
-
     struct uint128 r;
     FPL_MULT(ux.m, uy.m, r);
-
-    // Manual renormalization due to 128 bit precision of mantissa
-    int pos = FPL_highest_nonzero_bit(HIGH64(r)) + 64;
-    if (pos < 64) pos = FPL_highest_nonzero_bit(LOW64(r));
-
-    int total_shift = 0;
-    bool fixed = false;
-    if (pos >= 0)
-    {
-        total_shift += pos - FPL_MANTISSA_SIZE_64;
-        res.e += total_shift - 52;
-    }
-    else res.e = FPL_ZERO_EXP_64;
-    if (res.e < FPL_MIN_NORMAL_EXP_64)
-    {
-        total_shift += FPL_MIN_NORMAL_EXP_64 - res.e;
-        res.e = FPL_ZERO_EXP_64;
-    }
-    else if (res.e >= FPL_INF_EXP_64)
-    {
-        res.m = FPL_IMPLICIT_ONE_64;
-        res.e = FPL_INF_EXP_64;
-        fixed = true;
-    }
-    if (! fixed)
-    {
-        int b = GET_BIT128(r, total_shift - 1);
-        SHIFT_128(r, total_shift);
-        res.m = LOW64(r);
-    }
-    else res.m = 0;
+    FPL_RENORMALIZE_64(res, r, 52);
     return FPL_PACK_64(res);
 }
 
@@ -450,7 +355,6 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
     FPL_UNPACK_64(y, uy);
     res.s = ux.s ^ uy.s;
     res.e = ux.e - uy.e;
-
     uint64_t N = ux.m;
     uint64_t D = uy.m;
     if (uy.m == 0)
@@ -483,7 +387,6 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
         res.e += 1;
         D <<= 1;
     }
-    //printf("N = %lx\nD = %lx\n", N, D);
     uint64_t q = 0;
     int i;
     for (i = 0; i < 53; ++i)
