@@ -9,10 +9,12 @@ libfpl_la_SOURCES =         \
     sign_operations.c       \
     arithmetic.c            \
     interoperability.c		\
+    exponent.c              \
     utils.c
 
 
 libfpl_la_includedir = ${includedir}/FPL
 libfpl_la_include_HEADERS = \
     float.h                 \
-    interoperability.h 
+    interoperability.h 		\
+    functions.h

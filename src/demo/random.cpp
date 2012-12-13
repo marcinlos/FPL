@@ -1,9 +1,11 @@
 #include <FPL/float.h>
 #include <FPL/interoperability.h>
+#include <FPL/functions.h>
 #include <iostream>
 #include <cstdio>
 #include <map>
 #include <cstdlib>
+#include <cmath>
 
 using namespace std;
 
@@ -120,10 +122,32 @@ struct division
     }
 };
 
+void constPrinter(){
+	FPL_float64 log2 = FPL_double_to_float64(0.69314718055994530941723212145817656807550);
+	std::cout << log2;
+}
+void exprPrinter(){
+	double x = 9.0;
+	double res = FPL_exponent_64(x);
+	cout << "Hexowo: " << std::hex << *(uint64_t*)(&res) << std::endl;
+	//double FPL_exponent_64(double x);
+	cout << FPL_exponent_64(x) << endl;
+	cout << exp(9) << std::endl;
+}
+
 int main()
 {
-    std::cout << 1. / 0. << std::endl;
-    test<division>();
+    //std::cout << 1. / 0. << std::endl;
+    int i;
+    	cout << "{ ";
+    	for (i=-177;i<178;i++){
+    		double x = i/512.0;
+    		x = exp(x);
+    		FPL_float64 c = FPL_double_to_float64(x);
+    		cout << c << ",\n";
+    	}
+    	cout << "}";
+    	cout.flush();
     return 0;
 }
 

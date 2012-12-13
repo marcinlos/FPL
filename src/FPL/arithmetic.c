@@ -10,7 +10,6 @@ struct uint128
 #define HIGH64(val) ((((uint64_t) val.b[3]) << 32) | val.b[2])
 #define LOW64(val)  ((((uint64_t) val.b[1]) << 32) | val.b[0])
 
-
 #define GET_BIT128(val, n)                                                  \
     ((n) > 63 ?                                                             \
         (HIGH64(val) & (1 << ((n) - 64))) != 0                              \
