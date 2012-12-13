@@ -304,6 +304,8 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y);
 
 int64_t FPL_to_integer(FPL_float64 x);
 
+int64_t FPL_round(FPL_float64 x);
+
 FPL_float64 FPL_to_float64(int x);
 
 ///@}
