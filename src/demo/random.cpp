@@ -6,6 +6,7 @@
 #include <map>
 #include <cstdlib>
 #include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -106,6 +107,19 @@ void test()
         else
             errors[diff] = 1;
 
+        /*if (diff == 0x8000000000000000)
+                {
+                    printf("- - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+                    printf("x = %lx\ny = %lx\n", a, b);
+                    std::cout << "x = " << x << "\ny = " << y << std::endl;
+                    std::cout << "res = " << FPL_float64_to_double(res) << std::endl;
+                    std::cout << "ok =  " << op(x, y) << endl;
+                    printf("res = %lx\nok =  %lx\n", res, actual);
+                }*/
+
+
+        if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
+            continue;
         if (diff > 1000 || diff < -1000)
         {
             printf("- - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
@@ -178,13 +192,36 @@ void exprPrinter(){
 	cout << FPL_float64_to_double(FPL_exponent_64(x)) << endl;
 	cout << exp(9) << std::endl;
 }
-void logPrinter(){
-	double x = 23;
-	cout << "mine " << logarithm(x) << endl;
-	cout << "theirs " << log(x) << endl;
+void randomlogPrinter(){
+	srand(4321);
+	int i;
+	int good=0;
+	int bad = 0;
+	double table[10];
+	int j = 0;
+	for(i=0;i<1000;i++){
+		double f = (double)rand() / RAND_MAX;
+		double x = 0.0001 + f * (10000 - 0.0001);
+		if(abs(logarithm(x)-log(x))>0.0000000000001){
+			bad++;
+			table[j] = x;
+			j++;
+		}
+		else good++;
+	}
+	for(i=0;i<10;i++)
+		cout << "bad number: " << table[i] << endl;
+	cout << "good: " << good << endl;
+	cout << "bad: " << bad << endl;
+	//cout << "mineee "<< setprecision(40) << logarithm(x) << endl;
+	//cout << "theirs " << setprecision(40)  << log(x) << endl;
+}
 
-	cout << "mine " << FPL_float64_to_double(FPL_exponent_64(FPL_double_to_float64(x))) << endl;
-	    cout << "theirs " << exp(x) << endl;
+void logPrinter(){
+
+	double x = 6142;
+	cout << "mineee "<< setprecision(40) << logarithm(x) << endl;
+	cout << "theirs " << setprecision(40)  << log(x) << endl;
 }
 
 int main()
@@ -195,8 +232,11 @@ int main()
     test<mul>();
     std::cout << "Addition";
     test<add>();*/
-    logPrinter();
+    //logPrinter();
     //compare_exp();
+    //test_truncation();
+    //test<mul>();
+	randomlogPrinter();
     return 0;
 }
 

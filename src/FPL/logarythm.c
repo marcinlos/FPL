@@ -24,14 +24,26 @@ double logarithm (double argument){
 	}
     y = argument/n2;
     printf("\ny= %e\n", y);
+    printf("\nn2= %d\n", n2);
     printf("\nn= %d\n",n);
 	int i = round((y-3/4.0-1/512.0)*256);
+	if(i<0) i=0;
+	else if (i>190) i=190;
 	printf("\ni= %d\n",i);
-	printf("\ntabx= %e\n",TABLEX[i]);
-	printf("\ntabg= %e\n",TABLEG[i]);
+	printf("\ntabx= %f\n",TABLEX[i]);
+	printf("\ntabx20= %f\n",TABLEX[i+20]);
+	printf("\ntabx40= %f\n",TABLEX[i+40]);
+	printf("\ntabg= %f\n",TABLEG[i]);
 	double z = (y - TABLEX[i]) * TABLEG[i]; // <|1/384|
 	printf("\nz= %e\n",z);
+	printf("\ntabf= %e\n",TABLEF[i]);
+	printf("\ntabf= %e\n",TABLEF[i+60]);
 	double wynik = TABLEF[i] + polynomial(z);
+	printf("\n\n\n");
+	//int j;
+	//for(j=0;j<191;j++){
+	//	printf("\ntabf= %e\n",TABLEF[j]);
+	//}
 	return wynik + n * log(2);
 }
 
