@@ -6,6 +6,11 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>org.eclipse.cdt.autotools.core.genmakebuilderV2</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
@@ -20,8 +25,137 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.autotools.core.autotoolsNatureV2</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1354181429380</id>
+			<name></name>
+			<type>22</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.in</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429383</id>
+			<name></name>
+			<type>22</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Makefile</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429386</id>
+			<name></name>
+			<type>22</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.o</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429389</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-autom4te.cache</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429392</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-m4</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429399</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-true-config\.[^h].*</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429402</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-configure</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429405</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-aclocal.m4</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429408</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-depcomp</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429411</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-install-sh</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429413</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-libtool</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429418</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ltmain.sh</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429423</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-stamp-h1</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1354181429426</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-missing</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
