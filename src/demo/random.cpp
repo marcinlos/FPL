@@ -156,8 +156,9 @@ void logPrinter(){
 
 int main()
 {
-    test_truncation();
+    //test_truncation();
     //test<mul>();
+	logPrinter();
     return 0;
 }
 
