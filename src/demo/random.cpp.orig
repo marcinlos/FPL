@@ -148,16 +148,11 @@ void exprPrinter(){
 	cout << FPL_exponent_64(x) << endl;
 	cout << exp(9) << std::endl;
 }
-void logPrinter(){
-	double x = 9;
-	cout << "mine " << logarithm(x) << endl;
-	cout << "theirs " << log(x) << endl;
-}
 
 int main()
 {
-    //test_truncation();
-    logPrinter();
+    test_truncation();
+    //test<mul>();
     return 0;
 }
 
