@@ -9,7 +9,9 @@
 
 using namespace std;
 
-double random_double()
+
+
+double bitwise_random_double()
 {
     //return (rand() / double(RAND_MAX)) * 100000;
     int res = rand() % 1000;
@@ -26,11 +28,16 @@ double random_double()
     return FPL_float64_to_double(x);
 }
 
+double random_double(double max)
+{
+    return (rand() / double(RAND_MAX) - .5) * 2 * max;
+}
+
 void test_truncation()
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = (rand() / double(RAND_MAX) - .5) * 100000;
+        double r = (rand() / double(RAND_MAX) - .5) * 1000000000;
         int res = FPL_to_integer(FPL_double_to_float64(r));
         int actual = static_cast<int>(r);
         if (res != actual)
@@ -44,13 +51,30 @@ void test_round()
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = (rand() / double(RAND_MAX) - .5) * 100000;
+        double r = (rand() / double(RAND_MAX) - .5) * 1000000000;
         int res = FPL_round(FPL_double_to_float64(r));
         int actual = round(r);
         if (res != actual)
         {
             std::cerr << res << " =/= " << actual << std::endl;
         }
+    }
+}
+
+void compare_exp()
+{
+    for (int i = 0; i < 1000; ++ i)
+    {
+        double r = random_double(30);
+        double res = FPL_float64_to_double(FPL_exponent_64(FPL_double_to_float64(r)));
+        double actual = std::exp(r);
+        double diff = std::fabs(actual - res);
+        std::cout << diff;
+        if (diff > 1)
+        {
+            std::cout << "(" << r << ", " << actual << " vs " << res << ")";
+        }
+        std::cout << std::endl;
     }
 }
 
@@ -64,8 +88,8 @@ void test()
     for (int i = 0; i < 10000000; ++ i)
     {
         if (i % 1000000 == 0) std::cout << '.' << std::flush;
-        double x = random_double();
-        double y = random_double();
+        double x = bitwise_random_double();
+        double y = bitwise_random_double();
 
         FPL_float64 a = FPL_double_to_float64(x);
         FPL_float64 b = FPL_double_to_float64(y);
@@ -151,22 +175,28 @@ void exprPrinter(){
 	double res = FPL_exponent_64(x);
 	cout << "Hexowo: " << std::hex << *(uint64_t*)(&res) << std::endl;
 	//double FPL_exponent_64(double x);
-	cout << FPL_exponent_64(x) << endl;
+	cout << FPL_float64_to_double(FPL_exponent_64(x)) << endl;
 	cout << exp(9) << std::endl;
 }
 void logPrinter(){
-	double x = 9;
+	double x = 23;
 	cout << "mine " << logarithm(x) << endl;
 	cout << "theirs " << log(x) << endl;
+
+	cout << "mine " << FPL_float64_to_double(FPL_exponent_64(FPL_double_to_float64(x))) << endl;
+	    cout << "theirs " << exp(x) << endl;
 }
 
 int main()
 {
-    //test_truncation();
-    std::cout << "Multiplication";
+    //test_round();
+    //exprPrinter();
+    /*std::cout << "Multiplication";
     test<mul>();
     std::cout << "Addition";
-    test<add>();
+    test<add>();*/
+    logPrinter();
+    //compare_exp();
     return 0;
 }
 

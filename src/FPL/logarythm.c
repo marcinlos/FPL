@@ -18,7 +18,7 @@ double logarithm (double argument){
 	int n = 0;
 	int n2=1;
 	double y;
-	while (!(argument/n2 > 0.75 && argument/n2 < 1.5)){
+	while (!(argument/n2 >= 0.75 && argument/n2 < 1.5)){
 		n2 = n2*2;
 		n++;
 	}
