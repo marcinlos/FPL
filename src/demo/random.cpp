@@ -6,6 +6,7 @@
 #include <map>
 #include <cstdlib>
 #include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -148,17 +149,42 @@ void exprPrinter(){
 	cout << FPL_exponent_64(x) << endl;
 	cout << exp(9) << std::endl;
 }
+void randomlogPrinter(){
+	srand(4321);
+	int i;
+	int good=0;
+	int bad = 0;
+	double table[10];
+	int j = 0;
+	for(i=0;i<1000;i++){
+		double f = (double)rand() / RAND_MAX;
+		double x = 0.0001 + f * (10000 - 0.0001);
+		if(abs(logarithm(x)-log(x))>0.0000000000001){
+			bad++;
+			table[j] = x;
+			j++;
+		}
+		else good++;
+	}
+	for(i=0;i<10;i++)
+		cout << "bad number: " << table[i] << endl;
+	cout << "good: " << good << endl;
+	cout << "bad: " << bad << endl;
+	//cout << "mineee "<< setprecision(40) << logarithm(x) << endl;
+	//cout << "theirs " << setprecision(40)  << log(x) << endl;
+}
+
 void logPrinter(){
-	double x = 9;
-	cout << "mine " << logarithm(x) << endl;
-	cout << "theirs " << log(x) << endl;
+	double x = 6142;
+	cout << "mineee "<< setprecision(40) << logarithm(x) << endl;
+	cout << "theirs " << setprecision(40)  << log(x) << endl;
 }
 
 int main()
 {
     //test_truncation();
     //test<mul>();
-	logPrinter();
+	randomlogPrinter();
     return 0;
 }
 
