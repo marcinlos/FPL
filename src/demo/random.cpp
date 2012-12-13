@@ -185,9 +185,10 @@ void constPrinter(){
 	std::cout << log2;
 }
 void exprPrinter(){
-	double x = 9.0;
-	double res = FPL_exponent_64(x);
-	cout << "Hexowo: " << std::hex << *(uint64_t*)(&res) << std::endl;
+	double temp = 9.0;
+	FPL_float64 x = FPL_double_to_float64(temp);
+	//FPL_float64 res = FPL_exponent_64(x);
+	//cout << "Hexowo: " << std::hex << *(uint64_t*)(&res) << std::endl;
 	//double FPL_exponent_64(double x);
 	cout << FPL_float64_to_double(FPL_exponent_64(x)) << endl;
 	cout << exp(9) << std::endl;
@@ -236,7 +237,7 @@ int main()
     //compare_exp();
     //test_truncation();
     //test<mul>();
-	randomlogPrinter();
+	exprPrinter();
     return 0;
 }
 
