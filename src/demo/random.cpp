@@ -24,6 +24,20 @@ double random_double()
     return FPL_float64_to_double(x);
 }
 
+void test_truncation()
+{
+    for (int i = 0; i < 1000; ++ i)
+    {
+        double r = (rand() / double(RAND_MAX)) * 100000;
+        int res = FPL_to_integer(FPL_double_to_float64(r));
+        int actual = static_cast<int>(r);
+        if (res != actual)
+        {
+            std::cerr << res << " =/= " << actual << std::endl;
+        }
+    }
+}
+
 template <typename Operation>
 void test()
 {
@@ -122,8 +136,8 @@ struct division
 
 int main()
 {
-    std::cout << 1. / 0. << std::endl;
-    test<division>();
+    test_truncation();
+    //test<mul>();
     return 0;
 }
 

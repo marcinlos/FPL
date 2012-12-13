@@ -188,11 +188,15 @@ struct uint128
     } while (0)
 
 
-FPL_unpacked64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
+FPL_float64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
 {
     FPL_unpacked64 res;
-
     struct uint128 mx, my;
+    FPL_float64 sign = res.s ? FPL_SIGN_MASK_64 : 0;
+    if (x->e == FPL_INF_EXP_64)
+        return FPL_PACK_64(*x);
+    if (y->e == FPL_INF_EXP_64)
+        return FPL_PACK_64(*y);
     MAKE_UINT128(x->m, 0, mx);
     MAKE_UINT128(y->m, 0, my);
 
@@ -213,11 +217,6 @@ FPL_unpacked64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
     res.e = x->e;
     res.s = x->s;
     ADD_128(mx, my);
-
-
-
-
-
 
     // Manual renormalization due to 128 bit precision of mantissa
     int pos = FPL_highest_nonzero_bit(HIGH64(mx)) + 64;
@@ -245,27 +244,36 @@ FPL_unpacked64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
         fixed = true;
     }
     if (! fixed)
-    //if (res.e != FPL_INF_EXP_64)
     {
         int b = GET_BIT128(mx, total_shift - 1);
         SHIFT_128(mx, total_shift);
         res.m = LOW64(mx);
     }
     else res.m = 0;
-    return res;
-
-
+    return FPL_PACK_64(res);
 }
 
 
-FPL_unpacked64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
+FPL_float64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
 {
     FPL_unpacked64 res;
-
     struct uint128 mx, my;
+    if (x->e == FPL_INF_EXP_64)
+    {
+        if (y->e == FPL_INF_EXP_64)
+            return FPL_POSITIVE_NAN_64;
+        else
+            return FPL_PACK_64(*x);
+    }
+    else if (y->e == FPL_INF_EXP_64)
+    {
+        // -y
+        y->s ^= 1;
+        return FPL_PACK_64(*y);
+    }
+
     MAKE_UINT128(x->m, 0, mx);
     MAKE_UINT128(y->m, 0, my);
-
 
 
     int diff = x->e - y->e;
@@ -330,20 +338,10 @@ FPL_unpacked64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
     {
         int b = GET_BIT128(mx, total_shift - 1);
         SHIFT_128(mx, total_shift);
-        //if (b != 0)
-        //{
-            //printf("Przed: %lx%lx\n", HIGH64(r), LOW64(r));
-            //printf("Duuuuuuuuuuuuupa");
-
-            // TODO: TO jest do dupy
-            //if (LOW64(r) & 1)
-                //INCREMENT128(r);
-            //printf("Po:    %lx%lx\n", HIGH64(r), LOW64(r));
-        //}
         res.m = LOW64(mx);
     }
     else res.m = 0;
-    return res;
+    return FPL_PACK_64(res);
 }
 
 
@@ -354,7 +352,7 @@ FPL_float64 FPL_addition_64(FPL_float64 x, FPL_float64 y)
     NAN_GUARD(y);
     FPL_UNPACK_64(x, ux);
     FPL_UNPACK_64(y, uy);
-    FPL_unpacked64 res;
+    FPL_float64 res;
     if ((ux.s ^ uy.s) == 0)
         res = add_same_sign(&ux, &uy);
     else
@@ -362,7 +360,7 @@ FPL_float64 FPL_addition_64(FPL_float64 x, FPL_float64 y)
         uy.s = 1 - uy.s;
         res = sub_same_sign(&ux, &uy);
     }
-    return FPL_PACK_64(res);
+    return res;
 }
 
 
@@ -373,7 +371,7 @@ FPL_float64 FPL_subtraction_64(FPL_float64 x, FPL_float64 y)
     NAN_GUARD(y);
     FPL_UNPACK_64(x, ux);
     FPL_UNPACK_64(y, uy);
-    FPL_unpacked64 res;
+    FPL_float64 res;
     if ((ux.s ^ uy.s) == 0)
         res = sub_same_sign(&ux, &uy);
     else
@@ -381,7 +379,7 @@ FPL_float64 FPL_subtraction_64(FPL_float64 x, FPL_float64 y)
         ux.s = 1 - ux.s;
         res = add_same_sign(&ux, &uy);
     }
-    return FPL_PACK_64(res);
+    return res;
 }
 
 
@@ -426,8 +424,6 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
     {
         total_shift += FPL_MIN_NORMAL_EXP_64 - res.e;
         res.e = FPL_ZERO_EXP_64;
-        //printf("shift: %d\n", total_shift);
-        //fixed = true;
     }
     else if (res.e >= FPL_INF_EXP_64)
     {
@@ -436,20 +432,9 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
         fixed = true;
     }
     if (! fixed)
-    //if (res.e != FPL_INF_EXP_64)
     {
         int b = GET_BIT128(r, total_shift - 1);
         SHIFT_128(r, total_shift);
-        //if (b != 0)
-        //{
-            //printf("Przed: %lx%lx\n", HIGH64(r), LOW64(r));
-            //printf("Duuuuuuuuuuuuupa");
-
-            // TODO: TO jest do dupy
-            //if (LOW64(r) & 1)
-                //INCREMENT128(r);
-            //printf("Po:    %lx%lx\n", HIGH64(r), LOW64(r));
-        //}
         res.m = LOW64(r);
     }
     else res.m = 0;
