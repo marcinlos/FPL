@@ -26,6 +26,20 @@ double random_double()
     return FPL_float64_to_double(x);
 }
 
+void test_truncation()
+{
+    for (int i = 0; i < 1000; ++ i)
+    {
+        double r = (rand() / double(RAND_MAX)) * 100000;
+        int res = FPL_to_integer(FPL_double_to_float64(r));
+        int actual = static_cast<int>(r);
+        if (res != actual)
+        {
+            std::cerr << res << " =/= " << actual << std::endl;
+        }
+    }
+}
+
 template <typename Operation>
 void test()
 {
@@ -137,17 +151,8 @@ void exprPrinter(){
 
 int main()
 {
-    //std::cout << 1. / 0. << std::endl;
-    int i;
-    	cout << "{ ";
-    	for (i=-177;i<178;i++){
-    		double x = i/512.0;
-    		x = exp(x);
-    		FPL_float64 c = FPL_double_to_float64(x);
-    		cout << c << ",\n";
-    	}
-    	cout << "}";
-    	cout.flush();
+    test_truncation();
+    //test<mul>();
     return 0;
 }
 
