@@ -14,7 +14,7 @@ int64_t FPL_to_integer(FPL_float64 x)
         value <<= diff;
     else
         value >>= (-diff);
-    return value;
+    return u.s ? -value : value;
 }
 
 FPL_float64 FPL_to_float64(int x)

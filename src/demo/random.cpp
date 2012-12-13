@@ -30,7 +30,7 @@ void test_truncation()
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = (rand() / double(RAND_MAX)) * 100000;
+        double r = (rand() / double(RAND_MAX) - .5) * 100000;
         int res = FPL_to_integer(FPL_double_to_float64(r));
         int actual = static_cast<int>(r);
         if (res != actual)
@@ -156,8 +156,8 @@ void logPrinter(){
 
 int main()
 {
-    //test_truncation();
-    logPrinter();
+    test_truncation();
+    //test<mul>();
     return 0;
 }
 
