@@ -4,6 +4,8 @@
 #include "config.h"
 #include "fplshell.h"
 #include "parser.h"
+#include <stdio.h>
+
 
 static void greeting(void)
 {

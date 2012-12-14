@@ -4,11 +4,13 @@
 #include "config.h"
 #include "symbols.h"
 #include "value_list.h"
+#include <FPL/float.h>
+#include <FPL/interoperability.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <math.h>
 
-value_object sum(value_list* args)
+static value_object sum(value_list* args)
 {
     double sum = 0.0;
     while (args != NULL)
@@ -28,13 +30,31 @@ value_object sum(value_list* args)
 }
 
 
+static value_object hex(value_list* args)
+{
+    if (value_list_length(args) != 1)
+    {
+        fprintf(stderr, "hex: Expected one argument\n");
+        return make_null();
+    }
+    value_object val = args->value;
+    if (val.type == VAL_FLOAT)
+    {
+        double fv = val.float_value;
+        FPL_float64 a = FPL_double_to_float64(val.float_value);
+        printf("%lx\n", a);
+    }
+    return make_null();
+
+}
+
 
 #define FUNCTION_WRAPPER(function)                                      \
-    value_object function##_wrapper(value_list* args)                   \
+    static value_object function##_wrapper(value_list* args)            \
     {                                                                   \
         if (value_list_length(args) != 1)                               \
         {                                                               \
-            fprintf(stderr, #function "exp: Expected one argument\n");  \
+            fprintf(stderr, #function ": Expected one argument\n");     \
             return make_null();                                         \
         }                                                               \
         value_object val = args->value;                                 \
@@ -47,12 +67,14 @@ FUNCTION_WRAPPER(exp)
 FUNCTION_WRAPPER(sin)
 FUNCTION_WRAPPER(cos)
 FUNCTION_WRAPPER(tan)
+FUNCTION_WRAPPER(sqrt)
 
 #undef FUNCTION_WRAPPER
 
 void register_builtins(void)
 {
     insert_symbol(make_function("sum", sum));
+    insert_symbol(make_function("hex", hex));
 
 #define REG(name) insert_symbol(make_function(#name, name##_wrapper))
 
@@ -61,6 +83,7 @@ void register_builtins(void)
     REG(sin);
     REG(cos);
     REG(tan);
+    REG(sqrt);
 
 #undef REG
 }

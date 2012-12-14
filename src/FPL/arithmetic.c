@@ -235,7 +235,7 @@ FPL_float64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
 {
     FPL_unpacked64 res;
     struct uint128 mx, my;
-    FPL_float64 sign = res.s ? FPL_SIGN_MASK_64 : 0;
+    FPL_float64 sign = x->s ? FPL_SIGN_MASK_64 : 0;
     if (x->e == FPL_INF_EXP_64)
         return FPL_PACK_64(*x);
     if (y->e == FPL_INF_EXP_64)
@@ -363,9 +363,9 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
     FPL_UNPACK_64(x, ux);
     FPL_UNPACK_64(y, uy);
 
-    struct uint128 mx, my;
-    MAKE_UINT128(ux.m, 0uL, mx);
-    MAKE_UINT128(uy.m, 0uL, my);
+    //struct uint128 mx, my;
+    //MAKE_UINT128(ux.m, 0uL, mx);
+    //MAKE_UINT128(uy.m, 0uL, my);
 
     res.s = ux.s ^ uy.s;
     res.e = ux.e - uy.e;

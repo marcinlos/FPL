@@ -1,5 +1,5 @@
 AM_CPPFLAGS = -I ${top_srcdir}/src
-
+AM_CFLAGS = -Wall -Wno-unused-variable
 
 lib_LTLIBRARIES = libfpl.la
 

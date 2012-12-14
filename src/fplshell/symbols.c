@@ -96,9 +96,11 @@ static symbol_def* remove_from_chain(hash_chain** chain, const char* name)
 
 static unsigned int hash_function(const char* string)
 {
-    unsigned int k = 0;
-
-    return k;
+    unsigned int hash = 5381;
+    int c;
+    while ((c = *string++))
+        hash = ((hash << 5) + hash) + c;
+    return hash;
 }
 
 static int chain_index(const char* string)
