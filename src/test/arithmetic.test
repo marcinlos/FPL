@@ -8,7 +8,7 @@
 class TestArithmetic64 : public CxxTest::TestSuite
 {
 private:
-    double EPS = 1e-300;
+    static const double EPS = 1e-300;
     
     void additionTest(double xv, double yv)
     {

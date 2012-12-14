@@ -14,6 +14,7 @@ libfpl_la_SOURCES =         \
 	logarythm.c             \
 	sqrt.c					\
 	poly_eval.c				\
+	io.c					\
     utils.c
 
 
@@ -21,4 +22,5 @@ libfpl_la_includedir = ${includedir}/FPL
 libfpl_la_include_HEADERS = \
     float.h                 \
     interoperability.h 		\
-    functions.h
+    functions.h				\
+    io.h

@@ -1,8 +1,8 @@
 /**
  * @file
  */
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#ifndef FPL_FUNCTIONS_H
+#define FPL_FUNCTIONS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,4 +38,4 @@ FPL_float64 FPL_sqrt_64(FPL_float64 x);
 }
 #endif
 
-#endif
+#endif // FPL_FUNCTIONS_H

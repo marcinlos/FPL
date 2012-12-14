@@ -16,7 +16,7 @@ FPL_float64 static polynomial(FPL_float64 z){
 FPL_float64 FPL_exponent_64(FPL_float64 expr){
 //	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
 	if (FPL_is_nan_64(expr)){
-		return exp;
+		return expr;
 	}
 	if(FPL_is_inf_64(expr)){
 		return FPL_GET_SIGN_64(expr)?FPL_POSITIVE_ZERO_64:expr;

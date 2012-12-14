@@ -240,8 +240,8 @@ FPL_float64 add_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
         return FPL_PACK_64(*x);
     if (y->e == FPL_INF_EXP_64)
         return FPL_PACK_64(*y);
-    MAKE_UINT128(x->m, 0, mx);
-    MAKE_UINT128(y->m, 0, my);
+    MAKE_UINT128(x->m, 0uL, mx);
+    MAKE_UINT128(y->m, 0uL, my);
     FPL_ALIGN_MANTISSAS(*x, *y);
     res.e = x->e;
     res.s = x->s;
@@ -267,8 +267,8 @@ FPL_float64 sub_same_sign(FPL_unpacked64* x, FPL_unpacked64* y)
         y->s = 1 - y->s;
         return FPL_PACK_64(*y);
     }
-    MAKE_UINT128(x->m, 0, mx);
-    MAKE_UINT128(y->m, 0, my);
+    MAKE_UINT128(x->m, 0uL, mx);
+    MAKE_UINT128(y->m, 0uL, my);
     FPL_ALIGN_MANTISSAS(*x, *y);
     res.e = x->e;
     if (LT_128(mx, my))
@@ -364,8 +364,8 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
     FPL_UNPACK_64(y, uy);
 
     struct uint128 mx, my;
-    MAKE_UINT128(ux.m, 0, mx);
-    MAKE_UINT128(uy.m, 0, my);
+    MAKE_UINT128(ux.m, 0uL, mx);
+    MAKE_UINT128(uy.m, 0uL, my);
 
     res.s = ux.s ^ uy.s;
     res.e = ux.e - uy.e;
