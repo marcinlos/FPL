@@ -1,1 +1,1 @@
-SUBDIRS = FPL test demo
+SUBDIRS = FPL test demo fplshell

@@ -10,6 +10,8 @@ AC_CONFIG_MACRO_DIR([m4])
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
+AM_PROG_LEX
+AC_PROG_YACC
 LT_INIT
 
 
@@ -29,6 +31,7 @@ AC_CONFIG_FILES([
     src/FPL/Makefile
     src/test/Makefile
     src/demo/Makefile
+    src/fplshell/Makefile
 ])
                  
 AC_OUTPUT
