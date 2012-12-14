@@ -7,7 +7,8 @@
 
 char* FPL_sprintf(const char* fmt, char* buffer, FPL_float64 val)
 {
-    char* src = fmt, *out = buffer;
+    const char* src = fmt;
+    char *out = buffer;
 
     return buffer;
 }

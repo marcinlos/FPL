@@ -17,6 +17,7 @@ missing
 stamp-h1
 .deps
 .libs
+.dist-buildwrapper
 
 src/test/arithmetic.cpp
 src/test/classification.cpp
@@ -28,3 +29,4 @@ src/test/test
 src/test/testlist
 
 src/demo/random
+/ylwrap

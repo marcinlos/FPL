@@ -13,7 +13,7 @@ static int get_input(char *buf, int size)
     char *line;
     if (feof(yyin))
         return YY_NULL;
-    line = readline("fplsh: ");
+    line = readline(">>> ");
     if (!line)
         return YY_NULL;
     if (strlen(line) > size - 2) {
@@ -64,15 +64,10 @@ DIGIT           [0-9]
 
 %%
 
-
-[+\-*/(),;]                 return yytext[0];
-
-[a-zA-Z_][a-zA-Z0-9_]*      yylval.node = make_id(yytext); return ID;
-
-{DIGIT}+                    yylval.node = make_int(yytext); return INTEGER;
-
-([1-9][0-9]*)?\.[0-9]*       yylval.node = make_float(yytext); return FLOAT;
-
+[+\-*/(),;]               return yytext[0];
+[a-zA-Z_][a-zA-Z0-9_]*    yylval.node = make_id_expr(yytext); return ID;
+{DIGIT}+                  yylval.node = make_int_expr(yytext); return INTEGER;
+(0|[1-9][0-9]*)?\.[0-9]*  yylval.node = make_float_expr(yytext); return FLOAT;
 
 [ \t\n] ;
 

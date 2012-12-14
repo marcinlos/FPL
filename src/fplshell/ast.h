@@ -41,13 +41,13 @@ expr* make_binop(exp_type type, expr* left, expr* right);
 
 expr* make_unop(exp_type type, expr* operand);
 
-expr* make_float(char* value);
+expr* make_float_expr(char* value);
 
-expr* make_int(char* value);
+expr* make_int_expr(char* value);
 
-expr* make_id(char* name);
+expr* make_id_expr(char* name);
 
-expr* make_call(char* name, expr_list* args);
+expr* make_call(expr* fun, expr_list* args);
 
 expr_list* make_expr_singleton(expr* e);
 

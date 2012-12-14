@@ -98,8 +98,8 @@ void test()
             printf("x = %lx\ny = %lx\n", a, b);
             std::cout << "x = " << x << "\ny = " << y << std::endl;
             std::cout << "res = " << FPL_float64_to_double(res) << std::endl;
-            double actual = op(x, y);
-            std::cout << "ok =  " << actual << std::endl;
+            double act = op(x, y);
+            std::cout << "ok =  " << act << std::endl;
             printf("res = %lx\nok =  %lx\n", res, actual);
         }
     }

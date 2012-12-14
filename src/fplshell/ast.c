@@ -14,7 +14,7 @@ static void clean_expr(expr* e)
     e->args = NULL;
 }
 
-expr* make_empty_expr()
+expr* make_empty_expr(void)
 {
     expr* e = malloc(sizeof(expr));
     clean_expr(e);
@@ -38,7 +38,7 @@ expr* make_unop(exp_type type, expr* operand)
     return e;
 }
 
-expr* make_float(char* value)
+expr* make_float_expr(char* value)
 {
     expr* e = make_empty_expr();
     e->type = EXP_FLOAT;
@@ -46,7 +46,7 @@ expr* make_float(char* value)
     return e;
 }
 
-expr* make_int(char* value)
+expr* make_int_expr(char* value)
 {
     expr* e = make_empty_expr();
     e->type = EXP_INT;
@@ -54,7 +54,7 @@ expr* make_int(char* value)
     return e;
 }
 
-expr* make_id(char* name)
+expr* make_id_expr(char* name)
 {
     expr* e = make_empty_expr();
     e->type = EXP_ID;
@@ -62,16 +62,17 @@ expr* make_id(char* name)
     return e;
 }
 
-expr* make_call(char* name, expr_list* args)
+expr* make_call(expr* fun, expr_list* args)
 {
     expr* e = make_empty_expr();
     e->type = EXP_CALL;
-    e->text = strdup(name);
+    e->text = strdup(fun->text);
     e->args = args;
+    free_expr(fun);
     return e;
 }
 
-expr_list* make_empty_list()
+expr_list* make_empty_list(void)
 {
     expr_list* list = malloc(sizeof(expr_list));
     list->expression = NULL;
@@ -113,6 +114,7 @@ void free_expr(expr* e)
     if (e->text != NULL)
         free(e->text);
     clean_expr(e);
+    free(e);
 }
 
 void free_expr_list(expr_list* list)

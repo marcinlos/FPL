@@ -3,6 +3,7 @@
 #include <FPL/interoperability.h>
 #include <FPL/logtable.h>
 #include <math.h>
+#include <stdio.h>
 
 #define LOGN2 4604418534313441775;
 

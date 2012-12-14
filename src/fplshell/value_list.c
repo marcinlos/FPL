@@ -5,7 +5,7 @@
 #include "value_list.h"
 #include <stdlib.h>
 
-static value_list* make_empty_list()
+static value_list* make_empty_list(void)
 {
     value_list* list = malloc(sizeof(value_list));
     list->next = NULL;
@@ -34,6 +34,17 @@ value_list* append_value(value_list* list, value_object value)
     else
         prev->next = elem;
     return list;
+}
+
+int value_list_length(value_list* list)
+{
+    int length = 0;
+    while (list != NULL)
+    {
+        ++ length;
+        list = list->next;
+    }
+    return length;
 }
 
 void free_value_list(value_list* list)

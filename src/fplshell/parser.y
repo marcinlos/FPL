@@ -23,7 +23,8 @@
 %%
 
 program
-    : stmt              { evaluate($1); }
+    :
+    | stmt              { evaluate($1); }
     | program stmt      { evaluate($2); }
     | error             { yyclearin; yyerrok; }
     | program error     { yyclearin; yyerrok; } 
@@ -68,13 +69,9 @@ expr_list
 
 %%
 
-void yyerror(const char* msg) 
+void yyerror(const char* msg, ...) 
 {
     fprintf(stderr, "(%d, %d): %s\n", yylloc.first_line, 
         yylloc.first_column, msg);
 }
 
-int main() 
-{
-    yyparse();
-}

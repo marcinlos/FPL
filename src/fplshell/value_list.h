@@ -20,5 +20,7 @@ value_list* append_value(value_list* list, value_object value);
 
 void free_value_list(value_list* list);
 
+int value_list_length(value_list* list);
+
 
 #endif // VALUE_LIST_H

@@ -2,6 +2,7 @@
 #include <FPL/float.h>
 #include <FPL/utils.h>
 #include <stdint.h>
+#include <math.h>
 
 FPL_float64 FPL_sqrt_64(FPL_float64 x)
 {
