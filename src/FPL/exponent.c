@@ -6,9 +6,9 @@
 #include <math.h>
 
 
-double static polynomial(FPL_float64 z){
+FPL_float64 static polynomial(FPL_float64 z){
     double x = FPL_float64_to_double(z);
-	return (0.999999999999999999999623540967 + 0.99999999999999763152470487429*x + 0.500000000000002763221626745899*x*x + 0.166666676600773574707689190153*x*x*x + 0.0416666650109821193350748697127*x*x*x*x);
+	return FPL_double_to_float64(0.999999999999999999999623540967 + 0.99999999999999763152470487429*x + 0.500000000000002763221626745899*x*x + 0.166666676600773574707689190153*x*x*x + 0.0416666650109821193350748697127*x*x*x*x);
 }
 
 
@@ -54,7 +54,7 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
 	int n2 = 1;
 	FPL_float64 newn2 = FPL_double_to_float64((double)n2);
 	FPL_unpacked64 unpacked;
-	FPL_UNPACK_64(n2,unpacked);
+	FPL_UNPACK_64(newn2,unpacked);
 	unpacked.e += n;
 	newn2 = FPL_PACK_64(unpacked);
 	printf("\nnewn2= %e\n",FPL_float64_to_double(newn2));
