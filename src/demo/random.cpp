@@ -69,7 +69,7 @@ void test()
     Operation op;
     std::map<int64_t, int> errors;
     bitwise_random_double rand;
-    for (int i = 0; i < 10000000; ++ i)
+    for (int i = 0; i < 1000000; ++ i)
     {
         if (i % 1000000 == 0) std::cout << '.' << std::flush;
         double x = rand();
@@ -89,9 +89,6 @@ void test()
             ++ j->second;
         else
             errors[diff] = 1;
-
-       
-
 
         if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
             continue;
@@ -199,19 +196,27 @@ void logPrinter(){
 	cout << "theirs " << setprecision(40)  << log(x) << endl;
 }
 
+double exp(double x) { return std::exp(x); }
+
 int main()
 {
     //test_round();
     //exprPrinter();
-    /*std::cout << "Multiplication";
+    std::cout << "Multiplication";
     test<mul>();
     std::cout << "Addition";
-    test<add>();*/
+    test<add>();
+    std::cout << "Division";
+    test<division>();
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
-	randomlogPrinter();
+	//randomlogPrinter();
+//    fpl::test::histogram_collector hist;
+//    fpl::test::function_test(FPL_exponent_64, exp, 1000,
+//            uniform_random_double(30.0), hist);
+//    hist.print();
     return 0;
 }
 

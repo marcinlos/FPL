@@ -5,8 +5,11 @@
 #ifndef FUNCTION_TEST_H
 #define FUNCTION_TEST_H
 
+#include <iostream>
+#include <iomanip>
 #include <map>
 #include <cmath>
+#include <limits>
 
 namespace fpl
 {
@@ -23,7 +26,7 @@ void function_test(const Approx& approx, const Target& target,
         FPL_float64 xf = FPL_double_to_float64(x);
         double actual = target(x);
         double app = FPL_float64_to_double(approx(xf));
-        double diff = std::fabs(actual, app);
+        double diff = std::fabs(actual - app);
         collector(diff, app, actual);
     }
 };
@@ -31,7 +34,56 @@ void function_test(const Approx& approx, const Target& target,
 
 struct histogram_collector
 {
-    std::map<double, int> count;
+    std::map<int, int> count;
+    typedef std::map<int, int>::iterator iter;
+
+    void operator () (double diff, double approx, double target)
+    {
+        int log = std::log10(diff);
+        iter i = count.find(log);
+        if (i != count.end())
+            ++ i->second;
+        else
+        {
+            count[log] = 1;
+        }
+    }
+
+    void diagram()
+    {
+        int max = 0, min = std::numeric_limits<int>::max();
+        for (iter i = count.begin(); i != count.end(); ++ i)
+        {
+            if (i->first > max) max = i->first;
+            if (i->first < min) min = i->first;
+        }
+        min = std::max(-40, min);
+        for (int j = min; j <= 10; ++ j)
+        {
+            std::cout << std::setw(4) << j << ": ";
+            iter it = count.find(j);
+            if (it != count.end())
+            {
+                std::string line(it->second, '*');
+                std::cout << line;
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void print()
+    {
+        for (iter i = count.begin(); i != count.end(); ++ i)
+        {
+            std::cout << std::setw(5) << i->first << ": "
+                    << i->second << std::endl;
+        }
+    }
+
+    void clear()
+    {
+        count.clear();
+    }
 };
 
 

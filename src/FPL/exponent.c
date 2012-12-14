@@ -14,7 +14,7 @@ FPL_float64 static polynomial(FPL_float64 z){
 
 
 FPL_float64 FPL_exponent_64(FPL_float64 expr){
-	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
+//	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
 	if (FPL_is_nan_64(expr)){
 		return exp;
 	}
@@ -30,12 +30,12 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
 				);
 	}*/
 
-	printf("\nlog= %e\n",FPL_float64_to_double(LOGN2));
-	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
+//	printf("\nlog= %e\n",FPL_float64_to_double(LOGN2));
+//	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
 	int n = FPL_round(
         FPL_division_64(expr, LOGN2)
     );
-	printf("\nn= %d\n",n);
+//	printf("\nn= %d\n",n);
 
 	FPL_float64 y = FPL_subtraction_64(
         expr,
@@ -57,7 +57,7 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
 	FPL_UNPACK_64(newn2,unpacked);
 	unpacked.e += n;
 	newn2 = FPL_PACK_64(unpacked);
-	printf("\nnewn2= %e\n",FPL_float64_to_double(newn2));
+//	printf("\nnewn2= %e\n",FPL_float64_to_double(newn2));
 
 //	printf("\nn2= %d\n",n2);
 //	printf("\nz= %f\n",FPL_float64_to_double(z));

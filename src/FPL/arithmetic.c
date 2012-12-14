@@ -7,6 +7,15 @@ struct uint128
     uint32_t b[4];
 };
 
+#define INCREMENT_FLOAT(up) do {                                            \
+        if ((up).m == FPL_MAX_MANTISSA_64)                                  \
+        {                                                                   \
+            (up).m = FPL_IMPLICIT_ONE_64;                                   \
+            ++ (up).e;                                                      \
+        }                                                                   \
+        else ++ (up).m;                                                     \
+    } while (0)
+
 #define HIGH64(val) ((((uint64_t) val.b[3]) << 32) | val.b[2])
 #define LOW64(val)  ((((uint64_t) val.b[1]) << 32) | val.b[0])
 
@@ -353,6 +362,11 @@ FPL_float64 FPL_division_64(FPL_float64 x, FPL_float64 y)
     NAN_GUARD(y);
     FPL_UNPACK_64(x, ux);
     FPL_UNPACK_64(y, uy);
+
+    struct uint128 mx, my;
+    MAKE_UINT128(ux.m, 0, mx);
+    MAKE_UINT128(uy.m, 0, my);
+
     res.s = ux.s ^ uy.s;
     res.e = ux.e - uy.e;
     uint64_t N = ux.m;

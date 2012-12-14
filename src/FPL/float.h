@@ -91,6 +91,8 @@ typedef uint64_t FPL_float64;
 #define FPL_MAX_EXP_BITS_64          0x7FF
 #define FPL_MIN_EXP_BITS_64              0
 
+#define FPL_MAX_MANTISSA_64     (FPL_MANTISSA_MASK_64 | FPL_IMPLICIT_ONE_64)
+
 #define FPL_MAX_NORMAL_EXP_64	FPL_EXP_BIAS_64
 #define FPL_MIN_NORMAL_EXP_64	(-FPL_EXP_BIAS_64 + 1)
 
