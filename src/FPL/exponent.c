@@ -14,16 +14,28 @@ double static polynomial(FPL_float64 z){
 
 
 FPL_float64 FPL_exponent_64(FPL_float64 expr){
+	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
 	if (FPL_is_nan_64(expr)){
 		return exp;
 	}
 	if(FPL_is_inf_64(expr)){
 		return FPL_GET_SIGN_64(expr)?FPL_POSITIVE_ZERO_64:expr;
 	}
+	/*if(FPL_is_sign_minus(expr)){ //zalatwianie ujemnych wykladnikow
+		return FPL_division_64(
+				1,
+				FPL_exponent_64(
+						FPL_negate_64(expr)
+						)
+				);
+	}*/
 
+	printf("\nlog= %e\n",FPL_float64_to_double(LOGN2));
+	printf("\nexpr= %e\n",FPL_float64_to_double(expr));
 	int n = FPL_round(
         FPL_division_64(expr, LOGN2)
     );
+	printf("\nn= %d\n",n);
 
 	FPL_float64 y = FPL_subtraction_64(
         expr,
@@ -37,13 +49,16 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
             y,
             FPL_double_to_float64((double)512)
         )
-    ); //not sure czy to ucina, powinien być odpowiednik round(całość) w miejscu to_integer()
+    );
 	FPL_float64 z = FPL_subtraction_64(y, FPL_double_to_float64(i/512.0));
 	int n2 = 1;
-	//printf("\nn= %d\n",n);
-	for(n;n>0;n--){
-		n2 = n2*2;
-	}
+	FPL_float64 newn2 = FPL_double_to_float64((double)n2);
+	FPL_unpacked64 unpacked;
+	FPL_UNPACK_64(n2,unpacked);
+	unpacked.e += n;
+	newn2 = FPL_PACK_64(unpacked);
+	printf("\nnewn2= %e\n",FPL_float64_to_double(newn2));
+
 //	printf("\nn2= %d\n",n2);
 //	printf("\nz= %f\n",FPL_float64_to_double(z));
 //	printf("\ni= %d\n",i);
@@ -52,7 +67,7 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
 	//printf("\nzlo= %e\n",TABLE[i] + TABLE[i]*polynomial(z));
 	//printf("\ntablei= %f\n",TABLE[i]);
 	//printf("\ndiff= %e\n",polynomial(z)-exp(z));
-	return FPL_multiplication_64(FPL_double_to_float64((double)n2), FPL_multiplication_64(TABLE[i],polynomial(z)));
+	return FPL_multiplication_64(newn2, FPL_multiplication_64(TABLE[i],polynomial(z)));
 
 /*
 	int n = round(FPL_float64_to_double(expr)/log(2.0));

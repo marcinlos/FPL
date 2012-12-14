@@ -18,7 +18,7 @@ void test_truncation(const Generator& rand)
 {
     for (int i = 0; i < 1000; ++ i)
     {
-        double r = rand();
+        double r = (rand() / double(RAND_MAX) - .5) * 1000000000;
         int res = FPL_to_integer(FPL_double_to_float64(r));
         int actual = static_cast<int>(r);
         if (res != actual)
@@ -90,6 +90,9 @@ void test()
         else
             errors[diff] = 1;
 
+       
+
+
         if (FPL_is_nan_64(res) && FPL_is_nan_64(actual))
             continue;
         if (diff > 1000 || diff < -1000)
@@ -106,7 +109,9 @@ void test()
     for (std::map<int64_t, int>::iterator i = errors.begin();
             i != errors.end(); ++ i)
     {
+       
         std::cout << i->first << ": " << std::dec << i->second << std::endl;
+       
     }
 }
 
@@ -198,15 +203,15 @@ int main()
 {
     //test_round();
     //exprPrinter();
-    std::cout << "Multiplication";
+    /*std::cout << "Multiplication";
     test<mul>();
     std::cout << "Addition";
-    test<add>();
+    test<add>();*/
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
-	//randomlogPrinter();
+	randomlogPrinter();
     return 0;
 }
 
