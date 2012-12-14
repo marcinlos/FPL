@@ -2,6 +2,7 @@
 #include <FPL/interoperability.h>
 #include <FPL/functions.h>
 #include "generators.h"
+#include "function_test.h"
 #include <iostream>
 #include <cstdio>
 #include <map>
