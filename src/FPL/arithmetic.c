@@ -344,7 +344,6 @@ FPL_float64 FPL_multiplication_64(FPL_float64 x, FPL_float64 y)
     }
     if (uy.e == FPL_INF_EXP_64)
     {
-
         if (FPL_is_zero_64(x)) return FPL_POSITIVE_NAN_64 | sign;
         else return FPL_POSITIVE_INF_64 | sign;
     }

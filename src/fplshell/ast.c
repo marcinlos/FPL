@@ -46,6 +46,14 @@ expr* make_float_expr(char* value)
     return e;
 }
 
+expr* make_native_expr(char* value)
+{
+    expr* e = make_empty_expr();
+    e->type = EXP_NATIVE;
+    e->text = strdup(value);
+    return e;
+}
+
 expr* make_int_expr(char* value)
 {
     expr* e = make_empty_expr();

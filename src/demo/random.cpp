@@ -197,7 +197,7 @@ void logPrinter(){
 	cout << "theirs " << setprecision(40)  << log(x) << endl;
 }
 
-double exp(double x) { return std::exp(x); }
+double eexp(double x) { return std::exp(x); }
 
 int main()
 {
@@ -214,10 +214,10 @@ int main()
     //test_truncation();
     //test<mul>();
 	//randomlogPrinter();
-//    fpl::test::histogram_collector hist;
-//    fpl::test::function_test(FPL_exponent_64, exp, 1000,
-//            uniform_random_double(30.0), hist);
-//    hist.print();
+    fpl::test::histogram_collector hist;
+    fpl::test::function_test(FPL_exponent_64, eexp, 1000,
+            uniform_random_double(10.0), hist);
+    hist.print();
     return 0;
 }
 

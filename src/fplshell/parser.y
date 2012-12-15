@@ -12,8 +12,8 @@
     expr_list* list;
 }
 
-%token <node> ID INTEGER FLOAT
-%type <node> stmt expr add_expr mult_expr postfix_expr atomic_expr
+%token <node> ID INTEGER FLOAT NATIVE
+%type <node> stmt expr add_expr mult_expr postfix_expr atomic_expr unary_expr
 %type <list> expr_list
 
 %locations
@@ -44,10 +44,15 @@ add_expr
     ;
     
 mult_expr
-    : mult_expr '*' postfix_expr    { $$ = make_binop(EXP_TIMES, $1, $3); }
-    | mult_expr '/' postfix_expr    { $$ = make_binop(EXP_DIV, $1, $3); }
-    | postfix_expr
+    : mult_expr '*' unary_expr      { $$ = make_binop(EXP_TIMES, $1, $3); }
+    | mult_expr '/' unary_expr      { $$ = make_binop(EXP_DIV, $1, $3); }
+    | unary_expr
     ;
+    
+unary_expr
+    : '-' unary_expr                { $$ = make_unop(EXP_UNMINUS, $2); }
+    | postfix_expr
+    ;    
     
 postfix_expr
     : ID '(' expr_list ')'          { $$ = make_call($1, $3); }
@@ -59,6 +64,7 @@ atomic_expr
     : ID
     | INTEGER   
     | FLOAT
+    | NATIVE
     | '(' expr ')'                  { $$ = $2; }    
     ;
 

@@ -12,6 +12,7 @@ typedef enum
     EXP_TIMES,
     EXP_DIV,
     EXP_FLOAT,
+    EXP_NATIVE,
     EXP_INT,
     EXP_ASSIGN,
     EXP_UNMINUS,
@@ -42,6 +43,8 @@ expr* make_binop(exp_type type, expr* left, expr* right);
 expr* make_unop(exp_type type, expr* operand);
 
 expr* make_float_expr(char* value);
+
+expr* make_native_expr(char* value);
 
 expr* make_int_expr(char* value);
 

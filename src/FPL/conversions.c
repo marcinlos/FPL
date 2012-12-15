@@ -1,6 +1,7 @@
 #include "config.h"
 #include <FPL/float.h>
 #include <FPL/utils.h>
+#include <FPL/interoperability.h>
 #include <stdint.h>
 
 
@@ -38,5 +39,6 @@ int64_t FPL_round(FPL_float64 x)
 FPL_float64 FPL_to_float64(int x)
 {
     // TODO: Implement
+    return FPL_double_to_float64((double) x);
     return FPL_POSITIVE_NAN_64;
 }

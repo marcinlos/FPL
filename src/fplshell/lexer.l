@@ -21,9 +21,9 @@ static int get_input(char *buf, int size)
         return YY_NULL;
     }
     strcpy(buf, line);
-    free(line);
     add_history(buf);
-
+    strcat(buf, ";");
+    free(line);
     return strlen(buf);
 }
 
@@ -61,13 +61,16 @@ void print_error(const char* msg)
 %option noyywrap
 
 DIGIT           [0-9]
+FLOAT_NUM       (0|[1-9][0-9]*)?\.[0-9]*
+ID              [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-[+\-*/(),;]               return yytext[0];
-[a-zA-Z_][a-zA-Z0-9_]*    yylval.node = make_id_expr(yytext); return ID;
-{DIGIT}+                  yylval.node = make_int_expr(yytext); return INTEGER;
-(0|[1-9][0-9]*)?\.[0-9]*  yylval.node = make_float_expr(yytext); return FLOAT;
+[+\-*/(),;]    return yytext[0];
+{ID}           yylval.node = make_id_expr(yytext); return ID;
+{DIGIT}+       yylval.node = make_int_expr(yytext); return INTEGER;
+{FLOAT_NUM}    yylval.node = make_float_expr(yytext); return FLOAT;
+${FLOAT_NUM}   yylval.node = make_native_expr(yytext + 1); return NATIVE;
 
 [ \t\n] ;
 

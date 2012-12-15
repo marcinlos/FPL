@@ -5,11 +5,14 @@
 #define FPLSHELL_H
 
 #include "ast.h"
+#include <FPL/float.h>
+
 
 typedef enum
 {
     VAL_INT,
     VAL_FLOAT,
+    VAL_NATIVE,
     VAL_NULL
 } value_type;
 
@@ -20,13 +23,15 @@ typedef struct
     union
     {
         int int_value;
-        double float_value;
+        double native_value;
+        FPL_float64 float_value;
     };
 } value_object;
 
 
 value_object make_int(int x);
-value_object make_float(double x);
+value_object make_native(double x);
+value_object make_float(FPL_float64 x);
 value_object make_null(void);
 
 void insitu_cast_value(value_object* val, value_type target);

@@ -4,18 +4,47 @@
 #include "config.h"
 #include "fplshell.h"
 #include "symbols.h"
+#include <FPL/interoperability.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 static value_object eval_aux(expr* node);
 
+static void print_type(value_type type)
+{
+    switch (type)
+    {
+    case VAL_FLOAT:
+        printf("fpl");
+        break;
+    case VAL_NATIVE:
+        printf("native");
+        break;
+    case VAL_INT:
+        printf("int");
+        break;
+    case VAL_NULL:
+        printf("-");
+        break;
+    }
+}
+
 static void print_value(value_object value)
 {
     switch (value.type)
     {
-    case VAL_FLOAT: printf("%f", value.float_value); break;
-    case VAL_INT: printf("%d", value.int_value); break;
-    case VAL_NULL: printf("<null>"); break;
+    case VAL_FLOAT:
+        printf("%f", FPL_float64_to_double(value.float_value));
+        break;
+    case VAL_NATIVE:
+        printf("%f", value.native_value);
+        break;
+    case VAL_INT:
+        printf("%d", value.int_value);
+        break;
+    case VAL_NULL:
+        printf("<null>");
+        break;
     }
 }
 
@@ -61,6 +90,16 @@ static value_type coerce(value_object* x, value_object* y)
         insitu_cast_value(x, VAL_FLOAT);
         return VAL_FLOAT;
     }
+    else if (x->type == VAL_NATIVE)
+    {
+        insitu_cast_value(y, VAL_NATIVE);
+        return VAL_NATIVE;
+    }
+    else if (y->type == VAL_NATIVE)
+    {
+        insitu_cast_value(x, VAL_NATIVE);
+        return VAL_NATIVE;
+    }
     else
         return VAL_INT;
 }
@@ -75,7 +114,9 @@ static value_object add_values(value_object x, value_object y)
         return make_null();
     }
     else if (common == VAL_FLOAT)
-        return make_float(x.float_value + y.float_value);
+        return make_float(FPL_addition_64(x.float_value, y.float_value));
+    else if (common == VAL_NATIVE)
+        return make_native(x.native_value + y.native_value);
     else
         return make_int(x.int_value + y.int_value);
 }
@@ -89,7 +130,9 @@ static value_object sub_values(value_object x, value_object y)
         return make_null();
     }
     else if (common == VAL_FLOAT)
-        return make_float(x.float_value - y.float_value);
+        return make_float(FPL_subtraction_64(x.float_value, y.float_value));
+    else if (common == VAL_NATIVE)
+        return make_native(x.native_value - y.native_value);
     else
         return make_int(x.int_value - y.int_value);
 }
@@ -103,7 +146,9 @@ static value_object mul_values(value_object x, value_object y)
         return make_null();
     }
     else if (common == VAL_FLOAT)
-        return make_float(x.float_value * y.float_value);
+        return make_float(FPL_multiplication_64(x.float_value, y.float_value));
+    else if (common == VAL_NATIVE)
+        return make_native(x.native_value * y.native_value);
     else
         return make_int(x.int_value * y.int_value);
 }
@@ -117,9 +162,32 @@ static value_object div_values(value_object x, value_object y)
         return make_null();
     }
     else if (common == VAL_FLOAT)
-        return make_float(x.float_value / y.float_value);
+        return make_float(FPL_division_64(x.float_value, y.float_value));
+    else if (common == VAL_NATIVE)
+        return make_native(x.native_value / y.native_value);
     else
         return make_int(x.int_value / y.int_value);
+}
+
+
+static value_object negate_value(value_object x)
+{
+    if (x.type == VAL_FLOAT)
+        return make_float(FPL_negate_64(x.float_value));
+    else if (x.type == VAL_NATIVE)
+        return make_native(- x.native_value);
+    else if (x.type == VAL_INT)
+        return make_int(- x.int_value);
+    else
+    {
+        fprintf(stderr, "Error: trying to negate null\n");
+        return make_null();
+    }
+}
+
+static FPL_float64 to_float64(const char* text)
+{
+    return FPL_double_to_float64(atof(text));
 }
 
 
@@ -137,15 +205,20 @@ static value_object eval_aux(expr* node)
     case EXP_TIMES:     return mul_values(left, right);
     case EXP_DIV:       return div_values(left, right);
     case EXP_INT:       return make_int(atoi(node->text));
-    case EXP_FLOAT:     return make_float(atof(node->text));
+    case EXP_FLOAT:     return make_float(to_float64(node->text));
+    case EXP_NATIVE:    return make_native(atof(node->text));
     case EXP_CALL:      return eval_function(node->text, node->args);
+    case EXP_UNMINUS:   return negate_value(left);
     }
 }
 
 void evaluate(expr* expression)
 {
     value_object val = eval_aux(expression);
-    printf("val = ");
+    printf(" [");
+    print_type(val.type);
+    printf("]");
+    printf(" = ");
     print_value(val);
     printf("\n");
     free_expr(expression);

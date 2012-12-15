@@ -21,6 +21,7 @@ FPL_float64 FPL_exponent_64(FPL_float64 expr){
 	if(FPL_is_inf_64(expr)){
 		return FPL_GET_SIGN_64(expr)?FPL_POSITIVE_ZERO_64:expr;
 	}
+	// -0.002255  duża niedokładność
 	/*if(FPL_is_sign_minus(expr)){ //zalatwianie ujemnych wykladnikow
 		return FPL_division_64(
 				1,
