@@ -66,7 +66,7 @@ ID              [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-[+\-*/(),;]    return yytext[0];
+[=+\-*/(),;]   return yytext[0];
 {ID}           yylval.node = make_id_expr(yytext); return ID;
 {DIGIT}+       yylval.node = make_int_expr(yytext); return INTEGER;
 {FLOAT_NUM}    yylval.node = make_float_expr(yytext); return FLOAT;

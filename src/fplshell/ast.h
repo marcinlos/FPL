@@ -52,6 +52,8 @@ expr* make_id_expr(char* name);
 
 expr* make_call(expr* fun, expr_list* args);
 
+expr* make_assignment(expr* var, expr* value);
+
 expr_list* make_expr_singleton(expr* e);
 
 expr_list* append_expr(expr_list* list, expr* e);

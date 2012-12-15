@@ -36,6 +36,16 @@ value_list* append_value(value_list* list, value_object value)
     return list;
 }
 
+value_object get_nth_value(value_list* list, int n)
+{
+    while (list != NULL && n > 0)
+    {
+        list = list->next;
+        -- n;
+    }
+    return list != NULL ? list->value : make_null();
+}
+
 int value_list_length(value_list* list)
 {
     int length = 0;

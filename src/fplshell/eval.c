@@ -185,6 +185,30 @@ static value_object negate_value(value_object x)
     }
 }
 
+static value_object assign_value(expr* left, expr* right)
+{
+    value_object rhs = eval_aux(right);
+    symbol_def* symbol = make_variable(left->text, rhs);
+    insert_symbol(symbol);
+    return rhs;
+}
+
+static value_object get_variable_value(const char* name)
+{
+    symbol_def* symbol = find_symbol(name);
+    if (symbol == NULL)
+    {
+        fprintf(stderr, "Error: symbol `%s' not found\n", name);
+        return make_null();
+    }
+    if (symbol->type != SYM_VARIABLE)
+    {
+        fprintf(stderr, "Error: `%s' is not a variable\n", name);
+        return make_null();
+    }
+    return symbol->value;
+}
+
 static FPL_float64 to_float64(const char* text)
 {
     return FPL_double_to_float64(atof(text));
@@ -195,6 +219,9 @@ static value_object eval_aux(expr* node)
 {
     if (node == NULL)
         return make_null();
+    if (node->type == EXP_ASSIGN)
+        return assign_value(node->left, node->right);
+
     value_object left = eval_aux(node->left);
     value_object right = eval_aux(node->right);
 
@@ -208,6 +235,7 @@ static value_object eval_aux(expr* node)
     case EXP_FLOAT:     return make_float(to_float64(node->text));
     case EXP_NATIVE:    return make_native(atof(node->text));
     case EXP_CALL:      return eval_function(node->text, node->args);
+    case EXP_ID:        return get_variable_value(node->text);
     case EXP_UNMINUS:   return negate_value(left);
     }
 }
@@ -215,11 +243,14 @@ static value_object eval_aux(expr* node)
 void evaluate(expr* expression)
 {
     value_object val = eval_aux(expression);
-    printf(" [");
-    print_type(val.type);
-    printf("]");
-    printf(" = ");
-    print_value(val);
+    if (val.type != VAL_NULL)
+    {
+        printf(" [");
+        print_type(val.type);
+        printf("]");
+        printf(" = ");
+        print_value(val);
+    }
     printf("\n");
     free_expr(expression);
 }

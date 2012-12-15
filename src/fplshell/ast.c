@@ -80,6 +80,15 @@ expr* make_call(expr* fun, expr_list* args)
     return e;
 }
 
+expr* make_assignment(expr* var, expr* value)
+{
+    expr* e = make_empty_expr();
+    e->type = EXP_ASSIGN;
+    e->left = var;
+    e->right = value;
+    return e;
+}
+
 expr_list* make_empty_list(void)
 {
     expr_list* list = malloc(sizeof(expr_list));

@@ -32,7 +32,9 @@ program
     
 stmt
     : expr ';'
+    | ID '=' expr ';'               { $$ = make_assignment($1, $3); }
     ;
+    
     
 expr: add_expr
     ;
