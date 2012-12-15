@@ -1,0 +1,46 @@
+Using interactive FPL shell
+===========================
+Marcin Łoś
+v1.0
+
+Motivation
+----------
+FPL Shell was created as a developement, testing and demonstration environment 
+for FPL project. It's basically a REPL loop, providing simple calculator 
+functionality, allowing simultaneously using both FPL format/functions and 
+native C math library/float arithmetic. 
+
+Language definition
+-------------------
+
+Literals
+~~~~~~~~
+FPL Shell recognizes 3 kinds of literals:
+
+* *integers*, e.g. +666+
+* *native floats* preceeded by $, e.g. +$23.422+
+* *FPL floats*, e.g. +23.422+
+
+Values of lower type are implicitly convertible to values of higher types in
+arithmetical expressions. As for functions, it depends on the implementation.
+Currently all the functions convert arguments to precisely the type they expect.
+
+Statements
+~~~~~~~~~~
+Supported constructions:
+
+* *arithmetic expressions*, e.g. +23 * ($13.9 + (-7.))+.
+* *function calls*, e.g. +exp($1.23)+
+* *assignments*, e.g. +a = 7.0+.
+
+Builtin functions
+~~~~~~~~~~~~~~~~~
+* *hex(x)* - takes FPL float as an argument, prints its hexadecimal 
+             representation.
+* *poly_eval(x, c~n~,...,c~0~)* - takes FPL arguments, evaluates +p(x)+, where
+        +p(x) = c~n~x^n^ `+` ... `+` c~0~+
+* *fpl_exp* - FPL version of exponential
+* C math function wrappers, accepting native floats - *exp*, *log*, *pow*, 
+        *sin*, *cos*, *tan*, *sqrt*
+
+
