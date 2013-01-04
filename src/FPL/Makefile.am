@@ -12,6 +12,7 @@ libfpl_la_SOURCES =         \
     conversions.c			\
 	exponent.c              \
 	logarythm.c             \
+	sincos.c                \
 	sqrt.c					\
 	poly_eval.c				\
 	io.c					\

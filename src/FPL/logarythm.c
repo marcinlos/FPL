@@ -15,7 +15,7 @@ double static polynomial(double x){
 			- 0.125001525891841565968060649430009547354266601487839728337*x*x*x*x*x*x*x*x;
 }
 
-double logarithm (double argument){
+double FPL_logarithm_E_64 (double argument){
 	int n = 0;
 	int n2=1;
 	double y;
@@ -54,6 +54,6 @@ double FPL_logarithm_64 (double base,double argument){
 		return FPL_POSITIVE_NAN_64;
 	}
 	else{*/
-	return logarithm(argument) / logarithm(base);
+	return FPL_logarithm_E_64(argument) / FPL_logarithm_E_64(base);
 	//}
 }

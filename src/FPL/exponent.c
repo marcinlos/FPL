@@ -5,10 +5,19 @@
 #include <FPL/exptable.h>
 #include <math.h>
 
+static FPL_float64 polytable[] = {
+		0x3ff0000000000000,
+		0x3fefffffffffffeb,
+		0x3fe0000000000019,
+		0x3fc555556aaaaa97,
+		0x3fa55555471c71cb
+};
 
 FPL_float64 static polynomial(FPL_float64 z){
-    double x = FPL_float64_to_double(z);
-	return FPL_double_to_float64(0.999999999999999999999623540967 + 0.99999999999999763152470487429*x + 0.500000000000002763221626745899*x*x + 0.166666676600773574707689190153*x*x*x + 0.0416666650109821193350748697127*x*x*x*x);
+
+	return FPL_poly_eval_64(z,polytable,5);
+    //double x = FPL_float64_to_double(z);
+	//return FPL_double_to_float64(0.999999999999999999999623540967 + 0.99999999999999763152470487429*x + 0.500000000000002763221626745899*x*x + 0.166666676600773574707689190153*x*x*x + 0.0416666650109821193350748697127*x*x*x*x);
 }
 
 

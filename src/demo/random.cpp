@@ -175,7 +175,7 @@ void randomlogPrinter(){
 	for(i=0;i<1000;i++){
 		double f = (double)rand() / RAND_MAX;
 		double x = 0.0001 + f * (10000 - 0.0001);
-		if(abs(logarithm(x)-log(x))>0.0000000000001){
+		if(abs(FPL_logarithm_E_64(x)-log(x))>0.0000000000001){
 			bad++;
 			table[j] = x;
 			j++;
@@ -193,11 +193,18 @@ void randomlogPrinter(){
 void logPrinter(){
 
 	double x = 6142;
-	cout << "mineee "<< setprecision(40) << logarithm(x) << endl;
+	cout << "mineee "<< setprecision(40) << FPL_logarithm_E_64(x) << endl;
 	cout << "theirs " << setprecision(40)  << log(x) << endl;
 }
 
 double eexp(double x) { return std::exp(x); }
+
+double sinPrinter(){
+
+	double x = 0.7;
+	cout << "mineee "<< setprecision(40) << FPL_sin_64(x) << endl;
+	cout << "theirs " << setprecision(40)  << sin(x) << endl;
+}
 
 int main()
 {
@@ -214,10 +221,14 @@ int main()
     //test_truncation();
     //test<mul>();
 	//randomlogPrinter();
+    //std::cout << "Exping" << endl;
     fpl::test::histogram_collector hist;
+    //std::cout << "just checkin" << endl;
     fpl::test::function_test(FPL_exponent_64, eexp, 1000,
             uniform_random_double(10.0), hist);
-    hist.print();
+    //std::cout << "after test?" << endl;
+    //hist.print();
+    sinPrinter();
     return 0;
 }
 

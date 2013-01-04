@@ -29,7 +29,9 @@ FPL_float64 FPL_poly_eval_64(FPL_float64 x, const FPL_float64* coeffs, int N);
 
 FPL_float64 FPL_exponent_64(FPL_float64 x);
 double FPL_logarithm_64(double a, double b);
-double logarithm(double a);
+double FPL_logarithm_E_64(double a);
+double FPL_sin_64(double a);
+double FPL_cos_64 (double a);
 
 
 FPL_float64 FPL_sqrt_64(FPL_float64 x);
