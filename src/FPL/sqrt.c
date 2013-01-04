@@ -8,8 +8,6 @@
 #include <FPL/macros.h>
 
 
-//TODO wywalic toto, cheat
-
 FPL_float64 FPL_sqrt_64(FPL_float64 x)
 {
     //double z = FPL_float64_to_double(x);

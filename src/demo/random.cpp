@@ -1,4 +1,5 @@
 #include <FPL/float.h>
+#include <FPL/macros.h>
 #include <FPL/interoperability.h>
 #include <FPL/functions.h>
 #include "generators.h"
@@ -9,9 +10,33 @@
 #include <cstdlib>
 #include <cmath>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 using namespace fpl::gen;
+
+void table_gen(){
+	double x;
+		int i,j;
+		double tab1[192];
+		for(i=0;i<192;i++){
+			tab1[i] = 0.75+i/256.0+1/512.0;
+		}
+		for(i=0;i<192;i++){
+			tab1[i] = 1.0/(tab1[i]);
+		}
+
+		ofstream outputFile;
+		outputFile.open("logtable3.h");
+		outputFile << "double TABLEG[] = {";
+		for (i=0;i<191;i++){
+			cout << tab1[i] << endl;
+			outputFile <<  FLOAT64(tab1[i]) << "," << endl;
+			//FPL_addition_64(5uL,5uL);
+		}
+		outputFile <<  FLOAT64(tab1[191]) << "};";
+		outputFile.close();
+}
 
 template <class Generator>
 void test_truncation(const Generator& rand)
@@ -192,16 +217,20 @@ void randomlogPrinter(){
 
 void logPrinter(){
 
-	double x = 6142;
-	cout << "mineee "<< setprecision(40) << FPL_logarithm_E_64(x) << endl;
-	cout << "theirs " << setprecision(40)  << log(x) << endl;
+	double x = FPL_double_to_float64(9.0);
+	//double res = FPL_exponent_64(x);
+	//cout << "Hexowo: " << std::hex << *(uint64_t*)(&res) << std::endl;
+	cout << FPL_float64_to_double(FPL_logarithm_E_64(x)) << endl;
+	cout << log(9) << std::endl;
 }
 
 double eexp(double x) { return std::exp(x); }
+double esin(double x) { return std::sin(x); }
+double elog(double x) { return std::log(x); }
 
 double sinPrinter(){
 
-	double x = 0.7;
+	double x = 1000;
 	cout << "mineee "<< setprecision(40) << FPL_sin_64(x) << endl;
 	cout << "theirs " << setprecision(40)  << sin(x) << endl;
 }
@@ -210,12 +239,12 @@ int main()
 {
     //test_round();
     //exprPrinter();
-    std::cout << "Multiplication";
-    test<mul>();
-    std::cout << "Addition";
-    test<add>();
-    std::cout << "Division";
-    test<division>();
+    //std::cout << "Multiplication";
+   // test<mul>();
+    //std::cout << "Addition";
+    //test<add>();
+    //std::cout << "Division";
+   // test<division>();
     //logPrinter();
     //compare_exp();
     //test_truncation();
@@ -223,9 +252,12 @@ int main()
 	//randomlogPrinter();
     //std::cout << "Exping" << endl;
     fpl::test::histogram_collector hist;
+    //table_gen();
+    //logPrinter();
     //std::cout << "just checkin" << endl;
-    fpl::test::function_test(FPL_exponent_64, eexp, 1000,
-            uniform_random_double(10.0), hist);
+	//fpl::test::function_test(FPL_logarithm_E_64, elog, 1000, uniform_random_double(10.0), hist);
+    //fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);
+    //fpl::test::function_test(FPL_exponent_64, eexp, 1000, uniform_random_double(10.0), hist);
     //std::cout << "after test?" << endl;
     //hist.print();
     sinPrinter();
