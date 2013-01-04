@@ -13,8 +13,10 @@ extern "C" {
  */
 ///{
 
-#define LOGN2       4604418534313441775
-#define SQRT2       4609047870845172685
+#define LOGN2       0x3fe62e42fefa39ef
+#define SQRT2       0x3ff6a09e667f3bcd
+
+#define HALF        0x3fe0000000000000
 
 ///}
 

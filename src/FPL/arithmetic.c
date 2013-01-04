@@ -169,18 +169,6 @@ struct uint128
     } while (0)
 
 
-#define FPL_NORMALIZE_MANTISSA_64(up) do {                      \
-        int pos = FPL_highest_nonzero_bit((up).m);              \
-        if (pos >= 0)                                           \
-        {                                                       \
-            int shift = pos - FPL_MANTISSA_SIZE_64;             \
-            if (shift > 0) (up).m >>= shift;                    \
-            else (up).m <<= (-shift);                           \
-            (up).e += shift;                                    \
-        }                                                       \
-        else (up).e = FPL_ZERO_EXP_64;                          \
-    } while (0)
-
 
 #define FPL_RENORMALIZE_64(result, mantissa, expected_shift) do {           \
         int pos = FPL_highest_nonzero_bit(HIGH64(mantissa)) + 64;           \
