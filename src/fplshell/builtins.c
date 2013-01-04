@@ -68,6 +68,7 @@ static value_object poly_eval(value_list* args)
 
 
 FPL_FUNCTION_WRAPPER(FPL_exponent_64, fpl_exp)
+FPL_FUNCTION_WRAPPER(FPL_sqrt_64, fpl_sqrt);
 
 // Wrappers for one-argument functions from math.h
 
@@ -124,6 +125,7 @@ void register_builtins(void)
     REG(sqrt);
 
     REG(fpl_exp);
+    REG(fpl_sqrt);
 
 #undef REG
 }
