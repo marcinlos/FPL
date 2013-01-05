@@ -18,23 +18,23 @@ using namespace fpl::gen;
 void table_gen(){
 	double x;
 		int i,j;
-		double tab1[192];
-		for(i=0;i<192;i++){
-			tab1[i] = 0.75+i/256.0+1/512.0;
+		double tab1[185];
+		j=0;
+		for(i=16;i<202;i++){
+			tab1[j] = i/256.0;
+			j++;
 		}
-		for(i=0;i<192;i++){
-			tab1[i] = 1.0/(tab1[i]);
+		for(i=0;i<185;i++){
+			tab1[i] = sin(tab1[i]);
 		}
 
 		ofstream outputFile;
-		outputFile.open("logtable3.h");
-		outputFile << "double TABLEG[] = {";
-		for (i=0;i<191;i++){
-			cout << tab1[i] << endl;
+		outputFile.open("sintable.h");
+		outputFile << "FPL_float64 F[] = {";
+		for (i=0;i<184;i++){
 			outputFile <<  FLOAT64(tab1[i]) << "," << endl;
-			//FPL_addition_64(5uL,5uL);
 		}
-		outputFile <<  FLOAT64(tab1[191]) << "};";
+		outputFile <<  FLOAT64(tab1[184]) << "};";
 		outputFile.close();
 }
 
@@ -230,8 +230,9 @@ double elog(double x) { return std::log(x); }
 
 double sinPrinter(){
 
-	double x = 1000;
-	cout << "mineee "<< setprecision(40) << FPL_sin_64(x) << endl;
+	double x = 4;
+	FPL_float64 y = FLOAT64(x);
+	cout << "mineee "<< setprecision(40) << FPL_float64_to_double(FPL_sin_64(y)) << endl;
 	cout << "theirs " << setprecision(40)  << sin(x) << endl;
 }
 
@@ -256,11 +257,11 @@ int main()
     //logPrinter();
     //std::cout << "just checkin" << endl;
 	//fpl::test::function_test(FPL_logarithm_E_64, elog, 1000, uniform_random_double(10.0), hist);
-    //fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);
+    fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);
     //fpl::test::function_test(FPL_exponent_64, eexp, 1000, uniform_random_double(10.0), hist);
     //std::cout << "after test?" << endl;
-    //hist.print();
-    sinPrinter();
+    hist.print();
+    //sinPrinter();
     return 0;
 }
 

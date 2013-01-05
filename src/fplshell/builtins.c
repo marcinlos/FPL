@@ -28,6 +28,22 @@ static value_object hex(value_list* args)
     return make_null();
 }
 
+static value_object dec(value_list* args)
+{
+    if (value_list_length(args) != 1)
+    {
+        fprintf(stderr, "dec: Expected one argument\n");
+        return make_null();
+    }
+    value_object val = args->value;
+    insitu_cast_value(&val, VAL_FLOAT);
+    if (val.type == VAL_FLOAT)
+    {
+        printf("%lu\n", val.float_value);
+    }
+    return make_null();
+}
+
 static value_object poly_eval(value_list* args)
 {
     int length = value_list_length(args);
@@ -113,6 +129,7 @@ static value_object pow_wrapper(value_list* args)
 void register_builtins(void)
 {
     insert_symbol(make_function("hex", hex));
+    insert_symbol(make_function("dec", dec));
     insert_symbol(make_function("pow", pow_wrapper));
     insert_symbol(make_function("poly_eval", poly_eval));
 

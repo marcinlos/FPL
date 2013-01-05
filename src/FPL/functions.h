@@ -13,8 +13,10 @@ extern "C" {
  */
 ///{
 
-#define LOGN2       4604418534313441775
-#define SQRT2       4609047870845172685
+#define LOGN2       0x3fe62e42fefa39ef
+#define SQRT2       0x3ff6a09e667f3bcd
+#define PI          0x400921fb54442d18
+
 
 ///}
 
@@ -30,8 +32,8 @@ FPL_float64 FPL_poly_eval_64(FPL_float64 x, const FPL_float64* coeffs, int N);
 FPL_float64 FPL_exponent_64(FPL_float64 x);
 FPL_float64 FPL_logarithm_64(FPL_float64 a, FPL_float64 b);
 FPL_float64 FPL_logarithm_E_64(FPL_float64 a);
-double FPL_sin_64(double a);
-double FPL_cos_64 (double a);
+FPL_float64 FPL_sin_64(FPL_float64 a);
+FPL_float64 FPL_cos_64 (FPL_float64 a);
 
 
 FPL_float64 FPL_sqrt_64(FPL_float64 x);

@@ -25,6 +25,10 @@ extern "C" {
 
 #define ROUND(x) (FPL_round((x)))
 
+#define NEG(x) (FPL_negate_64((x)))
+
+#define ABS(x) (FPL_abs_64((x)))
+
 #ifdef __cplusplus
 }
 #endif

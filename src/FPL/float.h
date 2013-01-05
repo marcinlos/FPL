@@ -337,6 +337,9 @@ FPL_float64 FPL_copy_sign_64(FPL_float64 x, FPL_float64 y);
 ///@}
 
 
+int FPL_compare(FPL_float64 x, FPL_float64 y);
+
+
 #ifdef __cplusplus
 }
 #endif

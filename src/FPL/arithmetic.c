@@ -7,6 +7,21 @@ struct uint128
     uint32_t b[4];
 };
 
+
+// TODO: Zrob to dobrze jelopie
+
+int FPL_compare(FPL_float64 x, FPL_float64 y)
+{
+	FPL_float64 res = FPL_subtraction_64(x, y);
+	if (res == 0) return 0;
+	else return 1 - 2*(res & FPL_SIGN_MASK_64 != 0);
+
+}
+
+
+
+
+
 #define INCREMENT_FLOAT(up) do {                                            \
         if ((up).m == FPL_MAX_MANTISSA_64)                                  \
         {                                                                   \
