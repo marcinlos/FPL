@@ -33,6 +33,10 @@ FPL_float64 FPL_exponent_64(FPL_float64 x);
 double FPL_logarithm_64(double a, double b);
 double logarithm(double a);
 
+double FPL_sin_64 (double x);
+
+
+FPL_float64 FPL_arctan_64(FPL_float64 x);
 
 FPL_float64 FPL_sqrt_64(FPL_float64 x);
 

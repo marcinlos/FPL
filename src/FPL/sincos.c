@@ -25,7 +25,7 @@ double poly8(double x){ //for cos
 
 }
 double normalize(double x){ //TODO
-	return 0.7;
+	return 0.4;
 }
 
 double FPL_sin_64 (double x){
@@ -39,6 +39,9 @@ double FPL_sin_64 (double x){
 	int i = round(256.0*y); //w zakresie od 16 do 201 ponoć
 	double z = y-i/256.0; //|z|<1/512
 	i = i-16; // tab[0] zwraca wartości dla i=16
+	printf("%d\n", i);
+	printf("%f, %f\n", F[i], G[i]);
+
 	return (F[i]*poly8(z)+G[i]*poly9(z)); //poly powinny być niższe, ale po ch...
 	//kolejność może mieć znaczenie, jest rozpisane śmieszniej gdyby było trzeba
 	//oby nie

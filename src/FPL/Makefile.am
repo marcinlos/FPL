@@ -15,6 +15,8 @@ libfpl_la_SOURCES =         \
 	sqrt.c					\
 	poly_eval.c				\
 	io.c					\
+	sincos.c				\
+	atan.c					\
     utils.c
 
 

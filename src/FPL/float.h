@@ -336,6 +336,22 @@ FPL_float64 FPL_copy_sign_64(FPL_float64 x, FPL_float64 y);
 
 ///@}
 
+/**
+ * @name Comparisons
+ */
+
+bool FPL_eq_64(FPL_float64 x, FPL_float64 y);
+
+int FPL_compare_64(FPL_float64 x, FPL_float64 y);
+
+bool FPL_lt_64(FPL_float64 x, FPL_float64 y);
+
+bool FPL_lte_64(FPL_float64 x, FPL_float64 y);
+
+bool FPL_gt_64(FPL_float64 x, FPL_float64 y);
+
+bool FPL_gte_64(FPL_float64 x, FPL_float64 y);
+
 
 #ifdef __cplusplus
 }

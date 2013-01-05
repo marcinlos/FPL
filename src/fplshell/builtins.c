@@ -12,6 +12,18 @@
 #include <stdlib.h>
 
 
+static value_object dbg_print_hashtable_wrapper(value_list* args)
+{
+    if (value_list_length(args) > 0)
+    {
+        fprintf(stderr, "dbg_print_hashtable: Expected no arguments\n");
+        return make_null();
+    }
+    dbg_print_hashtable();
+    return make_null();
+}
+
+
 static value_object hex(value_list* args)
 {
     if (value_list_length(args) != 1)
@@ -68,7 +80,8 @@ static value_object poly_eval(value_list* args)
 
 
 FPL_FUNCTION_WRAPPER(FPL_exponent_64, fpl_exp)
-FPL_FUNCTION_WRAPPER(FPL_sqrt_64, fpl_sqrt);
+FPL_FUNCTION_WRAPPER(FPL_sqrt_64, fpl_sqrt)
+FPL_FUNCTION_WRAPPER(FPL_arctan_64, fpl_atan)
 
 // Wrappers for one-argument functions from math.h
 
@@ -91,6 +104,7 @@ FUNCTION_WRAPPER(sin)
 FUNCTION_WRAPPER(cos)
 FUNCTION_WRAPPER(tan)
 FUNCTION_WRAPPER(sqrt)
+FUNCTION_WRAPPER(atan)
 
 #undef FUNCTION_WRAPPER
 
@@ -114,6 +128,8 @@ void register_builtins(void)
     insert_symbol(make_function("hex", hex));
     insert_symbol(make_function("pow", pow_wrapper));
     insert_symbol(make_function("poly_eval", poly_eval));
+    insert_symbol(make_function("dbg_print_hashtable",
+            dbg_print_hashtable_wrapper));
 
 #define REG(name) insert_symbol(make_function(#name, name##_wrapper))
 
@@ -123,9 +139,11 @@ void register_builtins(void)
     REG(cos);
     REG(tan);
     REG(sqrt);
+    REG(atan);
 
     REG(fpl_exp);
     REG(fpl_sqrt);
+    REG(fpl_atan);
 
 #undef REG
 }

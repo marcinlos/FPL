@@ -10,6 +10,8 @@
 #include <cmath>
 #include <iomanip>
 
+extern "C" { double FPL_sin_64 (double x); }
+
 using namespace std;
 using namespace fpl::gen;
 
@@ -199,8 +201,16 @@ void logPrinter(){
 
 double eexp(double x) { return std::exp(x); }
 
+void sinPrinter()
+{
+    double x = .4;
+    double y = std::sin(x);
+    double res = FPL_sin_64(x);
+}
+
 int main()
 {
+    /*
     //test_round();
     //exprPrinter();
     std::cout << "Multiplication";
@@ -218,6 +228,9 @@ int main()
     fpl::test::function_test(FPL_exponent_64, eexp, 1000,
             uniform_random_double(10.0), hist);
     hist.print();
+    */
+    sinPrinter()
+            ;
     return 0;
 }
 

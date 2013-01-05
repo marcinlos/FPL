@@ -43,5 +43,6 @@ symbol_def* remove_symbol(const char* name);
 
 void register_builtins(void);
 
+void dbg_print_hashtable(void);
 
 #endif // SYMBOLS_H
