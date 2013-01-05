@@ -208,29 +208,34 @@ void sinPrinter()
     double res = FPL_sin_64(x);
 }
 
-int main()
+void test_arithmetic()
 {
-    /*
-    //test_round();
-    //exprPrinter();
     std::cout << "Multiplication";
     test<mul>();
     std::cout << "Addition";
     test<add>();
     std::cout << "Division";
     test<division>();
+}
+
+int main()
+{
+    fpl::test::histogram_collector hist;
+
+    //test_round();
+    //exprPrinter();
+
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
 	//randomlogPrinter();
-    fpl::test::histogram_collector hist;
-    fpl::test::function_test(FPL_exponent_64, eexp, 1000,
+
+    double (*atan_p)(double) = std::atan;
+
+    fpl::test::function_test(FPL_arctan_64, atan_p, 100000,
             uniform_random_double(10.0), hist);
     hist.print();
-    */
-    sinPrinter()
-            ;
     return 0;
 }
 

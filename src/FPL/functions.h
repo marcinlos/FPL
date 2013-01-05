@@ -16,6 +16,10 @@ extern "C" {
 #define LOGN2       0x3fe62e42fefa39ef
 #define SQRT2       0x3ff6a09e667f3bcd
 
+#define PI          0x400921fb54442d18
+#define PI_2        0x3ff921fb54442d18
+
+#define ONE         0x3ff0000000000000
 #define HALF        0x3fe0000000000000
 
 ///}

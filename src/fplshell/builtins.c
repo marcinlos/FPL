@@ -65,6 +65,24 @@ static value_object poly_eval(value_list* args)
     return make_float(result);
 }
 
+
+static value_object compare_wrapper(value_list* args)
+{
+    int length = value_list_length(args);
+    if (length != 2)
+    {
+        fprintf(stderr, "compare: expected exactly 2 arguments\n");
+        return make_null();
+    }
+    value_object left = get_nth_value(args, 0);
+    value_object right = get_nth_value(args, 1);
+    insitu_cast_value(&left, VAL_FLOAT);
+    insitu_cast_value(&right, VAL_FLOAT);
+    int result = FPL_compare_64(left.float_value, right.float_value);
+    return make_int(result);
+}
+
+
 #define FPL_FUNCTION_WRAPPER(function, name)                            \
     static value_object name##_wrapper(value_list* args)                \
     {                                                                   \
@@ -125,11 +143,15 @@ static value_object pow_wrapper(value_list* args)
 
 void register_builtins(void)
 {
-    insert_symbol(make_function("hex", hex));
-    insert_symbol(make_function("pow", pow_wrapper));
-    insert_symbol(make_function("poly_eval", poly_eval));
-    insert_symbol(make_function("dbg_print_hashtable",
-            dbg_print_hashtable_wrapper));
+#define PUT(name, fun) insert_symbol(make_function(name, fun))
+
+    PUT("hex", hex);
+    PUT("pow", pow_wrapper);
+    PUT("poly_eval", poly_eval);
+    PUT("compare", compare_wrapper);
+    PUT("dbg_print_hashtable", dbg_print_hashtable_wrapper);
+
+#undef PUT
 
 #define REG(name) insert_symbol(make_function(#name, name##_wrapper))
 

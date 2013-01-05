@@ -8,17 +8,17 @@
 class TestArithmetic64 : public CxxTest::TestSuite
 {
 private:
-    static const double EPS = 1e-300;
+    static const double EPS = 1e-20;
     
     void additionTest(double xv, double yv)
     {
         FPL_float64 x = FPL_double_to_float64(xv);
         FPL_float64 y = FPL_double_to_float64(yv);
         FPL_float64 res = FPL_addition_64(x, y);
-        TS_ASSERT_DELTA(FPL_float64_to_double(res), xv + yv, EPS);
-        
-        //printf("\nx: %#018lx\ny: %#018lx\n", x, y);
-        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);
+        FPL_float64 actual = FPL_double_to_float64(xv + yv);
+        FPL_float64 diff = res ^ actual;
+        TS_ASSERT_LESS_THAN_EQUALS(diff, 2);
+        //TS_ASSERT_DELTA(FPL_float64_to_double(res), xv + yv, EPS);
     }
     
     void multiplicationTest(double xv, double yv)
@@ -26,7 +26,12 @@ private:
         FPL_float64 x = FPL_double_to_float64(xv);
         FPL_float64 y = FPL_double_to_float64(yv);
         FPL_float64 res = FPL_multiplication_64(x, y);
-        TS_ASSERT_DELTA(FPL_float64_to_double(res), xv * yv, EPS);
+
+        FPL_float64 actual = FPL_double_to_float64(xv * yv);
+        FPL_float64 diff = res ^ actual;
+        TS_ASSERT_LESS_THAN_EQUALS(diff, 2);
+
+        //TS_ASSERT_DELTA(FPL_float64_to_double(res), xv * yv, EPS);
     }
 public:
     void testMultiplication_5_x_3_Returns15() 
@@ -56,16 +61,12 @@ public:
 
         FPL_float64 a = FPL_double_to_float64(x);
         FPL_float64 res = FPL_multiplication_64(a, a);
-        //TS_ASSERT_DELTA(FPL_float64_to_double(res), a * a, EPS);
-        printf("sqrt: \nexpected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(x * x), res);
     }
     
     void testMultiplication_Underflow()
     {
         double val = 1.5e-157;
         multiplicationTest(val, val);
-        
-        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(val * val), res);
     }
     
 
@@ -83,11 +84,6 @@ public:
         FPL_float64 x = FPL_double_to_float64(a);
         FPL_float64 y = FPL_double_to_float64(b);
         FPL_float64 res = FPL_multiplication_64(x, y);
-        
-        
-        //printf("\nx: %#018lx\ny: %#018lx\n", x, y);
-                
-        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(a * b), res);
     }
     
     void testAddition_1_9_plus_2_7_ReturnsGoodValue()
@@ -121,8 +117,7 @@ public:
         FPL_float64 x = FPL_double_to_float64(a);
         FPL_float64 y = FPL_double_to_float64(b);
         FPL_float64 res = FPL_division_64(x, y);
-        printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(a / b), res);
-        //TS_ASSERT_DELTA(FPL_float64_to_double(res), a / b, EPS); 
+        TS_ASSERT_DELTA(FPL_float64_to_double(res), a / b, EPS);
     }
     
     void testDivision_Subnormal_Subnormal_ReturnsGoodValue()
@@ -131,10 +126,7 @@ public:
         FPL_float64 y = 0x0000000000010000uL;
         double a = FPL_float64_to_double(x), b = FPL_float64_to_double(y);
         FPL_float64 res = FPL_division_64(x, y);
-        //printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(a / b), res);
         TS_ASSERT_DELTA(FPL_float64_to_double(res), a / b, EPS);
-        /*printf("\nx: %#018lx\ny: %#018lx\n", x, y);
-        printf("expected: %#018lx\nhave:     %#018lx\n", FPL_double_to_float64(xv + yv), res);*/
     }
 };
 
