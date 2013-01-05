@@ -38,7 +38,15 @@ int64_t FPL_round(FPL_float64 x)
 
 FPL_float64 FPL_to_float64(int x)
 {
-    // TODO: Implement
-    return FPL_double_to_float64((double) x);
-    return FPL_POSITIVE_NAN_64;
+    FPL_unpacked64 u = {x < 0, 0, 0};
+    u.m = abs(x);
+    int k = FPL_highest_nonzero_bit(u.m);
+    if (k > -1)
+    {
+        u.e = k;
+        u.m <<= FPL_MANTISSA_SIZE_64 - k;
+    }
+    else
+        u.e = FPL_ZERO_EXP_64;
+    return FPL_PACK_64(u);
 }
