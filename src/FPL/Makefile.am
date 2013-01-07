@@ -8,6 +8,7 @@ libfpl_la_SOURCES =         \
     ieee_conversions.c      \
     sign_operations.c       \
     arithmetic.c            \
+    compare.c				\
     interoperability.c		\
     conversions.c			\
 	exponent.c              \
@@ -16,6 +17,8 @@ libfpl_la_SOURCES =         \
 	sqrt.c					\
 	poly_eval.c				\
 	io.c					\
+	sincos.c				\
+	atan.c					\
     utils.c
 
 

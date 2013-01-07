@@ -29,9 +29,13 @@ extern "C" {
 
 #define ABS(x) (FPL_abs_64((x)))
 
+#define LT(x, y)    (FPL_lt_64((x), (y)))
+#define LTE(x, y)   (FPL_lte_64((x), (y)))
+#define GT(x, y)    (FPL_gt_64((x), (y)))
+#define GTE(x, y)   (FPL_gte_64((x), (y)))
+
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif // FPL_MACROS_H

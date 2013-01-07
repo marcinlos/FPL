@@ -1,7 +1,6 @@
 #include "config.h"
 #include <FPL/float.h>
 #include <FPL/interoperability.h>
-#include <FPL/functions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -116,6 +115,7 @@ FPL_float64 true_sin(FPL_float64 y){ //oblicza dla znormalizowanego y
 	//kolejność może mieć znaczenie, jest rozpisane śmieszniej gdyby było trzeba
 	//oby nie
 	//sin(Xi)*cos(z)+cos(Xi)*sin(z)
+
 }
 FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
 	//printf("\ntrue_cos= %e\n", FPL_float64_to_double(y));

@@ -18,9 +18,9 @@ test_LDADD = ../FPL/libfpl.la
 test_SOURCES = ${test_sources}
 
 ${test_cpps}: %.cpp: %.test
-	@CXXTESTGEN@ ${TESTGEN_FLAGS} -o $@ $^ ${CXX_TYPE}
+	cxxtestgen ${TESTGEN_FLAGS} -o $@ $^ ${CXX_TYPE}
 	
 runner.cpp: ${test_cpps}
-	@CXXTESTGEN@ ${ROOT_FLAGS} -o $@ ${CXX_TYPE}
+	cxxtestgen ${ROOT_FLAGS} -o $@ ${CXX_TYPE}
 
     

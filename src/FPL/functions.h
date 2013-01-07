@@ -15,8 +15,12 @@ extern "C" {
 
 #define LOGN2       0x3fe62e42fefa39ef
 #define SQRT2       0x3ff6a09e667f3bcd
-#define PI          0x400921fb54442d18
 
+#define PI          0x400921fb54442d18
+#define PI_2        0x3ff921fb54442d18
+
+#define ONE         0x3ff0000000000000
+#define HALF        0x3fe0000000000000
 
 ///}
 
@@ -35,6 +39,9 @@ FPL_float64 FPL_logarithm_E_64(FPL_float64 a);
 FPL_float64 FPL_sin_64(FPL_float64 a);
 FPL_float64 FPL_cos_64 (FPL_float64 a);
 
+
+
+FPL_float64 FPL_arctan_64(FPL_float64 x);
 
 FPL_float64 FPL_sqrt_64(FPL_float64 x);
 

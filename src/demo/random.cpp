@@ -15,6 +15,11 @@
 using namespace std;
 using namespace fpl::gen;
 
+extern "C" { double FPL_sin_64 (double x); }
+
+using namespace std;
+using namespace fpl::gen;
+
 void table_gen(){
 	double x;
 		int i,j;
@@ -200,7 +205,7 @@ void randomlogPrinter(){
 	for(i=0;i<1000;i++){
 		double f = (double)rand() / RAND_MAX;
 		double x = 0.0001 + f * (10000 - 0.0001);
-		if(abs(FPL_logarithm_E_64(x)-log(x))>0.0000000000001){
+		if(abs(logarithm(x)-log(x))>0.0000000000001){
 			bad++;
 			table[j] = x;
 			j++;
@@ -236,32 +241,34 @@ double sinPrinter(){
 	cout << "theirs " << setprecision(40)  << sin(x) << endl;
 }
 
+void test_arithmetic()
+{
+    std::cout << "Multiplication";
+    test<mul>();
+    std::cout << "Addition";
+    test<add>();
+    std::cout << "Division";
+    test<division>();
+}
+
 int main()
 {
+    fpl::test::histogram_collector hist;
+
     //test_round();
     //exprPrinter();
-    //std::cout << "Multiplication";
-   // test<mul>();
-    //std::cout << "Addition";
-    //test<add>();
-    //std::cout << "Division";
-   // test<division>();
+
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
 	//randomlogPrinter();
-    //std::cout << "Exping" << endl;
-    fpl::test::histogram_collector hist;
-    //table_gen();
-    //logPrinter();
-    //std::cout << "just checkin" << endl;
-	//fpl::test::function_test(FPL_logarithm_E_64, elog, 1000, uniform_random_double(10.0), hist);
-    fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);
-    //fpl::test::function_test(FPL_exponent_64, eexp, 1000, uniform_random_double(10.0), hist);
-    //std::cout << "after test?" << endl;
+
+    double (*atan_p)(double) = std::atan;
+
+    fpl::test::function_test(FPL_arctan_64, atan_p, 100000,
+            uniform_random_double(10.0), hist);
     hist.print();
-    //sinPrinter();
     return 0;
 }
 

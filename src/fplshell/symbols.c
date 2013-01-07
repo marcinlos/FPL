@@ -89,6 +89,7 @@ static symbol_def* remove_from_chain(hash_chain** chain, const char* name)
             free_chain(head);
             return symbol;
         }
+        prev = head;
         head = head->next;
     }
     return NULL;
@@ -103,9 +104,9 @@ static unsigned int hash_function(const char* string)
     return hash;
 }
 
-static int chain_index(const char* string)
+static unsigned int chain_index(const char* string)
 {
-    int idx = hash_function(string);
+    unsigned int idx = hash_function(string);
     return idx % HASH_SIZE;
 }
 
@@ -165,7 +166,7 @@ symbol_def* find_symbol(const char* name)
 symbol_def* insert_symbol(symbol_def* symbol)
 {
     const char* name = symbol->name;
-    int i = chain_index(name);
+    unsigned int i = chain_index(name);
     symbol_def* prev = remove_from_chain(&hash_table[i], name);
     hash_table[i] = append_symbol(hash_table[i], symbol);
     return prev;
@@ -179,4 +180,25 @@ symbol_def* remove_symbol(const char* name)
     return prev;
 }
 
+
+void dbg_print_hashtable(void)
+{
+    int i;
+    for (i = 0; i < HASH_SIZE; ++ i)
+    {
+        printf("Bucket %d: ", i);
+        hash_chain* chain = hash_table[i];
+        while (chain != NULL)
+        {
+            if (chain->symbol)
+            {
+                printf("%s -> ", chain->symbol->name);
+                chain = chain->next;
+            }
+            else
+                break;
+        }
+        printf("null\n");
+    }
+}
 
