@@ -20,7 +20,7 @@ static FPL_float64 arct_aux(FPL_float64 x)
     else
     {
         int i = ROUND(MUL(x, _256));
-        x = SUB(x, MUL(_1_256, FLOAT(i)));
+        x = SUB(x, MUL(_1_256, FLOAT64(i)));
         int N = sizeof(MAIN[i - 16]) / sizeof(FPL_float64);
         return FPL_poly_eval_64(x, MAIN[i - 16], N);
     }

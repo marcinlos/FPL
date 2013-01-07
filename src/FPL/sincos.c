@@ -1,6 +1,7 @@
 #include "config.h"
 #include <FPL/float.h>
 #include <FPL/interoperability.h>
+#include <FPL/functions.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

@@ -15,8 +15,6 @@
 using namespace std;
 using namespace fpl::gen;
 
-extern "C" { double FPL_sin_64 (double x); }
-
 using namespace std;
 using namespace fpl::gen;
 
@@ -205,7 +203,7 @@ void randomlogPrinter(){
 	for(i=0;i<1000;i++){
 		double f = (double)rand() / RAND_MAX;
 		double x = 0.0001 + f * (10000 - 0.0001);
-		if(abs(logarithm(x)-log(x))>0.0000000000001){
+		if(abs(FPL_logarithm_E_64(x)-log(x))>0.0000000000001){
 			bad++;
 			table[j] = x;
 			j++;
