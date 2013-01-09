@@ -34,10 +34,15 @@ FPL_float64 FPL_poly_eval_64(FPL_float64 x, const FPL_float64* coeffs, int N);
 
 
 FPL_float64 FPL_exponent_64(FPL_float64 x);
+
 FPL_float64 FPL_logarithm_64(FPL_float64 a, FPL_float64 b);
 FPL_float64 FPL_logarithm_E_64(FPL_float64 a);
+
 FPL_float64 FPL_sin_64(FPL_float64 a);
 FPL_float64 FPL_cos_64 (FPL_float64 a);
+
+double FPL_tan_64(double x);
+double FPL_cotan_64(double x);
 
 
 

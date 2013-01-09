@@ -323,7 +323,7 @@ FPL_float64 FPL_subtraction_64(FPL_float64 x, FPL_float64 y)
         res = sub_same_sign(&ux, &uy);
     else
     {
-        ux.s = 1 - ux.s;
+    	uy.s = 1 - uy.s;
         res = add_same_sign(&ux, &uy);
     }
     return res;

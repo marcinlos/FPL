@@ -18,6 +18,7 @@ libfpl_la_SOURCES =         \
 	poly_eval.c				\
 	io.c					\
 	atan.c					\
+	tancotan.c              \
     utils.c
 
 

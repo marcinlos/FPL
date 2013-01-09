@@ -99,10 +99,8 @@ FPL_float64 true_sin(FPL_float64 y){ //oblicza dla znormalizowanego y
 		return poly9(y); //w zasadzie poly9(u), ale co to u
 	}
 	long int i = ROUND(MUL(0x4070000000000000,y)); //w zakresie od 16 do 201 ponoć, round(256*y)
-	if (i > 201 || i<16){
-		printf("\nindexOutOfBoundsExcetion y= %e, i= %ld\n",FPL_float64_to_double(y),i);
-		exit(-1);
-	}
+	if (i > 200) i = 200;
+	else if (i < 16) i = 16;
 
 	FPL_float64 z = SUB(y,DIV(FLOAT64(i),0x4070000000000000)); //z = y-i/256.0; //|z|<1/512
 	//printf("\nz= %e\n", FPL_float64_to_double(z));
@@ -120,24 +118,25 @@ FPL_float64 true_sin(FPL_float64 y){ //oblicza dla znormalizowanego y
 
 }
 FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
-	printf("\ntrue_cos= %e\n", FPL_float64_to_double(y));
+	//printf("\ntrue_cos= %e\n", FPL_float64_to_double(y));
 	if(y < 0x3fbf800000000000){ //y < 31.5 / 256
 		return poly8(y);
 	}
 	long int i = ROUND(MUL(0x4070000000000000,y)); //w zakresie od 16 do 201 ponoć
-	if (i > 201 || i<16){
-			printf("\nindexOutOfBoundsExcetion y= %e, i= %ld\n",FPL_float64_to_double(y),i);
-			exit(-1);
-		}
+	if (i > 200) i = 200;
+	else if (i < 16) i = 16;
 	FPL_float64 z = SUB(y,DIV(FLOAT64(i),0x4070000000000000)); //|z|<1/512
-	printf("\nz= %e\n", FPL_float64_to_double(z));
+	//printf("\nz= %e\n", FPL_float64_to_double(z));
 	i = i-16; // tab[0] zwraca wartości dla i=16
 	FPL_float64 first = MUL(G[i],poly8(z));
 	FPL_float64 second = MUL(F[i],poly9(z));
-	FPL_float64 wynik = FPL_subtraction_64(first,second);
-	printf("\nfirst part= %e\n", FPL_float64_to_double(first));
-	printf("\nsecond part= %e\n", FPL_float64_to_double(second));\
-	printf("\nwynik= %e\n", FPL_float64_to_double(wynik));
+	FPL_float64 wynik = SUB(first,second);
+	//printf("\ni= %ld\n", i);
+	//printf("\nF= %e\n", FPL_float64_to_double(F[i]));
+	//printf("\nG= %e\n", FPL_float64_to_double(G[i]));
+	//printf("\nfirst part= %e\n", FPL_float64_to_double(first));
+	//printf("\nsecond part= %e\n", FPL_float64_to_double(second));\
+	//printf("\nwynik= %e\n", FPL_float64_to_double(wynik));
 	return wynik; //G[i]*poly8(z) - F[i]*poly9(z);
 
 	//cos(Xi)*cos(z)-sin(Xi)*sin(z)
@@ -151,9 +150,9 @@ FPL_float64 FPL_sin_64 (FPL_float64 x){
 	if (FPL_is_sign_minus_64(n.x)){
 			switch (n.k%4){
 			case 0: return NEG(true_sin(NEG(n.x)));
-			case 1: printf("\ndupa\n");return true_cos(ABS(n.x)); //adjusted
+			case 1: return true_cos(ABS(n.x)); //adjusted
 			case 2: return true_sin(NEG(n.x));
-			case 3: return true_cos(ABS(n.x));
+			case 3: return NEG(true_cos(ABS(n.x)));
 			}
 		}
 	switch (n.k%4){
@@ -171,13 +170,14 @@ FPL_float64 FPL_cos_64 (FPL_float64 x){
 	if (FPL_is_sign_minus_64(x)){
 				return FPL_cos_64(NEG(x));
 			}
-	reducted n = normalize(n.x);
+	reducted n = normalize(x);
+
 	if (FPL_is_sign_minus_64(n.x)){
 			switch (n.k%4){
 				case 0: return true_cos(ABS(n.x));
-				case 1: return (true_sin(NEG(n.x)));
+				case 1: return true_sin(NEG(n.x));
 				case 2: return NEG(true_cos(ABS(n.x)));
-				case 3: return NEG(true_sin(NEG(x)));
+				case 3: return NEG(true_sin(NEG(n.x)));
 			}
 				}
 	switch (n.k%4){

@@ -28,16 +28,16 @@ void table_gen(){
 			j++;
 		}
 		for(i=0;i<185;i++){
-			tab1[i] = sin(tab1[i]);
+			tab1[i] = 1.0/tan(tab1[i]);
 		}
 
 		ofstream outputFile;
-		outputFile.open("sintable.h");
-		outputFile << "FPL_float64 F[] = {";
+		outputFile.open("cotantable.h");
+		outputFile << "static FPL_float64 G[] = {";
 		for (i=0;i<184;i++){
-			outputFile <<  FLOAT64(tab1[i]) << "," << endl;
+			outputFile << setprecision(40) << tab1[i] << "," << endl;
 		}
-		outputFile <<  FLOAT64(tab1[184]) << "};";
+		outputFile << setprecision(40) <<  tab1[184] << "};";
 		outputFile.close();
 }
 
@@ -229,17 +229,23 @@ void logPrinter(){
 
 double eexp(double x) { return std::exp(x); }
 double esin(double x) { return std::sin(x); }
+double ecos(double x) { return std::cos(x); }
 double elog(double x) { return std::log(x); }
 
 double sinPrinter(){
 
-	double x = 7.2253; //7.2253, 7.17732 //6.766616e-01, 6.286816e-01 //-2.246160e-04 8.803840e-04
+	double x = 3.47296; //7.2253, 7.17732 //6.766616e-01, 6.286816e-01 //-2.246160e-04 8.803840e-04
 
 	FPL_float64 y = FLOAT64(x);
-	cout << "mineee "<< setprecision(40) << FPL_float64_to_double(FPL_sin_64(y)) << endl;
-	cout << "theirs " << setprecision(40)  << sin(x) << endl;
+	cout << "mineee "<< setprecision(40) << FPL_float64_to_double(FPL_cos_64(y)) << endl;
+	cout << "theirs " << setprecision(40)  << cos(x) << endl;
 }
 
+double tanPrinter(){
+	double x = 29;
+	cout << "mineee "<< setprecision(40) << FPL_cotan_64(x) << endl;
+	cout << "theirs " << setprecision(40)  << 1.0/tan(x) << endl;
+}
 void test_arithmetic()
 {
     std::cout << "Multiplication";
@@ -257,18 +263,18 @@ int main()
 
     //test_round();
     //exprPrinter();
-
+    //table_gen();
     //logPrinter();
     //compare_exp();
     //test_truncation();
     //test<mul>();
 	//randomlogPrinter();
-    sinPrinter();
-
+    //sinPrinter();
+    tanPrinter();
     //test_arithmetic();
     //double (*atan_p)(double) = std::atan;
 
-    //fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);
+    //fpl::test::function_test(FPL_cos_64, ecos, 1000, uniform_random_double(10.0), hist);
     //hist.print();
     return 0;
 }

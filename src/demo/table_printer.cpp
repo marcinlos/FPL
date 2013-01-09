@@ -18,19 +18,19 @@ int main(){
 	double tab1[185];
 	int j=0;
 	for(i=16;i<201;i++){
-		tab1[j] = 0.75+i/256.0+1/512.0;
+		tab1[j] = i/256.0;
 		j++;
 	}
-	for(i=0;i<192;i++){
-		tab1[i] = cos(tab1[i]);
+	for(i=0;i<185;i++){
+		tab1[i] = tan(tab1[i]);
 	}
 
 	ofstream outputFile;
-	outputFile.open("sintable.h");
-	outputFile << "FPL_float64 F[] = {";
+	outputFile.open("tantable.h");
+	outputFile << "static FPL_float64 F[] = {";
 	for (i=0;i<184;i++){
-		outputFile <<  FLOAT64(tab1[i]) << "," << endl;
+		outputFile <<  tab1[i] << "," << endl;
 	}
-//	outputFile <<  FLOAT64(tab1[184]) << "};";
+	outputFile << tab1[184] << "};";
 	outputFile.close();
 }
