@@ -233,7 +233,7 @@ double elog(double x) { return std::log(x); }
 
 double sinPrinter(){
 
-	double x = 7.17732; //7.2253, 7.17732 //6.766616e-01, 6.286816e-01 //-2.246160e-04
+	double x = 7.2253; //7.2253, 7.17732 //6.766616e-01, 6.286816e-01 //-2.246160e-04 8.803840e-04
 
 	FPL_float64 y = FLOAT64(x);
 	cout << "mineee "<< setprecision(40) << FPL_float64_to_double(FPL_sin_64(y)) << endl;
@@ -248,6 +248,7 @@ void test_arithmetic()
     test<add>();
     std::cout << "Division";
     test<division>();
+    std::cout << "Division";
 }
 
 int main()
@@ -264,6 +265,7 @@ int main()
 	//randomlogPrinter();
     sinPrinter();
 
+    //test_arithmetic();
     //double (*atan_p)(double) = std::atan;
 
     //fpl::test::function_test(FPL_sin_64, esin, 1000, uniform_random_double(10.0), hist);

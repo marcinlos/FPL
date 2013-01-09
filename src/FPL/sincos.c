@@ -132,7 +132,14 @@ FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
 	FPL_float64 z = SUB(y,DIV(FLOAT64(i),0x4070000000000000)); //|z|<1/512
 	printf("\nz= %e\n", FPL_float64_to_double(z));
 	i = i-16; // tab[0] zwraca wartości dla i=16
-	return SUB(MUL(G[i],poly8(z)),MUL(F[i],poly9(z))); //G[i]*poly8(z) - F[i]*poly9(z);
+	FPL_float64 first = MUL(G[i],poly8(z));
+	FPL_float64 second = MUL(F[i],poly9(z));
+	FPL_float64 wynik = FPL_subtraction_64(first,second);
+	printf("\nfirst part= %e\n", FPL_float64_to_double(first));
+	printf("\nsecond part= %e\n", FPL_float64_to_double(second));\
+	printf("\nwynik= %e\n", FPL_float64_to_double(wynik));
+	return wynik; //G[i]*poly8(z) - F[i]*poly9(z);
+
 	//cos(Xi)*cos(z)-sin(Xi)*sin(z)
 }
 
