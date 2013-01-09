@@ -74,9 +74,9 @@ reducted normalize(FPL_float64 x){ //TODO
 		return n;
 	}
 	long int k = ROUND(MUL(x,DIV(FLOAT64(2),PI)));
-	//printf("norm k = %ld",k);
+	//printf("\nnorm k = %ld\n",k);
 	x = SUB(x,MUL(FLOAT64(k),DIV(PI,FLOAT64(2))));
-	//printf("norm x = %e",FPL_float64_to_double(x));
+	//printf("\nnorm x = %e\n",FPL_float64_to_double(x));
 	reducted n;
 	n.k = k;
 	n.x = x;
@@ -94,6 +94,7 @@ reducted normalize(FPL_float64 x){ //TODO
 
 FPL_float64 true_sin(FPL_float64 y){ //oblicza dla znormalizowanego y
 	//printf("\ntrue_sin= %e\n", FPL_float64_to_double(y));
+	//printf("\ny = %e\n", FPL_float64_to_double(y));
 	if (y < 0x3fc4c00000000000){ //hax, y < 41.5/256
 		return poly9(y); //w zasadzie poly9(u), ale co to u
 	}
@@ -119,7 +120,7 @@ FPL_float64 true_sin(FPL_float64 y){ //oblicza dla znormalizowanego y
 
 }
 FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
-	//printf("\ntrue_cos= %e\n", FPL_float64_to_double(y));
+	printf("\ntrue_cos= %e\n", FPL_float64_to_double(y));
 	if(y < 0x3fbf800000000000){ //y < 31.5 / 256
 		return poly8(y);
 	}
@@ -129,7 +130,7 @@ FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
 			exit(-1);
 		}
 	FPL_float64 z = SUB(y,DIV(FLOAT64(i),0x4070000000000000)); //|z|<1/512
-	//printf("\nz= %e\n", FPL_float64_to_double(z));
+	printf("\nz= %e\n", FPL_float64_to_double(z));
 	i = i-16; // tab[0] zwraca wartości dla i=16
 	return SUB(MUL(G[i],poly8(z)),MUL(F[i],poly9(z))); //G[i]*poly8(z) - F[i]*poly9(z);
 	//cos(Xi)*cos(z)-sin(Xi)*sin(z)
@@ -137,11 +138,16 @@ FPL_float64 true_cos (FPL_float64 y){ //liczy dla znormalizowanego y
 
 FPL_float64 FPL_sin_64 (FPL_float64 x){
 	if (FPL_is_sign_minus_64(x)){
-		return NEG(FPL_sin_64(NEG(x))); //mamy jakieś funkcje do tych odwróceń znaków chyba
+		return NEG(FPL_sin_64(NEG(x)));
 	}
 	reducted n = normalize(x);
 	if (FPL_is_sign_minus_64(n.x)){
-			return NEG(FPL_sin_64(NEG(n.x))); //mamy jakieś funkcje do tych odwróceń znaków chyba
+			switch (n.k%4){
+			case 0: return NEG(true_sin(NEG(n.x)));
+			case 1: printf("\ndupa\n");return true_cos(ABS(n.x)); //adjusted
+			case 2: return true_sin(NEG(n.x));
+			case 3: return true_cos(ABS(n.x));
+			}
 		}
 	switch (n.k%4){
 		case 0: return true_sin(n.x);
@@ -156,11 +162,16 @@ FPL_float64 FPL_sin_64 (FPL_float64 x){
 
 FPL_float64 FPL_cos_64 (FPL_float64 x){
 	if (FPL_is_sign_minus_64(x)){
-				return FPL_cos_64(NEG(x)); //mamy jakieś funkcje do tych odwróceń znaków chyba
+				return FPL_cos_64(NEG(x));
 			}
 	reducted n = normalize(n.x);
-	if (FPL_is_sign_minus_64(x)){
-					return FPL_cos_64(NEG(n.x)); //mamy jakieś funkcje do tych odwróceń znaków chyba
+	if (FPL_is_sign_minus_64(n.x)){
+			switch (n.k%4){
+				case 0: return true_cos(ABS(n.x));
+				case 1: return (true_sin(NEG(n.x)));
+				case 2: return NEG(true_cos(ABS(n.x)));
+				case 3: return NEG(true_sin(NEG(x)));
+			}
 				}
 	switch (n.k%4){
 			case 0: return true_cos(ABS(n.x));

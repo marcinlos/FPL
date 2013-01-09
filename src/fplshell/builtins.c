@@ -116,6 +116,7 @@ static value_object compare_wrapper(value_list* args)
 FPL_FUNCTION_WRAPPER(FPL_exponent_64, fpl_exp)
 FPL_FUNCTION_WRAPPER(FPL_sqrt_64, fpl_sqrt)
 FPL_FUNCTION_WRAPPER(FPL_logarithm_E_64, fpl_log)
+FPL_FUNCTION_WRAPPER(FPL_sin_64,fpl_sin)
 FPL_FUNCTION_WRAPPER(FPL_arctan_64, fpl_atan)
 // Wrappers for one-argument functions from math.h
 
@@ -183,6 +184,7 @@ void register_builtins(void)
     REG(fpl_exp);
     REG(fpl_sqrt);
 	REG(fpl_log);
+	REG(fpl_sin);
     REG(fpl_atan);
 
 #undef REG
