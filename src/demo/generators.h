@@ -32,15 +32,20 @@ struct bitwise_random_double
 
 struct uniform_random_double
 {
-    double max;
+    double max, min;
+
+    uniform_random_double(double min, double max)
+    : min(min), max(max)
+    { }
 
     uniform_random_double(double max)
-    : max(max)
+    : max(max), min(-max)
     { }
 
     double operator() () const
     {
-        return (rand() / double(RAND_MAX) - .5) * 2 * max;
+        double t = (rand() / double(RAND_MAX));
+        return t * min + (1.0 - t) * max;
     }
 };
 

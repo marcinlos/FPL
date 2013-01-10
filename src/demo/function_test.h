@@ -27,7 +27,7 @@ void function_test(const Approx& approx, const Target& target,
         double actual = target(x);
         double app = FPL_float64_to_double(approx(xf));
         double diff = std::fabs(actual - app);
-        if(diff > 0.1) { std::cout << "x = " << x << std::endl; }
+        //if(diff > 1) { std::cout << "x = " << x << std::endl; }
         collector(diff, app, actual);
     }
 };

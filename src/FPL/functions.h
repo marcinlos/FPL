@@ -41,8 +41,8 @@ FPL_float64 FPL_logarithm_E_64(FPL_float64 a);
 FPL_float64 FPL_sin_64(FPL_float64 a);
 FPL_float64 FPL_cos_64 (FPL_float64 a);
 
-double FPL_tan_64(double x);
-double FPL_cotan_64(double x);
+FPL_float64 FPL_tan_64(FPL_float64 x);
+FPL_float64 FPL_cotan_64(FPL_float64 x);
 
 
 
