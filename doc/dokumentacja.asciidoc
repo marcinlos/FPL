@@ -365,4 +365,22 @@ Spakuj i zwróć liczbę
 
 .Odejmowanie
 
+Odejmowanie liczb zmiennoprzecinkowych jest operacją przebiegającą bardzo analogicznie do 
+dodawania, z tą drobną różnicą, iż odejmujemy zawsze mniejszą mantysę od większej, zmieniając
+w razie potrzeby znak wyniku. Nie ma więc potrzeby powtarzać przeprowadzonej w poprzednim
+podpunkcie analizy i dyskusji.
+
+.Dzielenie
+
+Dzielenie swoją naturą przypomina mnożenie, z całą jego konceptualną prostotą. Dla +x = (-1)^s~x~^ * 2^e~x~^ * M~x~+, 
++y = (-1)^s~y~^ * 2^e~y~^ * M~y~+ mamy
+
++x / y = (-1)^s~x~+s~y~^ * 2^e~x~-e~y~^ * M~x~ / M~y~+
+
+Jedyną problematyczną kwestią jest wyliczenie ilorazu mantys. Są one 64-bitowe, jednakowoż nie satysfakcjonuje nas 
+zwykłe dzielenie całkowite. Implementacja tego fragmentu dzielenia pozostawia nieco do życzenia. Po pierwsze, zrealizowane
+jest przy pomocy
+prostego, powolnego algorytmu wyliczającego bit po bicie. 
+
+
 
