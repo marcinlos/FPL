@@ -105,7 +105,8 @@ użycia, i idącą za tym łatwość testowania.
 Algorytmy ewaluacji funkcji
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO
+
+Wszystkie zaimplementowane algorytmy funkcji opierają się na metodzie zastosowanej w pracy 'An Accurate Elementary Mathematical Library for the IEEE Floating Point Standard' będącej naszą wyrocznią pod tym względem. W poszukiwaniu takiego właśnie opisu natknęliśmy się na wiele innych prac, większość z nich mówiła jednak o optymalizacji poszczególnych metod wykorzystując możliwości platform docelowych (co nie szło by w parze z ideą ogólności), lub z wykorzystaniem trudnych w implementacji i nietrywialnych w idei przejść, które wykraczałyby poza skalę projektu.
 
 
 Implementacja
@@ -381,6 +382,142 @@ Jedyną problematyczną kwestią jest wyliczenie ilorazu mantys. Są one 64-bito
 zwykłe dzielenie całkowite. Implementacja tego fragmentu dzielenia pozostawia nieco do życzenia. Po pierwsze, zrealizowane
 jest przy pomocy
 prostego, powolnego algorytmu wyliczającego bit po bicie. 
+
+
+Implementacja algorytmów ewaluacji funkcji
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Exponent
+^^^^^^^^
+
+Funkcja 'FPL_exponent_64'
+
+Proces zaczynamy od stworzenia tablicy obliczonych wcześniej wartości exponenta dla 354 wartości w okolicach zera (równomiernie rozłożonych z krokiem 1/512). W oryginalnej pracy rozkład ten nie jest równomierny, wybrane liczby odbiegają od tych równomiernie rozłożonych wartości o pewien epsilon który pozwoli na uzyskanie odpowiedniej dokładności, nie znaleźliśmy jednak prostego sposobu wyznaczania go. Następnie, korzystając z własności funkcji, rozbijamy
+exp(x) = 2^x/log2^ = 2^n^ * exp(y)
+W obliczeniu exp(y) wykorzystujemy wartości wyliczone wcześniej z tabeli oraz przybliżenie w sensie minimaxu exponenta na niewielkim przedziale służące za correction term. Szczegóły w załączonej pracy.
+
+Poniżej przedstawiono wyniki działania funkcji z argumentami w przedziale (-20,20) z losową próbką 100000 punktów, porównywane z wynikami funkcji z biblioteki standardowej. Im wylosowany argument znajduje się dalej od 0 tym mniej miejsc znaczących będzie poprawne (ze względu na specyfikę funkcji wykładniczej szybko powiększającej drobne błędy), ogólnie jednak dokładność jest zadowalająca. Liczba z lewej strony to rząd wielkości w którym wyniki są dokładne, liczba z prawej to ilość argumentów dla których działanie funkcji wykazało taką dokładność.
+----
+dokładnie: 5588
+  -23: 2397
+  -22: 5369
+  -21: 6202
+  -20: 6376
+  -19: 7109
+  -18: 5717
+  -17: 6819
+  -16: 7444
+  -15: 5361
+  -14: 2448
+  -13: 3926
+  -12: 3661
+  -11: 7937
+  -10: 2297
+   -9: 4626
+   -8: 6178
+   -7: 5511
+   -6: 4433
+   -5: 601
+----
+
+
+Logarytm
+^^^^^^^^
+
+Udostępniamy dwie funkcje, 'FPL_logarithm_E_64' podającą wartość logarytmu z bazą e, oraz 'FPL_logarithm_64' przyjmującą jako argument również bazę, udostępnioną dla wygody użytkownika.
+
+Na początku stworzyliśmy 3 tabele zgodnie z instrukcjami - X zawierającą znalezione potrzebne nam wartości w okolicach zera (w naszym przypadku rozłożone równomiernie, bez uwzględnienia epsilona), F będącą dokładnym logarytmem wartości z X, oraz G zawierającą odwrotności F.
+Dalej wykorzystujemy własność ln(x) = ln(y) + n*ln(2), ln(y) zaś obliczamy z wykorzystaniem wartości z tabeli oraz wielomianu przybliżającego logarytm dla małych wartości. Szczegóły w załączonej pracy.
+
+Poniżej tabela z wynikami dla 100000 liczb wylosowanych z przedziału (0,100). Format jak dla Exponenta. W tym przypadku gwarantujemy dokładność do 14 miejsc znaczących.
+----
+dokładnie: 11091
+  -18: 11
+  -17: 68
+  -16: 429
+  -15: 88398
+  -14: 3
+----
+
+Sinus i Cosinus
+^^^^^^^^^^^^^^^
+
+Funkcje 'FPL_sin_64' oraz 'FPL_cos_64'
+
+Aby obliczyć dobrze funkcje trygonometryczne bardzo ważną częścią jest redukcja argumentu do przedziału na którym działa algorytm. Jest to jednak w większości przypadków trudne. Jak mówi praca, by tego dokonać potrzebowalibyśmy liczby PI zapisanej na 137 bitach. To jednak wymagałoby znaczącej ingerencji na niskim poziomie (w gruncie rzeczy napisania wszystkich podstawowych operacji by uwzględniały ten szczególny przypadek). Dlatego postanowiliśmy zignorować tą część i spróbować dokonać redukcji na zwykłych 64 bitach licząc, że wyniki okażą się zadowalające
+
+Tak jak w innych przypadkach przygotowujemy tabelki z wyliczonymi wartościami funkcji sin i cos dla odpowiednio dobranych wartości bliskich 0 (nie uwzględniamy korekcji przez epsilon).
+
+Po uzyskaniu pi w przedziale (-pi/4,pi/4), oraz wywołaniu odpowiedniej funkcji zgodnie z własnościami trygonometrycznymi przechodzimy do algorytmu właściwego. Dla odpowiednio małych x wynik jest przybliżony przez wielomian. W pozostałych przypadkach korzystamy z własności trygonometrycznych:
+sin(x) = sin(X~i~+z) = sin(X~i~)*cos(z)+cos(X~i~)*sin(z)
+cos(x) = cos(X~i~+z) = cos(X~i~)*cos(z)-sin(X~i~)*sin(z)
+Gdzie sin/cos(X~i~) to tabelaryczna wartość a sin(z) i cos(z) są przybliżone wielomianami. Szczegóły w załączonej pracy.
+
+Tabela dokładności dla liczb w zakresie (-50,50):
+----
+Sinus
+dokładnie: 4669
+  -19: 2
+  -18: 12
+  -17: 77
+  -16: 1205
+  -15: 50182
+  -14: 43853
+
+Cosinus
+dokładnie: 6260
+  -16: 1111
+  -15: 48115
+  -14: 44469
+  -13: 45
+----
+
+Tangens i Cotangens
+^^^^^^^^^^^^^^^^^^^
+
+Funkcje 'FPL_tan_64' oraz 'FPL_cotan_64'
+
+Pierwszym krokiem jest redukcja, ta sama co dla Sinusa/Cosinusa. Tworzymy też tabelki dokładnie wyliczonych wartości zgodnie z instrukcjami (tradycyjnie nie uwzględniając przesunięcia punktów o epsilon). Dla odpowiednio małych wartości x wynik przybliżamy wielomianem, w przeciwnym wypadku stosujemy własność trygonometryczną
+tan(x) = tan(X~i~+z) = (tan(X~i~)+tan(z))/(1-tan(X~i~)*tan(z))
+gdzie tan(X~i~) bierzemy z tabel, tan(z) zaś przybliżamy wielomianem. Szczegóły w załączonej pracy.
+
+Poniżej tabela dokładności dla liczb w zakresie (-50,50). Niedokładność dla niektórych liczb może być wyjaśniona zmierzaniem tangensa do nieskończoności w okolicach wielokrotności pi/2, w związku z czym wiele miejsc znaczących znajduje się przed przecinkiem. W ogólności wyniki są jednak akceptowalne i można się spodziewać, że błąd nie wystąpi wcześniej niż na 9 miejscu znaczącym.
+----
+Tangent
+-2147483648: 1314
+  -18: 13
+  -17: 65
+  -16: 490
+  -15: 24601
+  -14: 42179
+  -13: 21588
+  -12: 6583
+  -11: 2143
+  -10: 669
+   -9: 242
+   -8: 70
+   -7: 30
+   -6: 8
+   -5: 2
+   -4: 3
+
+Cotangent
+-2147483648: 1363
+  -17: 4
+  -16: 1347
+  -15: 17756
+  -14: 54153
+  -13: 18437
+  -12: 4730
+  -11: 1470
+  -10: 503
+   -9: 163
+   -8: 55
+   -7: 14
+   -6: 4
+   -5: 1
+----
+
 
 
 
