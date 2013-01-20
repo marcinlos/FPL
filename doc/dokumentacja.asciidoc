@@ -174,7 +174,7 @@ jego anatomii. Liczba taka składa się z 8 bajtów, podzielonych logicznie na 3
 
 W najprostszym przypadku bity te opisują liczbę daną poprzez 
 
-+x=(-1)^s^2^e-t~0~^*1.m+
++x=(-1)^s^2^e-e~0~^*1.m+
 
 Dokładna interpretacja wartości tych pól zależy w pewnej mierze od rodzaju liczby, z jaką mamy
 do czynienia, i opisana jest w kolejnych podpunktach.
@@ -401,4 +401,71 @@ TODO
 FPL Shell
 ~~~~~~~~~
 
-Moje TODO
+Cele
+^^^^
+
+Jednym z wyzwań już od początkowej fazy projektu było kontrolowanie poprawności implementacji. 
+Jakolwiek funkcjonalność już działająca była łatwa do zweryfikowania przy pomocy masowych testów
+na losowych wartościach (opisanych w dalszej części dokumentu), poszukiwanie błędów było nieco
+uciążliwe z uwagi na konieczność każdorazowego pisania kawałka kodu z odpowiednimi wartościami
+w celu obserwacji rezultatów. Z tego powodu pojawił się pomysł stworzenia miniaturowego interpretera,
+umożliwiającego ewaluację dowolnych wyrażeń arytmetycznych przy użyciu opracowywanej arytmetyki
+software'owej oraz osobno, przy użyciu sprzętowego zmiennego przecinka. Pozwalałoby to na szybkie
+i wygodne sprawdzanie zachowania funkcji z projektu dla konkretnych, wybranych wartości wejścia.
+Tak powstała wstępna koncepcja, uzupełniona następnie o wsparcie dla funkcji z wyższej warstwy,
+oraz funkcje pomocnicze (np. +hex+, wypisująca reprezentację binarną liczby).
+
+Architektura
+^^^^^^^^^^^^
+
+Interpreter FPL Shell to standardowy program typu REPL (**R**ead-**E**val-**P**rint **L**oop).
+Zbudowany jest w sposób typowy dla tego rodzaju aplikacji - wejście przetwarzane jest przy użyciu
+flexa/bisona, edycję linii komend realizuje biblioteka GNU Readline. AST jest przetwarzane przez
+interpreter bezpośrednio, bez translacji na żaden kod pośredni. Rozwiązanie takie podyktowane jest
+prostotą implementacji, przy jednoczesnym braku jakichkolwiek wymagań efektywnościowych.
+
+Opis języka
+^^^^^^^^^^^
+
+Literały
+++++++++
+FPL Shell operuje na literałach następujących typów:
+
+* *liczby całkowite* [+integer+], zapisywane jako zwyczajne liczby całkowite, np. +666+
+* *sprzętowy zmienny przecinek* [+native float+], zapisywane jako liczby rzeczywiste poprzedzone 
+znakiem dolara ($), np. +$23.422+
+* *software'owy zmienny przecinek*, zapisywane jako liczby rzeczywiste, np. +23.422+
+
+Liczby całkowite posiadają niejawne konwersje do obydwu formatów liczb zmiennoprzecinkowych
+gdy są użyte w wyrażeniach arytmetycznych je zawierających. W przypadku użycia w wywołaniach
+funkcji jest to zależne od implementacji konkretnych funkcji. Obecnie wszystkie konwertują
+argument na typ, na którym domyślnie operują.
+
+Zdania (statements)
++++++++++++++++++++
+
+Wspierane konstrukcje:
+
+* wyrażenia arytmetyczne, np. +23 * ($13.9 + (-7.))+
+* wywołania funkcji, np. +exp($1.23)+
+* przypisania, np. +a = 7.0+
+
+Funkcje wbudowane
+~~~~~~~~~~~~~~~~~
+* *hex(x)* - jako argument przyjmuje software'ową liczbę zmiennoprzecinkową, wypisuje jej
+reprezentację heksadecymalną 
+* *poly_eval(x, c~n~,...,c~0~)* - pobiera software'owe liczby zmiennoprzecinkowe jako argumenty,
+oblicza +p(x) = c~n~x^n^ `+` ... `+` c~0~+
+* *fpl_exp* - software'owa implementacja funkcji wykładniczej
+* *fpl_log* - software'owa implementacja funkcji logarytmicznej
+* *fpl_sqrt* - software'owa implementacja pierwiastka kwadratowego
+* *fpl_sin* - software'owa implementacja funkcji sinus
+* *fpl_cos* - software'owa implementacja funkcji cosinus
+* *fpl_tan* - software'owa implementacja funkcji tangent
+* *fpl_cotan* - software'owa implementacja funkcji cotangens
+* *fpl_atan* - software'owa implementacja funkcji arcus tangens
+* Wrappery na funkcje z biblioteki standardowej C implementujące analogiczne operacje - *exp*,
+ *log*, *sqrt*, *sin*, *cos*, *tan*
+
+
+
