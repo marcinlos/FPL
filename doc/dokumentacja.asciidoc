@@ -1,0 +1,253 @@
+Technika mikroprocesorowa 2
+===========================
+Marcin Łoś, Michał Torba 
+
+:numbered:
+
+Założenia projektu
+------------------
+
+Celem projektu było zaprojektowanie oraz implementacja w języku C biblioteki umożliwiającej operacje 
+na liczbach rzeczywistych bez wykorzystania wsparcia sprzętowego. Powinna udostępniać ona funkcje 
+realizujące podstawowe działania arytmetyczne (dodawanie, odejmowanie, mnożenie, dzielenie),
+wybrane funkcje elementarne (pierwiastek kwadratowy, logarytm, funkcję wykładniczą, funkcje
+trygonometryczne - sinus, cosinus, tangens, cotangens), oraz konwersje pomiędzy liczbami całkowitymi,
+a zaimplementowanym formatem rzeczywistym.
+
+
+Wstępny plan realizacji
+-----------------------
+
+Przed rozpoczęciem implementacji omówiliśmy główne aspekty problemu i opracowaliśmy spójną wizję
+dalszych prac.
+
+Format
+~~~~~~
+Najniższą warstwę problemu stanowi wybór formatu reprezentacji liczb rzeczywistych. Mieliśmy kilka możliwości do wyboru:
+
+* *Floating poing* (w szczególności IEEE 754)
+* *Fixed point* (Stały przecinek)
+* *BCD* (Binary Coded Decimal)
+
+Kolejny paragraf stanowi krótki opis poszczególnych formatów z powyższej listy.
+
+Floating point
+^^^^^^^^^^^^^^
+
+Reprezentacje typu _floating-point_ polegają na rozbiciu liczby rzeczywistej na znak, wykładnik 
+(cechę) i mantysę, powiązane następującą równością:
+
++x = (-1)^s^ m b^t^+
+
+Standard IEEE 754 opisuje najpopularniejszą obecnie rodzina reprezentacji liczb
+zmiennoprzecinkowych. Wersja z roku 2008 opisuje formaty 16, 32, 64, 80 i 128-bitowe. Poza wartościami reprezentującymi poprawne liczby rzeczywiste, standard opisuje reprezentacje obydwu
+nieskończoności, oraz błędnych wartości, tzw. 'NaN' ('Not a Number'). 
+
+Za wyborem tej reprezentacji przemawia fakt, iż na dzień dzisiejszy posiada ona dominację
+wśród wszystkich reprezentacji liczb rzeczywistych. Co za tym idzie,
+
+* wykorzystujemy sprawdzony pomysł
+* łatwo znaleść kompleksowe opisy i przykładowe implementacje
+* łatwo przeprowadzać testy - niemal każdy komputer posiada sprzętową implementację IEEE 754,
+czego nie sposób powiedzieć o pozostałych formatach
+
+
+
+Fixed point
+^^^^^^^^^^^
+Również i w tym formacie korzystamy z rozbicia liczby na znak, wykładnik i mantysę, jednakowoż
+nie przechowujemy bezpośrednio cechy - posiada ona znaną, z góry określoną wartość. W ten sposób
+dostajemy format, w którym wagi poszczególnych bitów są stałe, zależne jedynie od określonej 
+wcześniej wartości cechy.
+
+Rozwiązanie zdaje się być stosunkowo proste pod względem implementacyjnym. Z punktu widzenia 
+użytownika posiada jednakowoż znaczące wady:
+
+* _Niewielki zakres reprezentowalnych wartości lub niewielka precyzja_ - innymi słowy, jak dobrać
+wykładnik? Mamy do dyspozycji stałą ilość liczb do reprezentowania liczb rzeczywistych rozłożonych
+równomiernie po pewnym przedziale, zatem +(długość przedziału) * (dokładność) = const+. Dla mocno 
+ujemnych wartości wykładnika reprezentacja będzie stosunkowo dokładna, natomiast  przedział
+reprezentowalnych wartości będzie zbyt mały do pewnych zastosowań, zaś dla większych wartości
+wykładnika rozmiar przedziału wzrośnie, natomiast dokładność zmaleje. Nie sposób dobrać wartości
+zaspakajające potrzeby wszystkich problemów obliczeniowych.
+* _Słabe wykorzystanie zbioru reprezentowalnych wartośc_ - dokładność bezwzględna reprezentacji jest
+identyczna na całym przedziale, a co za tym idzie dokładność względna w okolicach zera jest 
+znacznie mniejsza, niż w pobliżu końców przedziału reprezentowalnych wartości. Zazwyczaj gdy
+obliczenie operuje na liczbach o większej wartości bezwzględnej, godzimy się na większy błąd
+bezwzględny z uwagi na fakt, iż błąd względny pozostaje podobny do tego dla małych liczb. Przy 
+reprezentacji fixed point nie bierzemy tego pod uwagę.
+
+
+BCD
+^^^
+
+Binary Coded Decimal to w ogólności kodowanie liczb w postaci dziesiętnej, wykorzystujące na każdą
+cyfrę bajt (wesja podstawowa) lub 4 bity (nibble) (wersja spakowana). W zależności od sposobu
+interpretacji takiego ciągu cyfr, na BCD zbudować można reprezentację stało- lub zmiennoprzecinkową.
+Nie jest to reprezentacja na dzień dzisiejszy szeroko wykorzystywana sprzętowo.
+
+Z punktu widzenia implementacji niewątpliwą zaletą BCD jest prostota interpretacji bitów poprawnie
+zakodowanych liczb. Niestety trudno rozszerzyć tę listę o cokolwiek innego. Poprawność liczby
+zakodowanej w formacie BCD jest stosunkowo kosztowna do sprawdzenia (wartość każdego 4-bitowego
+kawałka musi być nie większa niż 9). Wykonywanie podstawowych operacji, takich jak dodawanie
+czy odejmowanie, również wymaga ręcznej implementacji. Niektóre architektury (np. x86) udostępniają
+instrukcje operujące na danych w formacie BCD (jak choćby +DAA+/+DAS+ we wspomnianym x86), jednakowoż
+nie są one dostępne z poziomu języka implementacji, co czyni ich wykorzystanie co najmniej
+kłopotliwym i niepożądanym. 
+
+Ostateczny rezultat
+^^^^^^^^^^^^^^^^^^^ 
+
+Ostatecznie zdecydowaliśmy się na wykorzystanie formatu IEEE 754, z uwagi na powszechność jego 
+użycia, i idącą za tym łatwość testowania.
+
+
+Algorytmy ewaluacji funkcji
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+
+Implementacja
+-------------
+
+Prace nad implementacją produktu końcowego podzielić można dość wyraźnie na 2 etapy: realizacja
+podstawowych operacji arytmetycznych i funkcji pomocniczych niskiego poziomu, zajmujących się
+dostarczeniem narzędzi niezbędnych do dostarczenia bardziej zaawansowanej funkcjonalności,
+oraz implementacja samych funkcji matematycznych. Etapy te okazały się w gruncie rzeczy niemal
+całkowicie niezależne, gdyż jakkolwiek algorytmy ewaluacji funkcji wykorzystują w kluczowy sposób
+środowisko dostarczane przez pierwszą, niższą warstwę, to z powodzeniem zastąpić można ją na czas
+implementacji klasyczną arytmetyką zmiennoprzecinkową, realizowaną sprzętowo przez procesor.
+Przy założeniu, że nie będzie wyraźnych obserwowalnych różnic w funkcjonowaniu tych dwóch realizacji
+tego samego konceptu, przejście od użycia jednej do drugiej nie powinno wymagać ingerencji w kod
+ponad zwykła podmianę operatorów na wywołania funkcji realizujących odpowiadające im operacje.
+Praktyka potwierdziła to przypuszczenie, i integracja dwóch realizowanych niezależnie warstw 
+przebiegła bez poważniejszych problemów.
+
+Wykorzystane narzędzia
+~~~~~~~~~~~~~~~~~~~~~~
+Kod projektu pisany był w środowisku Eclipse z wtyczką CDT. Projekt kompilowany był przy użyciu
+kompilatora GCC 4.7.2. Do zarządzania procesem budowania wykorzystaliśmy GNU Autotools (autoconf,
+automake, libtool). Do testów jednostkowych wykorzystaliśmy C++ i bibliotekę CxxTest. Interaktywny
+shell zbudowany został przy użyciu standardowych do tego typu zastosowań narzędzi - Lex/Yacc + GNU
+Readline. Dokumentacja API wygenerowana została z komentarzy w kodzie źródłowym przy użyciu systemu
+Doxygen.
+
+
+
+Implementacja warstwy podstawowych operacji
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Jako format reprezentacji liczb rzeczywistych wybrany został 64-bitowy wariant opisany w IEEE 754.
+W większości implementacji C odpowiada on popularnemu typowi +double+. 
+
+.Szczegół implementacyjny
+[NOTE]
+===========================================================
+Powszechnie wiadomo, że herkulesową niemal pracę stanowi pisanie w pełni przenośnego
+niskopoziomowego oprogramowania w C/C$$++$$, z uwagi na swobodę, jaką standardy pozostawiają
+implementatorom. O ile nam wiadomo, nie sposób uzyskać we w pełni przenośiny sposób typu
+całkowitego o wielkości 64 bitów. Najbliżej realizacji tego zadania zdaje się być +uint64_t+
+z nagłówka +<stdint.h>+, jednak ściśle rzecz biorąc, jego istnienie zależy od dobrej woli
+implementatora. Obejścia tego problemu przy użyciu np. tablicy +char+-ów, czy też struktury 
+ją zawierającej w celu zachowania pełnej formalnej jest możliwa, wymaga jednak ostrożnego
+lawirowania między subtelnymi nieraz przypadkami Undefined Behaviour, czychającymi na każdym
+kroku na nieświadomego wędrowca. Stąd uwaga ogólna odnośnie całego kodu: nie dołożyliśmy, ze
+względów praktycznych, wszelkich starań, by uniknąć dobrze zrozumianych i powszechnie
+występujących przypadków UB (jak choćby rzutowanie przez unię, bądź naruszanie w inny
+sposób reguł aliasowania).
+===========================================================
+
+Sposób reprezentacji
+^^^^^^^^^^^^^^^^^^^^
+
+Ażeby zaimplementować operacje arytmetyczne oraz funkcje pomocnicze pracujące na liczbach
+zmiennoprzecinkowych podwójnej precyzji w formacie IEEE 754, konieczne jest dokładne poznanie
+jego anatomii. Liczba taka składa się z 8 bajtów, podzielonych logicznie na 3 sekcje:
+
+.IEEE 754 (podwójna precyzja)
+[options="header",cols="^2,^3,^10",width="50%"]
+|======================================
+|1 bit      |11 bitów    |52 bity 
+|znak (+s+) |cecha (+e+) |mantysa (+m+)
+|======================================
+
+W najprostszym przypadku bity te opisują liczbę daną poprzez 
+
++x=(-1)^s^2^e-t~0~^*1.m+
+
+Dokładna interpretacja wartości tych pól zależy w pewnej mierze od rodzaju liczby, z jaką mamy
+do czynienia, i opisana jest w kolejnych podpunktach.
+
+Rodzaje liczb
+^^^^^^^^^^^^^
+
+Standard wyróżnia  rodzaje liczb reprezentowalnych przez wartości 8-bajtowe. Zbiory liczb
+8-bajtowych im odpowiadających stanowią podział zbioru wszystkich wartości, tzn. są rozłączne,
+a ich unia to cały ten zbiór.
+
+* *Liczby znormalizowane*
+* *Liczby zdenormalizowane*
+* *Zero*
+* *Nieskończoność*
+* *NaN*
+
+Liczby znormalizowane
++++++++++++++++++++++
+
+Ich wyróżnik stanowi wykładnik w zakresie 1-2046. Ten typ wartości służy do reprezentowania
+zwyczajnych liczb rzeczywistuch z zakresu [2.225 x 10^-308^, 1.798 x 10^308^]. Trójka
++(s, e, m)+ to reprezentacja liczby +(-1)^s^ * 2^e-1024^ * 1.m+, gdzie zapis +1.m+ dla
++m = m~1~ m~2~ $$...$$ m~52~+ oznacza 
++1 + m~1~2^-1^ $$+$$ m~2~2^-2^ $$ + ... + $$ m~52~2^-52^+
+
+Liczby zdenormalizowane
++++++++++++++++++++++++
+
+Jeśli liczba posiada wyzerowane pole wykładnika oraz niezerową mantysę, jest interpretowana jako
+liczba zdenormalizowana. Liczby takie reprezentują wielkości o wartości bezwzględnej mniejszej, 
+niż pozwala na to konstrukcja liczby znormalizowanej. Są one interpretowane w specjalny sposób,
+różniący się nieco od przypadku znormalizowanego. Trójka +(s, 0, m)+ to reprezentacja liczby
++(-1)^s^ * 2^-1023^ * 0.m+ (a więc wykładnik to +e-1023+ zamiast +e-1024+, a mantysa nie ma
+niejawnej jedynki). Te zmiany interpretacji pozwalają uzyskać liczby równomiernie rozłożone na
+przedziale +($$-$$a, $$+$$a)+, gdzie +a+ to najmniejsza dodatnia liczba znormalizowana.
+
+Pomimo prostoty koncepcji, poprawna obsługa liczb zdenormalizowanych potrafi sprawiać czasem
+problemy w nieoczekiwanych miejscach, z uwagi na specjalne reguły interpretacji. Najczęściej 
+jest to jednak po prostu przykry obowiązek, a nie poważna trudność.
+
+Zero
+++++
+
+Zera reprezentowane są jako liczby z zerowym polem wykładnika oraz zerową mantysą. Pole znaku
+jest dowolne, co, jak łatwo zauważyć, prowadzi do istnienia dwóch różnych pod względem bitowym
+reprezentacji tej liczby. Rozróżniamy zatem zero dodatnie i zero ujemne. Podczas wszelkich
+porównań znak zera jest ignorowany, jest natomiast istotny przy niektórych operacjach 
+arytmetycznych, np. +1/($$+0$$) = $$+$$inf+, natomiast +1/(-0) = -inf+.
+
+Nieskończoność
+++++++++++++++
+
+Nieskończoności reprezentowane są w IEEE 754 jako liczby z polem wykładnika o wartości 2047 
+(największy możliwy, tj. 11 bitów ustawionych na 1, +0x7ff+) oraz zerową mantysą. Bit znaku
+zwyczajnie określa znak nieskończoności. Operacje arytmetyczne z udzialem wartości nieskończonych
+są zdefiniowane następująco (+@+, +#+ oznacza plus lub minus):
+
+* +$$@inf + a = @inf$$+ dla +a != -@inf+
+* +$$@inf - a = @inf$$+ dla +a != @inf+
+* +$$@inf - @inf = NaN$$+
+* +$$@inf * a = sgn(a) * @inf$$+ dla +a != 0+
+* +$$@inf * 0 = NaN$$+, niezależnie od znaku +0+
+* +$$@inf / #inf = NaN$$+
+* +$$@inf / a = #inf$$+ dla skończonych +a+, gdzie +# = xor(sgn(@inf), sgn(a))+
+* +$$a / @inf = 0$$+ dla +a != #inf+, przy czym znak zera zależy w sposób naturalny od znaków +a+
+oraz +@+
+
+NaN
++++
+
+Do reprezentowania wartości będących wynikiem niepoprawnej operacji wykorzystywany jest specjalny
+rodzaj wartości - +NaN+ (+Not a Number+). Jest ona reprezentowana poprzez liczbę z polem wykładnika
+o wartości 2047 (jak nieskończoności), i niezerową mantysą. Wszelkie operacje arytmetyczne z udziałem
++NaN+ dają rezultat +NaN+. Zachowuje się on również osobliwie przy porównaniach - +NaN != NaN+.
+
