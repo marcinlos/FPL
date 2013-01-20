@@ -106,7 +106,7 @@ Algorytmy ewaluacji funkcji
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Wszystkie zaimplementowane algorytmy funkcji opierają się na metodzie zastosowanej w pracy 'An Accurate Elementary Mathematical Library for the IEEE Floating Point Standard' będącej naszą wyrocznią pod tym względem. W poszukiwaniu takiego właśnie opisu natknęliśmy się na wiele innych prac, większość z nich mówiła jednak o optymalizacji poszczególnych metod wykorzystując możliwości platform docelowych (co nie szło by w parze z ideą ogólności), lub z wykorzystaniem trudnych w implementacji i nietrywialnych w idei przejść, które wykraczałyby poza skalę projektu.
+Wszystkie zaimplementowane algorytmy funkcji (poza pierwiastkiem kwadratowym) opierają się na metodzie zastosowanej w pracy 'An Accurate Elementary Mathematical Library for the IEEE Floating Point Standard' będącej naszą wyrocznią pod tym względem. W poszukiwaniu takiego właśnie opisu natknęliśmy się na wiele innych prac, większość z nich mówiła jednak o optymalizacji poszczególnych metod wykorzystując możliwości platform docelowych (co nie szło by w parze z ideą ogólności), lub z wykorzystaniem trudnych w implementacji i nietrywialnych w idei przejść, które wykraczałyby poza skalę projektu.
 
 
 Implementacja
