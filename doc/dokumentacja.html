@@ -1,0 +1,1888 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.7" />
+<title>Technika mikroprocesorowa 2</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+tt {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+.monospaced {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Technika mikroprocesorowa 2</h1>
+<span id="author">Marcin Łoś, Michał Torba</span><br />
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_założenia_projektu">1. Założenia projektu</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Celem projektu było zaprojektowanie oraz implementacja w języku C biblioteki umożliwiającej operacje
+na liczbach rzeczywistych bez wykorzystania wsparcia sprzętowego. Powinna udostępniać ona funkcje
+realizujące podstawowe działania arytmetyczne (dodawanie, odejmowanie, mnożenie, dzielenie),
+wybrane funkcje elementarne (pierwiastek kwadratowy, logarytm, funkcję wykładniczą, funkcje
+trygonometryczne - sinus, cosinus, tangens, cotangens), oraz konwersje pomiędzy liczbami całkowitymi,
+a zaimplementowanym formatem rzeczywistym.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wstępny_plan_realizacji">2. Wstępny plan realizacji</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Przed rozpoczęciem implementacji omówiliśmy główne aspekty problemu i opracowaliśmy spójną wizję
+dalszych prac.</p></div>
+<div class="sect2">
+<h3 id="_format">2.1. Format</h3>
+<div class="paragraph"><p>Najniższą warstwę problemu stanowi wybór formatu reprezentacji liczb rzeczywistych. Mieliśmy kilka możliwości do wyboru:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Floating poing</strong> (w szczególności IEEE 754)
+</p>
+</li>
+<li>
+<p>
+<strong>Fixed point</strong> (Stały przecinek)
+</p>
+</li>
+<li>
+<p>
+<strong>BCD</strong> (Binary Coded Decimal)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Kolejny paragraf stanowi krótki opis poszczególnych formatów z powyższej listy.</p></div>
+<div class="sect3">
+<h4 id="_floating_point">2.1.1. Floating point</h4>
+<div class="paragraph"><p>Reprezentacje typu <em>floating-point</em> polegają na rozbiciu liczby rzeczywistej na znak, wykładnik
+(cechę) i mantysę, powiązane następującą równością:</p></div>
+<div class="paragraph"><p><tt>x = (-1)<sup>s</sup> m b<sup>t</sup></tt></p></div>
+<div class="paragraph"><p>Standard IEEE 754 opisuje najpopularniejszą obecnie rodzina reprezentacji liczb
+zmiennoprzecinkowych. Wersja z roku 2008 opisuje formaty 16, 32, 64, 80 i 128-bitowe. Poza wartościami reprezentującymi poprawne liczby rzeczywiste, standard opisuje reprezentacje obydwu
+nieskończoności, oraz błędnych wartości, tzw. <em>NaN</em> (<em>Not a Number</em>).</p></div>
+<div class="paragraph"><p>Za wyborem tej reprezentacji przemawia fakt, iż na dzień dzisiejszy posiada ona dominację
+wśród wszystkich reprezentacji liczb rzeczywistych. Co za tym idzie,</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+wykorzystujemy sprawdzony pomysł
+</p>
+</li>
+<li>
+<p>
+łatwo znaleść kompleksowe opisy i przykładowe implementacje
+</p>
+</li>
+<li>
+<p>
+łatwo przeprowadzać testy - niemal każdy komputer posiada sprzętową implementację IEEE 754,
+czego nie sposób powiedzieć o pozostałych formatach
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_fixed_point">2.1.2. Fixed point</h4>
+<div class="paragraph"><p>Również i w tym formacie korzystamy z rozbicia liczby na znak, wykładnik i mantysę, jednakowoż
+nie przechowujemy bezpośrednio cechy - posiada ona znaną, z góry określoną wartość. W ten sposób
+dostajemy format, w którym wagi poszczególnych bitów są stałe, zależne jedynie od określonej
+wcześniej wartości cechy.</p></div>
+<div class="paragraph"><p>Rozwiązanie zdaje się być stosunkowo proste pod względem implementacyjnym. Z punktu widzenia
+użytownika posiada jednakowoż znaczące wady:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Niewielki zakres reprezentowalnych wartości lub niewielka precyzja</em> - innymi słowy, jak dobrać
+wykładnik? Mamy do dyspozycji stałą ilość liczb do reprezentowania liczb rzeczywistych rozłożonych
+równomiernie po pewnym przedziale, zatem <tt>(długość przedziału) * (dokładność) = const</tt>. Dla mocno
+ujemnych wartości wykładnika reprezentacja będzie stosunkowo dokładna, natomiast  przedział
+reprezentowalnych wartości będzie zbyt mały do pewnych zastosowań, zaś dla większych wartości
+wykładnika rozmiar przedziału wzrośnie, natomiast dokładność zmaleje. Nie sposób dobrać wartości
+zaspakajające potrzeby wszystkich problemów obliczeniowych.
+</p>
+</li>
+<li>
+<p>
+<em>Słabe wykorzystanie zbioru reprezentowalnych wartośc</em> - dokładność bezwzględna reprezentacji jest
+identyczna na całym przedziale, a co za tym idzie dokładność względna w okolicach zera jest
+znacznie mniejsza, niż w pobliżu końców przedziału reprezentowalnych wartości. Zazwyczaj gdy
+obliczenie operuje na liczbach o większej wartości bezwzględnej, godzimy się na większy błąd
+bezwzględny z uwagi na fakt, iż błąd względny pozostaje podobny do tego dla małych liczb. Przy
+reprezentacji fixed point nie bierzemy tego pod uwagę.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_bcd">2.1.3. BCD</h4>
+<div class="paragraph"><p>Binary Coded Decimal to w ogólności kodowanie liczb w postaci dziesiętnej, wykorzystujące na każdą
+cyfrę bajt (wesja podstawowa) lub 4 bity (nibble) (wersja spakowana). W zależności od sposobu
+interpretacji takiego ciągu cyfr, na BCD zbudować można reprezentację stało- lub zmiennoprzecinkową.
+Nie jest to reprezentacja na dzień dzisiejszy szeroko wykorzystywana sprzętowo.</p></div>
+<div class="paragraph"><p>Z punktu widzenia implementacji niewątpliwą zaletą BCD jest prostota interpretacji bitów poprawnie
+zakodowanych liczb. Niestety trudno rozszerzyć tę listę o cokolwiek innego. Poprawność liczby
+zakodowanej w formacie BCD jest stosunkowo kosztowna do sprawdzenia (wartość każdego 4-bitowego
+kawałka musi być nie większa niż 9). Wykonywanie podstawowych operacji, takich jak dodawanie
+czy odejmowanie, również wymaga ręcznej implementacji. Niektóre architektury (np. x86) udostępniają
+instrukcje operujące na danych w formacie BCD (jak choćby <tt>DAA</tt>/<tt>DAS</tt> we wspomnianym x86), jednakowoż
+nie są one dostępne z poziomu języka implementacji, co czyni ich wykorzystanie co najmniej
+kłopotliwym i niepożądanym.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_ostateczny_rezultat">2.1.4. Ostateczny rezultat</h4>
+<div class="paragraph"><p>Ostatecznie zdecydowaliśmy się na wykorzystanie formatu IEEE 754, z uwagi na powszechność jego
+użycia, i idącą za tym łatwość testowania.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_algorytmy_ewaluacji_funkcji">2.2. Algorytmy ewaluacji funkcji</h3>
+<div class="paragraph"><p>Wszystkie zaimplementowane algorytmy funkcji (poza pierwiastkiem kwadratowym) opierają się na metodzie zastosowanej w pracy <em>An Accurate Elementary Mathematical Library for the IEEE Floating Point Standard</em> będącej naszą wyrocznią pod tym względem. W poszukiwaniu takiego właśnie opisu natknęliśmy się na wiele innych prac, większość z nich mówiła jednak o optymalizacji poszczególnych metod wykorzystując możliwości platform docelowych (co nie szło by w parze z ideą ogólności), lub z wykorzystaniem trudnych w implementacji i nietrywialnych w idei przejść, które wykraczałyby poza skalę projektu.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementacja">3. Implementacja</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Prace nad implementacją produktu końcowego podzielić można dość wyraźnie na 2 etapy: realizacja
+podstawowych operacji arytmetycznych i funkcji pomocniczych niskiego poziomu, zajmujących się
+dostarczeniem narzędzi niezbędnych do dostarczenia bardziej zaawansowanej funkcjonalności,
+oraz implementacja samych funkcji matematycznych. Etapy te okazały się w gruncie rzeczy niemal
+całkowicie niezależne, gdyż jakkolwiek algorytmy ewaluacji funkcji wykorzystują w kluczowy sposób
+środowisko dostarczane przez pierwszą, niższą warstwę, to z powodzeniem zastąpić można ją na czas
+implementacji klasyczną arytmetyką zmiennoprzecinkową, realizowaną sprzętowo przez procesor.
+Przy założeniu, że nie będzie wyraźnych obserwowalnych różnic w funkcjonowaniu tych dwóch realizacji
+tego samego konceptu, przejście od użycia jednej do drugiej nie powinno wymagać ingerencji w kod
+ponad zwykła podmianę operatorów na wywołania funkcji realizujących odpowiadające im operacje.
+Praktyka potwierdziła to przypuszczenie, i integracja dwóch realizowanych niezależnie warstw
+przebiegła bez poważniejszych problemów.</p></div>
+<div class="sect2">
+<h3 id="_wykorzystane_narzędzia">3.1. Wykorzystane narzędzia</h3>
+<div class="paragraph"><p>Kod projektu pisany był w środowisku Eclipse z wtyczką CDT. Projekt kompilowany był przy użyciu
+kompilatora GCC 4.7.2. Do zarządzania procesem budowania wykorzystaliśmy GNU Autotools (autoconf,
+automake, libtool). Do testów jednostkowych wykorzystaliśmy C++ i bibliotekę CxxTest. Interaktywny
+shell zbudowany został przy użyciu standardowych do tego typu zastosowań narzędzi - Lex/Yacc + GNU
+Readline. Dokumentacja API wygenerowana została z komentarzy w kodzie źródłowym przy użyciu systemu
+Doxygen.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_implementacja_warstwy_podstawowych_operacji">3.2. Implementacja warstwy podstawowych operacji</h3>
+<div class="paragraph"><p>Jako format reprezentacji liczb rzeczywistych wybrany został 64-bitowy wariant opisany w IEEE 754.
+W większości implementacji C odpowiada on popularnemu typowi <tt>double</tt>.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="title">Szczegół implementacyjny</div>
+<div class="paragraph"><p>Powszechnie wiadomo, że herkulesową niemal pracę stanowi pisanie w pełni przenośnego
+niskopoziomowego oprogramowania w C/C++, z uwagi na swobodę, jaką standardy pozostawiają
+implementatorom. O ile nam wiadomo, nie sposób uzyskać we w pełni przenośiny sposób typu
+całkowitego o wielkości 64 bitów. Najbliżej realizacji tego zadania zdaje się być <tt>uint64_t</tt>
+z nagłówka <tt>&lt;stdint.h&gt;</tt>, jednak ściśle rzecz biorąc, jego istnienie zależy od dobrej woli
+implementatora. Obejścia tego problemu przy użyciu np. tablicy <tt>char</tt>-ów, czy też struktury
+ją zawierającej w celu zachowania pełnej formalnej jest możliwa, wymaga jednak ostrożnego
+lawirowania między subtelnymi nieraz przypadkami Undefined Behaviour, czychającymi na każdym
+kroku na nieświadomego wędrowca. Stąd uwaga ogólna odnośnie całego kodu: nie dołożyliśmy, ze
+względów praktycznych, wszelkich starań, by uniknąć dobrze zrozumianych i powszechnie
+występujących przypadków UB (jak choćby rzutowanie przez unię, bądź naruszanie w inny
+sposób reguł aliasowania).</p></div>
+</td>
+</tr></table>
+</div>
+<div class="sect3">
+<h4 id="_sposób_reprezentacji">3.2.1. Sposób reprezentacji</h4>
+<div class="paragraph"><p>Ażeby zaimplementować operacje arytmetyczne oraz funkcje pomocnicze pracujące na liczbach
+zmiennoprzecinkowych podwójnej precyzji w formacie IEEE 754, konieczne jest dokładne poznanie
+jego anatomii. Liczba taka składa się z 8 bajtów, podzielonych logicznie na 3 sekcje:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. IEEE 754 (podwójna precyzja)</caption>
+<col width="13%" />
+<col width="20%" />
+<col width="66%" />
+<thead>
+<tr>
+<th align="center" valign="top">1 bit      </th>
+<th align="center" valign="top">11 bitów    </th>
+<th align="center" valign="top">52 bity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">znak (<tt>s</tt>)</p></td>
+<td align="center" valign="top"><p class="table">cecha (<tt>e</tt>)</p></td>
+<td align="center" valign="top"><p class="table">mantysa (<tt>m</tt>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>W najprostszym przypadku bity te opisują liczbę daną poprzez</p></div>
+<div class="paragraph"><p><tt>x=(-1)<sup>s</sup>2<sup>e-e<sub>0</sub></sup>*1.m</tt></p></div>
+<div class="paragraph"><p>Dokładna interpretacja wartości tych pól zależy w pewnej mierze od rodzaju liczby, z jaką mamy
+do czynienia, i opisana jest w kolejnych podpunktach.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_rodzaje_liczb">3.2.2. Rodzaje liczb</h4>
+<div class="paragraph"><p>Standard wyróżnia  rodzaje liczb reprezentowalnych przez wartości 8-bajtowe. Zbiory liczb
+8-bajtowych im odpowiadających stanowią podział zbioru wszystkich wartości, tzn. są rozłączne,
+a ich unia to cały ten zbiór.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>Liczby znormalizowane</strong>
+</p>
+</li>
+<li>
+<p>
+<strong>Liczby zdenormalizowane</strong>
+</p>
+</li>
+<li>
+<p>
+<strong>Zero</strong>
+</p>
+</li>
+<li>
+<p>
+<strong>Nieskończoność</strong>
+</p>
+</li>
+<li>
+<p>
+<strong>NaN</strong>
+</p>
+</li>
+</ul></div>
+<div class="sect4">
+<h5 id="_liczby_znormalizowane">Liczby znormalizowane</h5>
+<div class="paragraph"><p>Ich wyróżnik stanowi wykładnik w zakresie 1-2046. Ten typ wartości służy do reprezentowania
+zwyczajnych liczb rzeczywistuch z zakresu [2.225 x 10<sup>-308</sup>, 1.798 x 10<sup>308</sup>]. Trójka
+<tt>(s, e, m)</tt> to reprezentacja liczby <tt>(-1)<sup>s</sup> * 2<sup>e-1024</sup> * 1.m</tt>, gdzie zapis <tt>1.m</tt> dla
+<tt>m = m<sub>1</sub> m<sub>2</sub> ... m<sub>52</sub></tt> oznacza
+<tt>1 + m<sub>1</sub>2<sup>-1</sup> + m<sub>2</sub>2<sup>-2</sup>  + ... +  m<sub>52</sub>2<sup>-52</sup></tt></p></div>
+</div>
+<div class="sect4">
+<h5 id="_liczby_zdenormalizowane">Liczby zdenormalizowane</h5>
+<div class="paragraph"><p>Jeśli liczba posiada wyzerowane pole wykładnika oraz niezerową mantysę, jest interpretowana jako
+liczba zdenormalizowana. Liczby takie reprezentują wielkości o wartości bezwzględnej mniejszej,
+niż pozwala na to konstrukcja liczby znormalizowanej. Są one interpretowane w specjalny sposób,
+różniący się nieco od przypadku znormalizowanego. Trójka <tt>(s, 0, m)</tt> to reprezentacja liczby
+<tt>(-1)<sup>s</sup> * 2<sup>-1023</sup> * 0.m</tt> (a więc wykładnik to <tt>e-1023</tt> zamiast <tt>e-1024</tt>, a mantysa nie ma
+niejawnej jedynki). Te zmiany interpretacji pozwalają uzyskać liczby równomiernie rozłożone na
+przedziale <tt>(-a, +a)</tt>, gdzie <tt>a</tt> to najmniejsza dodatnia liczba znormalizowana.</p></div>
+<div class="paragraph"><p>Pomimo prostoty koncepcji, poprawna obsługa liczb zdenormalizowanych potrafi sprawiać czasem
+problemy w nieoczekiwanych miejscach, z uwagi na specjalne reguły interpretacji. Najczęściej
+jest to jednak po prostu przykry obowiązek, a nie poważna trudność.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_zero">Zero</h5>
+<div class="paragraph"><p>Zera reprezentowane są jako liczby z zerowym polem wykładnika oraz zerową mantysą. Pole znaku
+jest dowolne, co, jak łatwo zauważyć, prowadzi do istnienia dwóch różnych pod względem bitowym
+reprezentacji tej liczby. Rozróżniamy zatem zero dodatnie i zero ujemne. Podczas wszelkich
+porównań znak zera jest ignorowany, jest natomiast istotny przy niektórych operacjach
+arytmetycznych, np. <tt>1/(+0) = +inf</tt>, natomiast <tt>1/(-0) = -inf</tt>.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_nieskończoność">Nieskończoność</h5>
+<div class="paragraph"><p>Nieskończoności reprezentowane są w IEEE 754 jako liczby z polem wykładnika o wartości 2047
+(największy możliwy, tj. 11 bitów ustawionych na 1, <tt>0x7ff</tt>) oraz zerową mantysą. Bit znaku
+zwyczajnie określa znak nieskończoności. Operacje arytmetyczne z udzialem wartości nieskończonych
+są zdefiniowane następująco (<tt>@</tt>, <tt>#</tt> oznacza plus lub minus):</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<tt>@inf + a = @inf</tt> dla <tt>a != -@inf</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf - a = @inf</tt> dla <tt>a != @inf</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf - @inf = NaN</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf * a = sgn(a) * @inf</tt> dla <tt>a != 0</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf * 0 = NaN</tt>, niezależnie od znaku <tt>0</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf / #inf = NaN</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>@inf / a = #inf</tt> dla skończonych <tt>a</tt>, gdzie <tt># = xor(sgn(@inf), sgn(a))</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>a / @inf = 0</tt> dla <tt>a != #inf</tt>, przy czym znak zera zależy w sposób naturalny od znaków <tt>a</tt>
+oraz <tt>@</tt>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect4">
+<h5 id="_nan">NaN</h5>
+<div class="paragraph"><p>Do reprezentowania wartości będących wynikiem niepoprawnej operacji wykorzystywany jest specjalny
+rodzaj wartości - <tt>NaN</tt> (<tt>Not a Number</tt>). Jest ona reprezentowana poprzez liczbę z polem wykładnika
+o wartości 2047 (jak nieskończoności), i niezerową mantysą. Wszelkie operacje arytmetyczne z udziałem
+<tt>NaN</tt> dają rezultat <tt>NaN</tt>. Zachowuje się on również osobliwie przy porównaniach - <tt>NaN != NaN</tt>.</p></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_implementacja_operacji_arytmetycznych">3.2.3. Implementacja operacji arytmetycznych</h4>
+<div class="sect4">
+<h5 id="_założenia_projektowe">Założenia projektowe</h5>
+<div class="paragraph"><p>Pierwotnie planowaliśmy realizację podstawowych operacji w pełni zgodną z IEEE 754. Zadanie takie
+wymaga, poza zwyczajnym obliczeniem wartości, poprawnego jej zaokrąglenia, tj. przedstawienia
+dokładnie obliczonego wyniku w stosowanym formacie. Jest to konieczne z uwagi na fakt, iż zbiór
+liczb reprezentowalnych w formacie podwójnej precyzji nie jest zamknięty ze względu na operacje
+arytmetyczne. Standard opisuje kilka trybów zaokrąglania, przy czym najpowszechniej stosowany to
+zaokrąglanie do najbliższej wartości reprezentowalnej rozwiązującej konflikty (sytuacje, w których
+wartość dokładna leży dokładnie w połowie pomiędzy dwoma reprezentowalnymi wartościami) na korzyść
+tej liczby, która posiada parzystą ostatnią cyfrę mantysy (<tt>roundTiesToEven</tt>). Rozwiązanie takie
+jest symetryczne względem znaku, dzięki czemu unikamy przesuniecia średniej względem zera, które
+występuje w niektórych innych trybach zaokrąglania.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_realizacja">Realizacja</h5>
+<div class="paragraph"><p>Niezbędny do jakichkolwiek innych operacji jest sposób przechodzenia między wartościami w postaci
+zakodowanej (z polami upakowanymi na 64 bitach zgodnie z uprzednio przedstawionym diagramem),
+a w postaci krotki trójelementowej, zrealizowanej jako struktura z trzema polami. Jedynym problemem
+na tym etapie jest specjalne traktowanie liczb zdenormalizowanych, niemniej dopracowanie szczegółów
+jest względnie proste, więc nie będą tutaj przytaczane. Konwersje te dostarczają pierwszej,
+najbardziej podstawowej warstwy abstrakcji nad surową pamięcią.</p></div>
+<div class="paragraph"><p>Kolejne paragrafy opisują sposób zrealizowania kolejnych operacji arytmetycznych.</p></div>
+<div class="paragraph"><div class="title">Mnożenie</div><p>Najłatwiejszym działaniem okazało się mnożenie, z uwagi na prostotę koncepcji tej operacji w
+przyjętym formacie. Są oczywiście dodatkowe komplikacje i trudności implementacyjne, ale ogólna idea
+operacji mnożenia wyraża się w następującej równości. Dla <tt>x = (-1)<sup>s<sub>x</sub></sup> *
+2<sup>e<sub>x</sub></sup> * M<sub>x</sub></tt>, <tt>y = (-1)<sup>s<sub>y</sub></sup> * 2<sup>e<sub>y</sub></sup> * M<sub>y</sub></tt> mamy</p></div>
+<div class="paragraph"><p><tt>x * y = (-1)<sup>s<sub>x</sub>+s<sub>y</sub></sup> * 2<sup>e<sub>x</sub>+e<sub>y</sub></sup> * M<sub>x</sub> * M<sub>y</sub></tt></p></div>
+<div class="paragraph"><p>Poza wykryciem i obsługą przypadków specjalnych, opisanych w jednej z poprzednich sekcji o rodzajach
+liczb, jedyny problem stanowi obliczenie <tt>M<sub>x</sub> * M<sub>y</sub></tt>. Są to w ogólności wielkości 53-bitowe
+(52 bity mantysy i niejawna jedynka dla liczb znormalizowanych), zatem nie sposób dokonać dokładnego
+ich mnożenia używając wyłącznie arytmetyki 64-bitowej. Przewidując podobne problemy przy pozostałych
+operacjach, zaimplementowaliśmy zestaw operacji na 128-bitowych liczbach całkowitych. Jest to więcej,
+niż jest potrzebne do dokładnego obliczania tych wartości, jednak przy implementacji software&#8217;owej
+optymalizowanie operacji pod tym kątem mija się z celem.</p></div>
+<div class="paragraph"><p>Wynik mnożenia dwóch wielkości 53-bitowych to w przypadku ogólnym liczba <tt>(2*53 - 1)</tt>-bitowa, zatem
+wynik należy przesunąć o 52 bity w prawo. W przypadku, gdy obydwie mantysy należały do liczb
+znormalizowanych, na tym można poprzestać; bit 53 jest z całą pewnością ustawiony na 1, zatem
+mantysa wynikowa należy do liczby znormalizowanej. Sytuacja komplikuje się, gdy jedna z mnożonych
+liczb jest zdenormalizowana. Wówczas może zdarzyć się, że otrzymamy wynik z 53-cim bitem zerowym.
+Podówczas dokonać należy <strong>renormalizacji</strong> - procesu przywrócenia liczbie własności normalizacji
+poprzez odpowiednie przesunięcie mantysy - "dosunięcie" najwyższego niezerowego bitu na pozycję
+53 - oraz poprawienie wykładnika, aby zachować wartość liczby po zmianie mantysy.</p></div>
+<div class="paragraph"><p>Ostatecznie więc algorytm mnożenia w pseudokodzie wygląda następująco:</p></div>
+<div class="listingblock">
+<div class="title">Mnożenie (pseudokod)</div>
+<div class="content">
+<pre><tt>Rozpakuj wartości do struktur
+Sprawdź przypadki specjalne
+e = e~x~ + e~y~
+M = M~x~ * M~y~
+W razie potrzeby dokonaj renormalizacji:
+   Znajdź pierwszy niezerowy bit od lewej
+   Dosuń go do pozycji 53
+   Odejmij od wykładnika tyle, o ile pozycji przesunięto mantysę
+Spakuj i zwróć liczbę</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="title">Szczegół implementacyjny</div>
+<div class="paragraph"><p>Opisany poniżej algorytm dotyczy dodawania dwóch liczb tego samego znaku.
+Podobnie opisany dalej algorytm odejmowania odnosi się do liczb tego
+samego znaku. Dodawanie/odejmowanie liczb w ogólności sprowadza się do
+jednego z dwóch przypadków: dodawania bądź odejmowania liczb o tym samym
+znaku. Funkcje realizujące ogólne przypadki tych operacji rozpoznają
+przypadek, z jakim mają do czynienia i przekazują sterowanie do funkcji
+odpowiadających rozpatrywanemu przypadkowi.</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><div class="title">Dodawanie</div><p>Dodawanie liczb zmiennoprzecinkowych przedstawia większą trudność niż mnożenie, z uwagi na fakt,
+iż aby móc dodać mantysy, konieczne jest przekształcenie liczb tak, aby uzyskać ich reprezentacje
+z identycznym wykładnikiem. Komplikuje to nieco implementację, wprowadza bowiem dodatkowy
+krok obliczeń. Z uwagi na utratę dokładności przy podejściu polegającym na przesunieciu
+w prawo mantysy mniejszego wykładnika bez zachowywania bitów przesuniętych poza prawą krawędź
+liczby konieczne okazało się zastosowanie i tu operacji na liczbach 128-bitowych. W naszej
+realizacji mantysy początkowo zajmują górne 8 bajtów tych liczb. Następnie mantysy i wykładniki
+są modyfikowane w taki sposób, aby uzyskać reprezentację z większym z dwóch wykładników argumentów.
+Po tym kroku wystarczy dodać mantysy, zrenormalizować wynik, spakować go do reprezentacji binarnej
+i zwrócić.</p></div>
+<div class="listingblock">
+<div class="title">Dodawanie (pseudokod)</div>
+<div class="content">
+<pre><tt>Rozpakuj wartości do struktur
+Sprawdź przypadki specjalne
+M128~x~ = [m~x~, 0]
+M128~y~ = [m~y~, 0]
+d = e~x~ - e~y~
+If d &lt; 0:
+   Przesuń M128~x~ o (-d) w prawo
+   e = e~y~
+Else:
+   Przesuń M128~y~ o d w prawo
+   e = e~x~
+M128 = M128~x~ + M128~y~
+Zrenormalizuj wynik (jak w mnożeniu)
+Spakuj i zwróć liczbę</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Odejmowanie</div><p>Odejmowanie liczb zmiennoprzecinkowych jest operacją przebiegającą bardzo analogicznie do
+dodawania, z tą drobną różnicą, iż odejmujemy zawsze mniejszą mantysę od większej, zmieniając
+w razie potrzeby znak wyniku. Nie ma więc potrzeby powtarzać przeprowadzonej w poprzednim
+podpunkcie analizy i dyskusji.</p></div>
+<div class="paragraph"><div class="title">Dzielenie</div><p>Dzielenie swoją naturą przypomina mnożenie, z całą jego konceptualną prostotą. Dla <tt>x = (-1)<sup>s<sub>x</sub></sup> * 2<sup>e<sub>x</sub></sup> * M<sub>x</sub></tt>,
+<tt>y = (-1)<sup>s<sub>y</sub></sup> * 2<sup>e<sub>y</sub></sup> * M<sub>y</sub></tt> mamy</p></div>
+<div class="paragraph"><p><tt>x / y = (-1)<sup>s<sub>x</sub>+s<sub>y</sub></sup> * 2<sup>e<sub>x</sub>-e<sub>y</sub></sup> * M<sub>x</sub> / M<sub>y</sub></tt></p></div>
+<div class="paragraph"><p>Jedyną problematyczną kwestią jest wyliczenie ilorazu mantys. Są one 64-bitowe, jednakowoż nie
+satysfakcjonuje nas zwykłe dzielenie całkowite. Implementacja tego fragmentu dzielenia pozostawia
+nieco do życzenia. Po pierwsze, zrealizowane jest przy pomocy prostego, powolnego algorytmu
+wyliczającego kolejne bity rezultatu. To niestety nie koniec problemów. Wszystkie pozostałe
+operacje działają z dokładnością do przedostatniego bitu mantysy (wynik różni się od wzorcowej
+implementacji co najwyżej na ostatnim bicie), natomiast w przypadku dzielenia około 5% wyników
+posiada nieznacznie większe błędy. Jest to spowodowane najprawdopodobniej niedokładnością
+odejmowania w jednym z kroków algorytmu dzielenia (całość działa na liczbach 64-bitowych, bez
+wykorzystania dodatkowej precyzji oferowanej przez 128 bitów). Jakkolwiek defekt ten wydaje się
+nie wpływać w widoczny sposób na operacje wyższej warstwy (nie zaobserwowaliśmy różnic w średniej
+dokładności między implementacją wykorzystującą sprzętowy zmienny przecinek, a tą wykorzystującą
+naszą arytmetykę), to stanowi potencjalny problem. Z uwagi na mnogość innych kwestii wymagających
+uwagi, oraz brak widocznego wpływu na resztę funkcjonalności postanowiliśmy zaniechać dalszego
+śledzenia przyczyn błędu i ewentualnej jego eliminacji.</p></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementacja_algorytmów_ewaluacji_funkcji">3.3. Implementacja algorytmów ewaluacji funkcji</h3>
+<div class="sect3">
+<h4 id="_exponent">3.3.1. Exponent</h4>
+<div class="paragraph"><p>Funkcja <em>FPL_exponent_64</em></p></div>
+<div class="paragraph"><p>Proces zaczynamy od stworzenia tablicy obliczonych wcześniej wartości exponenta dla 354 wartości w okolicach zera (równomiernie rozłożonych z krokiem 1/512). W oryginalnej pracy rozkład ten nie jest równomierny, wybrane liczby odbiegają od tych równomiernie rozłożonych wartości o pewien epsilon który pozwoli na uzyskanie odpowiedniej dokładności, nie znaleźliśmy jednak prostego sposobu wyznaczania go. Następnie, korzystając z własności funkcji, rozbijamy
+exp(x) = 2<sup>x/log2</sup> = 2<sup>n</sup> * exp(y)
+W obliczeniu exp(y) wykorzystujemy wartości wyliczone wcześniej z tabeli oraz przybliżenie w sensie minimaxu exponenta na niewielkim przedziale służące za correction term. Szczegóły w załączonej pracy.</p></div>
+<div class="paragraph"><p>Poniżej przedstawiono wyniki działania funkcji z argumentami w przedziale (-20,20) z losową próbką 100000 punktów, porównywane z wynikami funkcji z biblioteki standardowej. Im wylosowany argument znajduje się dalej od 0 tym mniej miejsc znaczących będzie poprawne (ze względu na specyfikę funkcji wykładniczej szybko powiększającej drobne błędy), ogólnie jednak dokładność jest zadowalająca. Liczba z lewej strony to rząd wielkości w którym wyniki są dokładne, liczba z prawej to ilość argumentów dla których działanie funkcji wykazało taką dokładność.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 2. Exponent</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">5588</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-23</p></td>
+<td align="center" valign="top"><p class="table">2397</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-22</p></td>
+<td align="center" valign="top"><p class="table">5369</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-21</p></td>
+<td align="center" valign="top"><p class="table">6202</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-20</p></td>
+<td align="center" valign="top"><p class="table">6376</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-19</p></td>
+<td align="center" valign="top"><p class="table">7109</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-18</p></td>
+<td align="center" valign="top"><p class="table">5717</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">6819</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">7444</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">5361</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">2448</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-13</p></td>
+<td align="center" valign="top"><p class="table">3926</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-12</p></td>
+<td align="center" valign="top"><p class="table">3661</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-11</p></td>
+<td align="center" valign="top"><p class="table">7937</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-10</p></td>
+<td align="center" valign="top"><p class="table">2297</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-9</p></td>
+<td align="center" valign="top"><p class="table">4626</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-8</p></td>
+<td align="center" valign="top"><p class="table">6178</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-7</p></td>
+<td align="center" valign="top"><p class="table">5511</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-6</p></td>
+<td align="center" valign="top"><p class="table">4433</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-5</p></td>
+<td align="center" valign="top"><p class="table">601</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_logarytm">3.3.2. Logarytm</h4>
+<div class="paragraph"><p>Udostępniamy dwie funkcje, <em>FPL_logarithm_E_64</em> podającą wartość logarytmu z bazą e, oraz <em>FPL_logarithm_64</em> przyjmującą jako argument również bazę, udostępnioną dla wygody użytkownika.</p></div>
+<div class="paragraph"><p>Na początku stworzyliśmy 3 tabele zgodnie z instrukcjami - X zawierającą znalezione potrzebne nam wartości w okolicach zera (w naszym przypadku rozłożone równomiernie, bez uwzględnienia epsilona), F będącą dokładnym logarytmem wartości z X, oraz G zawierającą odwrotności F.
+Dalej wykorzystujemy własność ln(x) = ln(y) + n*ln(2), ln(y) zaś obliczamy z wykorzystaniem wartości z tabeli oraz wielomianu przybliżającego logarytm dla małych wartości. Szczegóły w załączonej pracy.</p></div>
+<div class="paragraph"><p>Poniżej tabela z wynikami dla 100000 liczb wylosowanych z przedziału (0,100). Format jak dla Exponenta. W tym przypadku gwarantujemy dokładność do 14 miejsc znaczących.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 3. Logarytm</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">11091</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-18</p></td>
+<td align="center" valign="top"><p class="table">11</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">68</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">429</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">88398</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sinus_i_cosinus">3.3.3. Sinus i Cosinus</h4>
+<div class="paragraph"><p>Funkcje <em>FPL_sin_64</em> oraz <em>FPL_cos_64</em></p></div>
+<div class="paragraph"><p>Aby obliczyć dobrze funkcje trygonometryczne bardzo ważną częścią jest redukcja argumentu do przedziału na którym działa algorytm. Jest to jednak w większości przypadków trudne. Jak mówi praca, by tego dokonać potrzebowalibyśmy liczby PI zapisanej na 137 bitach. To jednak wymagałoby znaczącej ingerencji na niskim poziomie (w gruncie rzeczy napisania wszystkich podstawowych operacji by uwzględniały ten szczególny przypadek). Dlatego postanowiliśmy zignorować tą część i spróbować dokonać redukcji na zwykłych 64 bitach licząc, że wyniki okażą się zadowalające</p></div>
+<div class="paragraph"><p>Tak jak w innych przypadkach przygotowujemy tabelki z wyliczonymi wartościami funkcji sin i cos dla odpowiednio dobranych wartości bliskich 0 (nie uwzględniamy korekcji przez epsilon).</p></div>
+<div class="paragraph"><p>Po uzyskaniu pi w przedziale (-pi/4,pi/4), oraz wywołaniu odpowiedniej funkcji zgodnie z własnościami trygonometrycznymi przechodzimy do algorytmu właściwego. Dla odpowiednio małych x wynik jest przybliżony przez wielomian. W pozostałych przypadkach korzystamy z własności trygonometrycznych:
+sin(x) = sin(X<sub>i</sub>+z) = sin(X<sub>i</sub>)*cos(z)+cos(X<sub>i</sub>)*sin(z)
+cos(x) = cos(X<sub>i</sub>+z) = cos(X<sub>i</sub>)*cos(z)-sin(X<sub>i</sub>)*sin(z)
+Gdzie sin/cos(X<sub>i</sub>) to tabelaryczna wartość a sin(z) i cos(z) są przybliżone wielomianami. Szczegóły w załączonej pracy.</p></div>
+<div class="paragraph"><p>Tabela dokładności dla liczb w zakresie (-50,50):</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 4. Sinus</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">4669</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-19</p></td>
+<td align="center" valign="top"><p class="table">2</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-18</p></td>
+<td align="center" valign="top"><p class="table">12</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">77</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">1205</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">0182</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">43853</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 5. Cosinus</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">6260</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">1111</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">48115</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">44469</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-13</p></td>
+<td align="center" valign="top"><p class="table">45</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tangens_i_cotangens">3.3.4. Tangens i Cotangens</h4>
+<div class="paragraph"><p>Funkcje <em>FPL_tan_64</em> oraz <em>FPL_cotan_64</em></p></div>
+<div class="paragraph"><p>Pierwszym krokiem jest redukcja, ta sama co dla Sinusa/Cosinusa. Tworzymy też tabelki dokładnie wyliczonych wartości zgodnie z instrukcjami (tradycyjnie nie uwzględniając przesunięcia punktów o epsilon). Dla odpowiednio małych wartości x wynik przybliżamy wielomianem, w przeciwnym wypadku stosujemy własność trygonometryczną
+tan(x) = tan(X<sub>i</sub>+z) = (tan(X<sub>i</sub>)+tan(z))/(1-tan(X<sub>i</sub>)*tan(z))
+gdzie tan(X<sub>i</sub>) bierzemy z tabel, tan(z) zaś przybliżamy wielomianem. Szczegóły w załączonej pracy.</p></div>
+<div class="paragraph"><p>Poniżej tabela dokładności dla liczb w zakresie (-50,50). Niedokładność dla niektórych liczb może być wyjaśniona zmierzaniem tangensa do nieskończoności w okolicach wielokrotności pi/2, w związku z czym wiele miejsc znaczących znajduje się przed przecinkiem. W ogólności wyniki są jednak akceptowalne i można się spodziewać, że błąd nie wystąpi wcześniej niż na 9 miejscu znaczącym.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 6. Tangent</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">1314</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-18</p></td>
+<td align="center" valign="top"><p class="table">13</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">65</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">490</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">24601</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">42179</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-13</p></td>
+<td align="center" valign="top"><p class="table">21588</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-12</p></td>
+<td align="center" valign="top"><p class="table">6583</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-11</p></td>
+<td align="center" valign="top"><p class="table">2143</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-10</p></td>
+<td align="center" valign="top"><p class="table">669</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-9</p></td>
+<td align="center" valign="top"><p class="table">242</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-8</p></td>
+<td align="center" valign="top"><p class="table">70</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-7</p></td>
+<td align="center" valign="top"><p class="table">30</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-6</p></td>
+<td align="center" valign="top"><p class="table">8</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-5</p></td>
+<td align="center" valign="top"><p class="table">2</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-4</p></td>
+<td align="center" valign="top"><p class="table">3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 7. Cotangent</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">1363</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">4</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">1347</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">17756</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">54153</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-13</p></td>
+<td align="center" valign="top"><p class="table">18437</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-12</p></td>
+<td align="center" valign="top"><p class="table">4730</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-11</p></td>
+<td align="center" valign="top"><p class="table">1470</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-10</p></td>
+<td align="center" valign="top"><p class="table">503</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-9</p></td>
+<td align="center" valign="top"><p class="table">163</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-8</p></td>
+<td align="center" valign="top"><p class="table">55</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-7</p></td>
+<td align="center" valign="top"><p class="table">14</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-6</p></td>
+<td align="center" valign="top"><p class="table">4</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-5</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_arcus_tangens">3.3.5. Arcus tangens</h4>
+<div class="paragraph"><p>Funkcja <em>FPL_arctan_64</em></p></div>
+<div class="paragraph"><p>Pierwszym krokiem jest redukcja argumentów o wartości bezwzlgędnej większej niż 1 przy użyciu
+tożsamości <tt>arctg(x) = pi/2 - arctg(1/x)</tt>. Arcus tangens jest symetryczny, zatem możemy założyć,
+że dostajemy argument w <tt>[0, 1]</tt>. Redukcja do mniejszych przedziałów w przeciwieństwie do
+poprzednich przypadków nie wydaje się możliwa, zatem przybliżyć trzeba tę funkcję dokładnie na
+całym przedziale. W tym celu zamiast jednego wielomianu konstruujemy tabelę 256 wielomianów
+w sposób opisany w pracy, na której bazuje projekt.</p></div>
+<div class="paragraph"><p>Poniższa tabela przedstawia dokładność przybliżenia na przedziale <tt>(-50, 50)</tt>. Wyniki wydają się
+akceptowalne na całej jej długości.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 8. Arcus Tangent</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">27844</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-20</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-19</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-18</p></td>
+<td align="center" valign="top"><p class="table">8</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-17</p></td>
+<td align="center" valign="top"><p class="table">96</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">522</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">71528</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pierwiastek_kwadratowy">3.3.6. Pierwiastek kwadratowy</h4>
+<div class="paragraph"><p>Funkcja <em>FPL_sqrt_64</em></p></div>
+<div class="paragraph"><p>Implementacja tej funkcji odbiega znacząco od wszystkich pozostałych. Nie jest obliczana przy pomocy
+aproksymacji wielomianowej, zamiast tego wykorzystuje starą dobra metodę Newtona-Raphsona.
+W połączeniu z bezpośrednią manipulacją wykładnikiem daje bardzo dokładne rezultaty już dla kilku
+iteracji.</p></div>
+<div class="paragraph"><p>Poniższa tabela przedstawia dokładność przybliżenia na przedziale <tt>(-100, 100)</tt>.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="30%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 9. Sqrt</caption>
+<col width="40%" />
+<col width="60%" />
+<thead>
+<tr>
+<th align="center" valign="top">rząd błędu</th>
+<th align="center" valign="top">wystąpienia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">dokładnie</p></td>
+<td align="center" valign="top"><p class="table">72086</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-16</p></td>
+<td align="center" valign="top"><p class="table">63</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-15</p></td>
+<td align="center" valign="top"><p class="table">17932</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-14</p></td>
+<td align="center" valign="top"><p class="table">9919</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fpl_shell">3.4. FPL Shell</h3>
+<div class="sect3">
+<h4 id="_cele">3.4.1. Cele</h4>
+<div class="paragraph"><p>Jednym z wyzwań już od początkowej fazy projektu było kontrolowanie poprawności implementacji.
+Jakolwiek funkcjonalność już działająca była łatwa do zweryfikowania przy pomocy masowych testów
+na losowych wartościach (opisanych w dalszej części dokumentu), poszukiwanie błędów było nieco
+uciążliwe z uwagi na konieczność każdorazowego pisania kawałka kodu z odpowiednimi wartościami
+w celu obserwacji rezultatów. Z tego powodu pojawił się pomysł stworzenia miniaturowego interpretera,
+umożliwiającego ewaluację dowolnych wyrażeń arytmetycznych przy użyciu opracowywanej arytmetyki
+software&#8217;owej oraz osobno, przy użyciu sprzętowego zmiennego przecinka. Pozwalałoby to na szybkie
+i wygodne sprawdzanie zachowania funkcji z projektu dla konkretnych, wybranych wartości wejścia.
+Tak powstała wstępna koncepcja, uzupełniona następnie o wsparcie dla funkcji z wyższej warstwy,
+oraz funkcje pomocnicze (np. <tt>hex</tt>, wypisująca reprezentację binarną liczby).</p></div>
+</div>
+<div class="sect3">
+<h4 id="_architektura">3.4.2. Architektura</h4>
+<div class="paragraph"><p>Interpreter FPL Shell to standardowy program typu REPL (<strong>R</strong>ead-<strong>E</strong>val-<strong>P</strong>rint <strong>L</strong>oop).
+Zbudowany jest w sposób typowy dla tego rodzaju aplikacji - wejście przetwarzane jest przy użyciu
+flexa/bisona, edycję linii komend realizuje biblioteka GNU Readline. AST jest przetwarzane przez
+interpreter bezpośrednio, bez translacji na żaden kod pośredni. Rozwiązanie takie podyktowane jest
+prostotą implementacji, przy jednoczesnym braku jakichkolwiek wymagań efektywnościowych.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_opis_języka">3.4.3. Opis języka</h4>
+<div class="sect4">
+<h5 id="_literały">Literały</h5>
+<div class="paragraph"><p>FPL Shell operuje na literałach następujących typów:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>liczby całkowite</strong> [<tt>integer</tt>], zapisywane jako zwyczajne liczby całkowite, np. <tt>666</tt>
+</p>
+</li>
+<li>
+<p>
+<strong>sprzętowy zmienny przecinek</strong> [<tt>native float</tt>], zapisywane jako liczby rzeczywiste poprzedzone
+znakiem dolara ($), np. <tt>$23.422</tt>
+</p>
+</li>
+<li>
+<p>
+<strong>software&#8217;owy zmienny przecinek</strong>, zapisywane jako liczby rzeczywiste, np. <tt>23.422</tt>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Liczby całkowite posiadają niejawne konwersje do obydwu formatów liczb zmiennoprzecinkowych
+gdy są użyte w wyrażeniach arytmetycznych je zawierających. W przypadku użycia w wywołaniach
+funkcji jest to zależne od implementacji konkretnych funkcji. Obecnie wszystkie konwertują
+argument na typ, na którym domyślnie operują.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_zdania_statements">Zdania (statements)</h5>
+<div class="paragraph"><p>Wspierane konstrukcje:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+wyrażenia arytmetyczne, np. <tt>23 * ($13.9 + (-7.))</tt>
+</p>
+</li>
+<li>
+<p>
+wywołania funkcji, np. <tt>exp($1.23)</tt>
+</p>
+</li>
+<li>
+<p>
+przypisania, np. <tt>a = 7.0</tt>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect4">
+<h5 id="_funkcje_wbudowane">Funkcje wbudowane</h5>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>hex(x)</strong> - jako argument przyjmuje software&#8217;ową liczbę zmiennoprzecinkową, wypisuje jej
+reprezentację heksadecymalną
+</p>
+</li>
+<li>
+<p>
+<strong>poly_eval(x, c<sub>n</sub>,&#8230;,c<sub>0</sub>)</strong> - pobiera software&#8217;owe liczby zmiennoprzecinkowe jako argumenty,
+oblicza <tt>p(x) = c<sub>n</sub>x<sup>n</sup> <tt>+</tt> &#8230; <tt>+</tt> c<sub>0</sub></tt>
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_exp</strong> - software&#8217;owa implementacja funkcji wykładniczej
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_log</strong> - software&#8217;owa implementacja funkcji logarytmicznej
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_sqrt</strong> - software&#8217;owa implementacja pierwiastka kwadratowego
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_sin</strong> - software&#8217;owa implementacja funkcji sinus
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_cos</strong> - software&#8217;owa implementacja funkcji cosinus
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_tan</strong> - software&#8217;owa implementacja funkcji tangent
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_cotan</strong> - software&#8217;owa implementacja funkcji cotangens
+</p>
+</li>
+<li>
+<p>
+<strong>fpl_atan</strong> - software&#8217;owa implementacja funkcji arcus tangens
+</p>
+</li>
+<li>
+<p>
+Wrappery na funkcje z biblioteki standardowej C implementujące analogiczne operacje - <strong>exp</strong>,
+ <strong>log</strong>, <strong>sqrt</strong>, <strong>sin</strong>, <strong>cos</strong>, <strong>tan</strong>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_literatura_i_zródla">4. Literatura i zródla</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+IEEE Std 754-2008 (IEEE Standard for Floating-Point Arithmetic )
+</p>
+</li>
+<li>
+<p>
+John F. Hart, Computer Approximations
+</p>
+</li>
+<li>
+<p>
+Shmuel Gal, Boris Bachelis, An Accurate Elementary Mathematical Library for the IEEE Floating
+Point Standard, ACM Transactions on Mathematical Software (TOMS) Volume 17 Issue 1, March 1991
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-20 17:08:03 CET
+</div>
+</div>
+</body>
+</html>
