@@ -251,3 +251,118 @@ rodzaj wartości - +NaN+ (+Not a Number+). Jest ona reprezentowana poprzez liczb
 o wartości 2047 (jak nieskończoności), i niezerową mantysą. Wszelkie operacje arytmetyczne z udziałem
 +NaN+ dają rezultat +NaN+. Zachowuje się on również osobliwie przy porównaniach - +NaN != NaN+.
 
+Implementacja operacji arytmetycznych
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Założenia projektowe
+++++++++++++++++++++
+
+Pierwotnie planowaliśmy realizację podstawowych operacji w pełni zgodną z IEEE 754. Zadanie takie
+wymaga, poza zwyczajnym obliczeniem wartości, poprawnego jej zaokrąglenia, tj. przedstawienia 
+dokładnie obliczonego wyniku w stosowanym formacie. Jest to konieczne z uwagi na fakt, iż zbiór
+liczb reprezentowalnych w formacie podwójnej precyzji nie jest zamknięty ze względu na operacje 
+arytmetyczne. Standard opisuje kilka trybów zaokrąglania, przy czym najpowszechniej stosowany to 
+zaokrąglanie do najbliższej wartości reprezentowalnej rozwiązującej konflikty (sytuacje, w których
+wartość dokładna leży dokładnie w połowie pomiędzy dwoma reprezentowalnymi wartościami) na korzyść
+tej liczby, która posiada parzystą ostatnią cyfrę mantysy (+roundTiesToEven+). Rozwiązanie takie
+jest symetryczne względem znaku, dzięki czemu unikamy przesuniecia średniej względem zera, które 
+występuje w niektórych innych trybach zaokrąglania.
+
+Realizacja
+++++++++++
+
+Niezbędny do jakichkolwiek innych operacji jest sposób przechodzenia między wartościami w postaci
+zakodowanej (z polami upakowanymi na 64 bitach zgodnie z uprzednio przedstawionym diagramem),
+a w postaci krotki trójelementowej, zrealizowanej jako struktura z trzema polami. Jedynym problemem
+na tym etapie jest specjalne traktowanie liczb zdenormalizowanych, niemniej dopracowanie szczegółów
+jest względnie proste, więc nie będą tutaj przytaczane. Konwersje te dostarczają pierwszej, 
+najbardziej podstawowej warstwy abstrakcji nad surową pamięcią.
+
+Kolejne paragrafy opisują sposób zrealizowania kolejnych operacji arytmetycznych.
+
+.Mnożenie
+Najłatwiejszym działaniem okazało się mnożenie, z uwagi na prostotę koncepcji tej operacji w
+przyjętym formacie. Są oczywiście dodatkowe komplikacje i trudności implementacyjne, ale ogólna idea
+operacji mnożenia wyraża się w następującej równości. Dla +x = (-1)^s~x~^ *
+2^e~x~^ * M~x~+, +y = (-1)^s~y~^ * 2^e~y~^ * M~y~+ mamy
+
++x * y = (-1)^s~x~+s~y~^ * 2^e~x~+e~y~^ * M~x~ * M~y~+
+
+Poza wykryciem i obsługą przypadków specjalnych, opisanych w jednej z poprzednich sekcji o rodzajach
+liczb, jedyny problem stanowi obliczenie +M~x~ * M~y~+. Są to w ogólności wielkości 53-bitowe 
+(52 bity mantysy i niejawna jedynka dla liczb znormalizowanych), zatem nie sposób dokonać dokładnego
+ich mnożenia używając wyłącznie arytmetyki 64-bitowej. Przewidując podobne problemy przy pozostałych
+operacjach, zaimplementowaliśmy zestaw operacji na 128-bitowych liczbach całkowitych. Jest to więcej,
+niż jest potrzebne do dokładnego obliczania tych wartości, jednak przy implementacji software'owej
+optymalizowanie operacji pod tym kątem mija się z celem.
+
+Wynik mnożenia dwóch wielkości 53-bitowych to w przypadku ogólnym liczba +(2*53 - 1)+-bitowa, zatem
+wynik należy przesunąć o 52 bity w prawo. W przypadku, gdy obydwie mantysy należały do liczb
+znormalizowanych, na tym można poprzestać; bit 53 jest z całą pewnością ustawiony na 1, zatem
+mantysa wynikowa należy do liczby znormalizowanej. Sytuacja komplikuje się, gdy jedna z mnożonych
+liczb jest zdenormalizowana. Wówczas może zdarzyć się, że otrzymamy wynik z 53-cim bitem zerowym.
+Podówczas dokonać należy *renormalizacji* - procesu przywrócenia liczbie własności normalizacji
+poprzez odpowiednie przesunięcie mantysy - "dosunięcie" najwyższego niezerowego bitu na pozycję
+53 - oraz poprawienie wykładnika, aby zachować wartość liczby po zmianie mantysy.
+
+Ostatecznie więc algorytm mnożenia w pseudokodzie wygląda następująco:
+
+.Mnożenie (pseudokod)
+----
+Rozpakuj wartości do struktur
+Sprawdź przypadki specjalne
+e = e~x~ + e~y~
+M = M~x~ * M~y~
+W razie potrzeby dokonaj renormalizacji:
+   Znajdź pierwszy niezerowy bit od lewej
+   Dosuń go do pozycji 53
+   Odejmij od wykładnika tyle, o ile pozycji przesunięto mantysę
+Spakuj i zwróć liczbę
+----
+
+.Szczegół implementacyjny
+[NOTE]
+======================================================================
+Opisany poniżej algorytm dotyczy dodawania dwóch liczb tego samego znaku.
+Podobnie opisany dalej algorytm odejmowania odnosi się do liczb tego
+samego znaku. Dodawanie/odejmowanie liczb w ogólności sprowadza się do 
+jednego z dwóch przypadków: dodawania bądź odejmowania liczb o tym samym 
+znaku. Funkcje realizujące ogólne przypadki tych operacji rozpoznają 
+przypadek, z jakim mają do czynienia i przekazują sterowanie do funkcji 
+odpowiadających rozpatrywanemu przypadkowi.
+=======================================================================
+
+.Dodawanie
+
+Dodawanie liczb zmiennoprzecinkowych przedstawia większą trudność niż mnożenie, z uwagi na fakt, 
+iż aby móc dodać mantysy, konieczne jest przekształcenie liczb tak, aby uzyskać ich reprezentacje
+z identycznym wykładnikiem. Komplikuje to nieco implementację, wprowadza bowiem dodatkowy
+krok obliczeń. Z uwagi na utratę dokładności przy podejściu polegającym na przesunieciu
+w prawo mantysy mniejszego wykładnika bez zachowywania bitów przesuniętych poza prawą krawędź
+liczby konieczne okazało się zastosowanie i tu operacji na liczbach 128-bitowych. W naszej 
+realizacji mantysy początkowo zajmują górne 8 bajtów tych liczb. Następnie mantysy i wykładniki
+są modyfikowane w taki sposób, aby uzyskać reprezentację z większym z dwóch wykładników argumentów.
+Po tym kroku wystarczy dodać mantysy, zrenormalizować wynik, spakować go do reprezentacji binarnej
+i zwrócić.
+
+.Dodawanie (pseudokod)
+----
+Rozpakuj wartości do struktur
+Sprawdź przypadki specjalne
+M128~x~ = [m~x~, 0]
+M128~y~ = [m~y~, 0]
+d = e~x~ - e~y~
+If d < 0:
+   Przesuń M128~x~ o (-d) w prawo
+   e = e~y~
+Else:
+   Przesuń M128~y~ o d w prawo
+   e = e~x~
+M128 = M128~x~ + M128~y~
+Zrenormalizuj wynik (jak w mnożeniu)
+Spakuj i zwróć liczbę
+----
+
+.Odejmowanie
+
+
