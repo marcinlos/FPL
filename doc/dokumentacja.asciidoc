@@ -406,28 +406,32 @@ exp(x) = 2^x/log2^ = 2^n^ * exp(y)
 W obliczeniu exp(y) wykorzystujemy wartości wyliczone wcześniej z tabeli oraz przybliżenie w sensie minimaxu exponenta na niewielkim przedziale służące za correction term. Szczegóły w załączonej pracy.
 
 Poniżej przedstawiono wyniki działania funkcji z argumentami w przedziale (-20,20) z losową próbką 100000 punktów, porównywane z wynikami funkcji z biblioteki standardowej. Im wylosowany argument znajduje się dalej od 0 tym mniej miejsc znaczących będzie poprawne (ze względu na specyfikę funkcji wykładniczej szybko powiększającej drobne błędy), ogólnie jednak dokładność jest zadowalająca. Liczba z lewej strony to rząd wielkości w którym wyniki są dokładne, liczba z prawej to ilość argumentów dla których działanie funkcji wykazało taką dokładność.
-----
-dokładnie: 5588
-  -23: 2397
-  -22: 5369
-  -21: 6202
-  -20: 6376
-  -19: 7109
-  -18: 5717
-  -17: 6819
-  -16: 7444
-  -15: 5361
-  -14: 2448
-  -13: 3926
-  -12: 3661
-  -11: 7937
-  -10: 2297
-   -9: 4626
-   -8: 6178
-   -7: 5511
-   -6: 4433
-   -5: 601
-----
+
+.Exponent
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 5588
+| -23      | 2397
+| -22      | 5369
+| -21      | 6202
+| -20      | 6376
+| -19      | 7109
+| -18      | 5717
+| -17      | 6819
+| -16      | 7444
+| -15      | 5361
+| -14      | 2448
+| -13      | 3926
+| -12      | 3661
+| -11      | 7937
+| -10      | 2297
+|  -9      | 4626
+|  -8      | 6178
+|  -7      | 5511
+|  -6      | 4433
+|  -5      | 601
+|======================
 
 
 Logarytm
@@ -439,14 +443,18 @@ Na początku stworzyliśmy 3 tabele zgodnie z instrukcjami - X zawierającą zna
 Dalej wykorzystujemy własność ln(x) = ln(y) + n*ln(2), ln(y) zaś obliczamy z wykorzystaniem wartości z tabeli oraz wielomianu przybliżającego logarytm dla małych wartości. Szczegóły w załączonej pracy.
 
 Poniżej tabela z wynikami dla 100000 liczb wylosowanych z przedziału (0,100). Format jak dla Exponenta. W tym przypadku gwarantujemy dokładność do 14 miejsc znaczących.
-----
-dokładnie: 11091
-  -18: 11
-  -17: 68
-  -16: 429
-  -15: 88398
-  -14: 3
-----
+
+.Logarytm
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 11091
+|  -18     | 11
+|  -17     | 68
+|  -16     | 429
+|  -15     | 88398
+|  -14     | 3
+|======================
 
 Sinus i Cosinus
 ^^^^^^^^^^^^^^^
@@ -463,23 +471,31 @@ cos(x) = cos(X~i~+z) = cos(X~i~)*cos(z)-sin(X~i~)*sin(z)
 Gdzie sin/cos(X~i~) to tabelaryczna wartość a sin(z) i cos(z) są przybliżone wielomianami. Szczegóły w załączonej pracy.
 
 Tabela dokładności dla liczb w zakresie (-50,50):
-----
-Sinus
-dokładnie: 4669
-  -19: 2
-  -18: 12
-  -17: 77
-  -16: 1205
-  -15: 50182
-  -14: 43853
 
-Cosinus
-dokładnie: 6260
-  -16: 1111
-  -15: 48115
-  -14: 44469
-  -13: 45
-----
+.Sinus
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie |4669
+|-19       |2
+|-18       |12
+|-17       |77
+|-16       |1205
+|-15       |0182
+|-14       |43853
+|======================
+
+
+.Cosinus
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 6260
+|  -16     | 1111
+|  -15     | 48115
+|  -14     | 44469
+|  -13     | 45
+|======================
 
 Tangens i Cotangens
 ^^^^^^^^^^^^^^^^^^^
@@ -491,41 +507,99 @@ tan(x) = tan(X~i~+z) = (tan(X~i~)+tan(z))/(1-tan(X~i~)*tan(z))
 gdzie tan(X~i~) bierzemy z tabel, tan(z) zaś przybliżamy wielomianem. Szczegóły w załączonej pracy.
 
 Poniżej tabela dokładności dla liczb w zakresie (-50,50). Niedokładność dla niektórych liczb może być wyjaśniona zmierzaniem tangensa do nieskończoności w okolicach wielokrotności pi/2, w związku z czym wiele miejsc znaczących znajduje się przed przecinkiem. W ogólności wyniki są jednak akceptowalne i można się spodziewać, że błąd nie wystąpi wcześniej niż na 9 miejscu znaczącym.
-----
-Tangent
--2147483648: 1314
-  -18: 13
-  -17: 65
-  -16: 490
-  -15: 24601
-  -14: 42179
-  -13: 21588
-  -12: 6583
-  -11: 2143
-  -10: 669
-   -9: 242
-   -8: 70
-   -7: 30
-   -6: 8
-   -5: 2
-   -4: 3
 
-Cotangent
--2147483648: 1363
-  -17: 4
-  -16: 1347
-  -15: 17756
-  -14: 54153
-  -13: 18437
-  -12: 4730
-  -11: 1470
-  -10: 503
-   -9: 163
-   -8: 55
-   -7: 14
-   -6: 4
-   -5: 1
-----
+.Tangent
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 1314
+|  -18     | 13
+|  -17     | 65
+|  -16     | 490
+|  -15     | 24601
+|  -14     | 42179
+|  -13     | 21588
+|  -12     | 6583
+|  -11     | 2143
+|  -10     | 669
+|   -9     | 242
+|   -8     | 70
+|   -7     | 30
+|   -6     | 8
+|   -5     | 2
+|   -4     | 3
+|======================
+
+.Cotangent
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 1363
+|  -17     | 4
+|  -16     | 1347
+|  -15     | 17756
+|  -14     | 54153
+|  -13     | 18437
+|  -12     | 4730
+|  -11     | 1470
+|  -10     | 503
+|   -9     | 163
+|   -8     | 55
+|   -7     | 14
+|   -6     | 4
+|   -5     | 1
+|======================
+
+
+Arcus tangens
+^^^^^^^^^^^^^
+
+Funkcja 'FPL_arctan_64'
+
+Pierwszym krokiem jest redukcja argumentów o wartości bezwzlgędnej większej niż 1 przy użyciu
+tożsamości +arctg(x) = pi/2 - arctg(1/x)+. Arcus tangens jest symetryczny, zatem możemy założyć, 
+że dostajemy argument w +[0, 1]+. Redukcja do mniejszych przedziałów w przeciwieństwie do 
+poprzednich przypadków nie wydaje się możliwa, zatem przybliżyć trzeba tę funkcję dokładnie na
+całym przedziale. W tym celu zamiast jednego wielomianu konstruujemy tabelę 256 wielomianów 
+w sposób opisany w pracy, na której bazuje projekt. 
+
+Poniższa tabela przedstawia dokładność przybliżenia na przedziale +(-50, 50)+. Wyniki wydają się
+akceptowalne na całej jej długości. 
+
+.Arcus Tangent
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 27844
+|  -20     | 1
+|  -19     | 1
+|  -18     | 8
+|  -17     | 96
+|  -16     | 522
+|  -15     | 71528
+|======================
+
+Pierwiastek kwadratowy
+^^^^^^^^^^^^^^^^^^^^^^
+
+Funkcja 'FPL_sqrt_64'
+
+Implementacja tej funkcji odbiega znacząco od wszystkich pozostałych. Nie jest obliczana przy pomocy
+aproksymacji wielomianowej, zamiast tego wykorzystuje starą dobra metodę Newtona-Raphsona.
+W połączeniu z bezpośrednią manipulacją wykładnikiem daje bardzo dokładne rezultaty już dla kilku
+iteracji. 
+
+Poniższa tabela przedstawia dokładność przybliżenia na przedziale +(-100, 100)+.
+
+.Sqrt
+[options="header", width="30%", cols="2^,3^"]
+|======================
+|rząd błędu|wystąpienia
+|dokładnie | 72086
+|  -16     | 63
+|  -15     | 17932
+|  -14     | 9919
+|======================
 
 FPL Shell
 ~~~~~~~~~
@@ -596,5 +670,14 @@ oblicza +p(x) = c~n~x^n^ `+` ... `+` c~0~+
 * Wrappery na funkcje z biblioteki standardowej C implementujące analogiczne operacje - *exp*,
  *log*, *sqrt*, *sin*, *cos*, *tan*
 
+[bibliography]
+Literatura i zródla
+-------------------
 
+- IEEE Std 754-2008 (IEEE Standard for Floating-Point Arithmetic )
+
+- John F. Hart, Computer Approximations
+
+- Shmuel Gal, Boris Bachelis, An Accurate Elementary Mathematical Library for the IEEE Floating 
+Point Standard, ACM Transactions on Mathematical Software (TOMS) Volume 17 Issue 1, March 1991
 
