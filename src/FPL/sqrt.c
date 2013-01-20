@@ -2,8 +2,6 @@
 #include <FPL/float.h>
 #include <FPL/utils.h>
 #include <FPL/functions.h>
-#include <stdint.h>
-#include <math.h>
 
 #include <FPL/interoperability.h>
 #include <FPL/macros.h>

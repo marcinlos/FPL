@@ -7,7 +7,6 @@
 #include <FPL/interoperability.h>
 #include <FPL/macros.h>
 #include <FPL/arctan_FPLTAB.h>
-#include <math.h>
 
 
 static FPL_float64 arct_aux(FPL_float64 x)
