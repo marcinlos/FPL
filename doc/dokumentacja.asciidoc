@@ -377,10 +377,28 @@ Dzielenie swoją naturą przypomina mnożenie, z całą jego konceptualną prost
 
 +x / y = (-1)^s~x~+s~y~^ * 2^e~x~-e~y~^ * M~x~ / M~y~+
 
-Jedyną problematyczną kwestią jest wyliczenie ilorazu mantys. Są one 64-bitowe, jednakowoż nie satysfakcjonuje nas 
-zwykłe dzielenie całkowite. Implementacja tego fragmentu dzielenia pozostawia nieco do życzenia. Po pierwsze, zrealizowane
-jest przy pomocy
-prostego, powolnego algorytmu wyliczającego bit po bicie. 
+Jedyną problematyczną kwestią jest wyliczenie ilorazu mantys. Są one 64-bitowe, jednakowoż nie 
+satysfakcjonuje nas zwykłe dzielenie całkowite. Implementacja tego fragmentu dzielenia pozostawia
+nieco do życzenia. Po pierwsze, zrealizowane jest przy pomocy prostego, powolnego algorytmu 
+wyliczającego kolejne bity rezultatu. To niestety nie koniec problemów. Wszystkie pozostałe 
+operacje działają z dokładnością do przedostatniego bitu mantysy (wynik różni się od wzorcowej 
+implementacji co najwyżej na ostatnim bicie), natomiast w przypadku dzielenia około 5% wyników 
+posiada nieznacznie większe błędy. Jest to spowodowane najprawdopodobniej niedokładnością 
+odejmowania w jednym z kroków algorytmu dzielenia (całość działa na liczbach 64-bitowych, bez 
+wykorzystania dodatkowej precyzji oferowanej przez 128 bitów). Jakkolwiek defekt ten wydaje się 
+nie wpływać w widoczny sposób na operacje wyższej warstwy (nie zaobserwowaliśmy różnic w średniej 
+dokładności między implementacją wykorzystującą sprzętowy zmienny przecinek, a tą wykorzystującą
+naszą arytmetykę), to stanowi potencjalny problem. Z uwagi na mnogość innych kwestii wymagających 
+uwagi, oraz brak widocznego wpływu na resztę funkcjonalności postanowiliśmy zaniechać dalszego
+śledzenia przyczyn błędu i ewentualnej jego eliminacji.
 
 
+Implementacja warstwy funkcji elementarnych
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+TODO
+
+FPL Shell
+~~~~~~~~~
+
+Moje TODO
